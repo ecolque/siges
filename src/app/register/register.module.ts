@@ -18,6 +18,7 @@ import { DomicilioComponent } from './../register/domicilio/domicilio.component'
 import { TenenciaComponent } from './../register/tenencia/tenencia.component';
 import { DomicilioService } from './../services/domicilio.service';
 import { TenenciaService } from './../services/tenencia.service';
+import { DocumentoService } from './../services/documento.service';
 import { FormObsComponent } from './register-list/form-obs/form-obs.component';
 import { VerBeneficioComponent } from './../shared/ver-beneficio/ver-beneficio.component';
 
@@ -49,6 +50,7 @@ import { FormOpenprojectComponent } from '../project/form-openproject/form-openp
 import { FormRecordComponent } from './register-list/form-record/form-record.component';
 import { FormObsCloseProject } from './register-list/form-obs-closeproject/form-obs-closeproject';
 import { FormCreditoComponent } from './register-list/form-credito/form-credito.component';
+import { DocumentosComponent } from './documentos/documentos.component';
 
 
 @NgModule({
@@ -61,7 +63,7 @@ import { FormCreditoComponent } from './register-list/form-credito/form-credito.
         FamilyFormComponent,
         DomicilioComponent,
         TenenciaComponent,
-        FormObsComponent, VerBeneficioComponent, FormRecordComponent, FormObsCloseProject, FormCreditoComponent,
+        FormObsComponent, VerBeneficioComponent, FormRecordComponent, FormObsCloseProject, FormCreditoComponent,DocumentosComponent,
         FormReemplazoComponent,
         MsgModalComponent,
         FormRenunciaComponent,
@@ -91,13 +93,15 @@ import { FormCreditoComponent } from './register-list/form-credito/form-credito.
          FormOpenprojectComponent,
          FuncionarioComponent,
          FormRecordComponent,
-         FormCreditoComponent
+         FormCreditoComponent,
+         DocumentosComponent
         ],
     providers: [
         RegisterEditResolver,
         FamilyService,
         DomicilioService,
-        TenenciaService
+        TenenciaService,
+        DocumentoService
        // RegisterService,
        // UtilsService,
     ],

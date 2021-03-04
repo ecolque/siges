@@ -26,7 +26,9 @@ import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.componen
     RouterModule, 
     FormsModule, 
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBX8whC1OH81ha6rVZh9uy19FvodcNJ6D8'
+     // apiKey: 'AIzaSyBX8whC1OH81ha6rVZh9uy19FvodcNJ6D8'
+      apiKey: 'AIzaSyBbY5fSj7PyVAqX3fy_pq9-REGO2kF0DM8'
+      
     }),
     NgbModule.forRoot(),
     GeoRoutingModule

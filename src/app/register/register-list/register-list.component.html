@@ -163,6 +163,7 @@
                             <th class="bg-danger"><small>Edit</small></th>
                             <!--th class="bg-danger"><small class="txt13">Form</small></th-->
                             <th class="bg-danger"><small class="txt13">V.Dom</small></th>                            
+                        <th class="bg-danger"><small class="txt13">Documento</small></th>
                             <th class="bg-danger"><small>Excluir</small></th>
                         </tr>
                     </thead>
@@ -256,6 +257,9 @@
                             <!--td (click)="setRegisterSelected(reg)"><a href="{{URL_PRINT}}getBoleta?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>F</small></a></td-->
                             <td (click)="setRegisterSelected(reg)"><a *ngIf="project?.tipoProyId != 12 || (reg.inicialValid && project?.tipoProyId == 12)" href="{{URL_PRINT}}fichaPersonal?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>VD</small></a></td>
                             <td (click)="setRegisterSelected(reg)"><button *ngIf="reg.estado.btnExcluir && !reg.valid && reg.reemplazante.id == 0 && isAcceses(3)" (click)="delete(reg.id, i)" type="button" class="btn btn-sm btn-light" ngbTooltip="El solicitante deja de estar en esta lista">&#10006;</button></td>
+                        <td><button *ngIf="project?.tipoProyId == 12" (click)="showFormDocumento(reg)" type="button" class="btn btn-sm btn-primary">
+                                   Documento
+                            </button>
                         </tr>    
                     </tbody>
                 </table>  

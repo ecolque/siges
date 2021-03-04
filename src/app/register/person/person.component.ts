@@ -84,12 +84,12 @@ export class PersonComponent implements OnInit {
     this.estadoCiviles = UtilsService.getMaritalStatus();        
     
     // es un parche que se debe corregir
-    if(RegisterService.selectedProject.yearId == 2019) {
+    if(RegisterService.selectedProject.yearId >= 2019) {
       this.gradoDiscapacidades = [];      
       this.gradoDiscapacidades.splice(0, 0, {id: 62, name: "Discapacidad (SI)"});
     }
 
-    if(RegisterService.selectedProject.yearId == 2018) {
+    if(RegisterService.selectedProject.yearId <= 2018) {
       //this.gradoDiscapacidades = [];      
       this.gradoDiscapacidades = UtilsService.getEvaluacionesById(RegisterService.selectedProject.tipoProyId, UtilsService.gradoDiscapacidad);
       this.gradoDiscapacidades.splice(0, 1);

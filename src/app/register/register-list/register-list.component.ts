@@ -19,6 +19,7 @@ import { FormRecordComponent } from './form-record/form-record.component';
 import { FormObsCloseProject } from './form-obs-closeproject/form-obs-closeproject';
 import { FormCreditoComponent } from './form-credito/form-credito.component';
 
+import { DocumentosComponent } from '../documentos/documentos.component';
 
 @Component({
   selector: 'app-register-list',
@@ -218,6 +219,14 @@ export class RegisterListComponent implements OnInit {
     this.openFormReemplazo(register);
   }
 
+  showFormDocumento(register: any){
+    //this.registerService.registerSelectedEmitter.emit(register);
+    this.register = register;    
+    this.openFormDocumento(register);
+  }
+
+
+
   cancelReemplazante(register: any) {
     this.openFormCancelReemplazo(register);
   }
@@ -414,6 +423,15 @@ export class RegisterListComponent implements OnInit {
     modalRef.result.then((result) => {
       this.sumEstados();
     });
+  }
+
+  private openFormDocumento(register: any) {
+    const modalRef = this.modalService.open(DocumentosComponent, {size: 'lg', backdrop: 'static', keyboard: false});
+    modalRef.componentInstance.register = register;
+   /* modalRef.componentInstance.registers = RegisterService.registers.filter(_ => _.estado.id == 3);
+    modalRef.result.then((result) => {
+      this.sumEstados();
+    });*/
   }
 
   private openFormCancelReemplazo(register: any) {

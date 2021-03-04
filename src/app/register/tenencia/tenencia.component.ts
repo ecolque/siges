@@ -99,7 +99,9 @@ export class TenenciaComponent implements OnInit, OnDestroy {
       
       this.showPhotos = true;
       if(RegisterService.selectedProject.yearId == 2019) {        
-        this.showPhotos = false;
+        //this.showPhotos = false;  //PVE 05/08/2020
+        this.showPhotos = true;
+        
       }
   }
 

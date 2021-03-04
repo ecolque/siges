@@ -1,0 +1,78 @@
+<div class="modal-header bg-primary text-white">
+    <h6>Formulario de Documentos</h6>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('edwin')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm">
+            <div class="alert alert-danger col-sm" role="alert" *ngIf="error">
+                {{error}}
+            </div>
+            <p class="font-weight-bold">NOMBRE: {{register?.person.nombres}} {{register?.person.paterno}}
+                {{register?.person.paterno}}</p>
+            <p class="font-weight-bold">NUM. DOCUMENTO: {{register?.person.document}}</p>
+        </div>
+    </div>
+
+    <hr />
+    <div class="col-sm-3">
+        <label class="col-form-label-sm">Tipo Documento:</label>
+        <select required         
+        [(ngModel)]="marcaElegida"       
+        class="form-control form-control-sm select">
+        <option *ngFor="let documen of tipoDocumentoVentas" [ngValue]="documen">{{documen.nombre}}</option>
+        </select>
+        <p>
+        <input type="file" (change)="onArchivoElegido($event)" >
+ 
+        <button type="button"  class="btn btn-sm btn-primary"  class="btn btn-sm btn-primary" (click)="onSubirArchivo()">Subir Archivo</button> </p>
+        <p><button type="button" class="btn btn-sm btn-primary" (click)="onListarDocumentos()">Refrescar</button> </p>
+    </div>
+
+    <div class="card">
+    
+            <table class="table table-bordered table-sm table-responsive" *ngIf="listadocumentos">
+                <thead class="thead-inverse">
+                    <tr>                                                                      
+                        <th><small>Id</small></th>
+                        <th><small>Tipo Documento</small></th>
+                        <th><small>Nombre Documento</small></th>
+                        <th><small>Descargar</small></th>
+                        <th><small>Eliminar</small></th>                            
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let obj of listadocumentos">                                                                      
+                        <td><small>{{obj.id}}</small></td>
+                        <td><small>{{obj.nombreTipo}}</small></td>
+                        <td><small>{{obj.nombre}}</small></td>
+                        <!--<td><a href="http://10.10.0.102:8080/siges/documentoService/decargarArchivo/{{obj.registro_id}}/{{obj.nombre}}">Descargar</a></td>-->                                                
+                        <td><a href="http://siges.aevivienda.gob.bo/siges/documentoService/decargarArchivo/{{obj.registro_id}}/{{obj.nombre}}">Descargar</a></td>                                                
+                        <td><button type="button" class="btn btn-danger btn-sm"  (click)="onEliminarArchivo(obj.registro_id,obj.id,obj.nombre)">Eliminar</button></td>                        
+                    </tr>            
+                </tbody>
+            </table>      
+ 
+    </div>
+
+    
+
+  
+
+
+   
+
+    <!-- <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <input type="file" name="avatar" (change)="onFileChange($event)" />
+        <button type="submit">Upload</button>
+
+    </form> -->
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('')">Cerrar</button>
+</div>  

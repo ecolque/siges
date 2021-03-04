@@ -27,7 +27,7 @@ export class GeoZoomComponent implements OnInit {
 
   ngOnInit() {
     if (this.photoId != 0 ) {
-      if(this.photoId > 1769326) {
+      if(this.photoId > 2429328) {
         this.busy = this.geoService.getPhoto(this.photoId)
         .subscribe(
             data => {            
