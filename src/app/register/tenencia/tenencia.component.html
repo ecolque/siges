@@ -1,0 +1,464 @@
+<img *ngIf="busy != null ? !busy.closed : false" src="app/assets/images/loader.gif">
+<div class="animate-right">
+    <fieldset [disabled]="!isAcceses(3)">    
+        <form *ngIf="tenencia" [formGroup]="form" #f="ngForm" (ngSubmit)="saveTenencia(f.value)">
+            <div class="card" *ngIf="showViviendaReside || showHacinamiento">
+                <h6 class="card-header bg-primary text-white">TENENCIA DE TERRENO Y DOCUMENTACION</h6>        
+                <div class="card-body border border-primary">                    
+                    <div class="row">
+                        <div *ngIf="showViviendaReside" class="col-sm border border-secondary border-top-0 border-bottom-0 border-left-0">
+                            <label class="col-form-label-sm"><strong>¿Cuenta con terreno propio?:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-2">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true" 
+                                                formControlName="terrenoPropio"                                               
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-2">                                 
+                                        <label class="custom-control custom-radio">
+                                            <input  [value]="false"                       
+                                                    formControlName="terrenoPropio"                                                                                   
+                                                    type="radio"
+                                                    class="custom-control-input form-control-sm"> 
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description">No</span>
+                                        </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row" *ngIf="form.controls.terrenoPropio.value">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">Especifique como lo adquirio:</label>
+                                    <input 
+                                        formControlName="terrenoAdquirio"
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        [class.is-invalid]="(!form.controls.terrenoAdquirio.valid && form.controls.terrenoAdquirio.touched) || (form.controls.terrenoAdquirio.errors != null && form.controls.terrenoAdquirio.errors?.msg != null)"> 
+                                    <small *ngIf="form.controls.terrenoAdquirio.errors" class="invalid-feedback">
+                                            {{form.controls.terrenoAdquirio.errors?.msg}}                        
+                                    </small>                               
+                                </div>
+                            </div> 
+                        </div> 
+                        <div *ngIf="showViviendaReside || showHacinamiento" class="col-sm border border-secondary border-top-0 border-bottom-0 border-left-0">
+                            <!--label class="col-form-label-sm"><strong>¿Cuenta con documentos de propiedad? (de acuerdo a normativa vigente):</strong></label--> 
+                            <!--div class="row">                                                
+                                <div class="col-sm-2">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true"               
+                                                formControlName="documentoPropiedad"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-2">                                 
+                                        <label class="custom-control custom-radio">
+                                            <input  [value]="false"      
+                                                    formControlName="documentoPropiedad"                                                                                                    
+                                                    type="radio"
+                                                    class="custom-control-input form-control-sm"> 
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description">No</span>
+                                        </label>                                                             
+                                </div>                              
+                            </div-->  
+                            
+                            <label class="col-form-label-sm"><strong>Documentos que cuenta (de acuerdo a normativa vigente): </strong></label>                            
+                            <select required 
+                                    formControlName="tipoDocumentoPropiedad" 
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="(form.controls.tipoDocumentoPropiedad.touched && form.controls.tipoDocumentoPropiedad.value.id <= 0) || (form.controls.tipoDocumentoPropiedad.errors != null && form.controls.tipoDocumentoPropiedad.errors?.msg != null)">
+                                <option *ngFor="let typeDoc of documentos" [ngValue]="typeDoc">{{typeDoc.name}}</option>    
+                            </select>                               
+                            <small *ngIf="form.controls.tipoDocumentoPropiedad.errors" class="invalid-feedback"> 
+                                {{form.controls.tipoDocumentoPropiedad.errors?.msg}}
+                            </small>                                                  
+                            
+                        </div>                                                                                                  
+
+                        <div *ngIf="showHacinamiento" class="col-sm">
+                            <label class="col-form-label-sm"><strong>Condicion de uso de la vivienda (Según criterio social):</strong><strong class="text-danger"> (*)</strong></label>
+                            <!--select required 
+                                    formControlName="condicion" 
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="(form.controls.condicion.touched && form.controls.condicion.value.id <= 0) || (form.controls.condicion.errors != null && form.controls.condicion.errors?.msg != null)">
+                                <option *ngFor="let obj of condicionViviendas" [ngValue]="obj">{{obj.name}}</option>    
+                            </select-->  
+                            <div *ngFor="let obj of condicionViviendas">
+                                <label class="custom-control custom-radio">
+                                    <input  [value]="obj"         
+                                            formControlName="condicion"                                                                                                 
+                                            type="radio"
+                                            class="custom-control-input form-control-sm"> 
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"
+                                        [class.text-danger]="form.controls.condicion.errors != null && form.controls.condicion.errors?.msg != null">
+                                        <small>{{obj.name}}</small>
+                                    </span>
+                                </label>                                                     
+                            </div>                               
+                            <small *ngIf="form.controls.condicion.errors" class="text-danger"> 
+                                {{form.controls.condicion.errors?.msg}}
+                            </small>                    
+                        </div>               
+                    </div>                        
+                    <br>
+                    <button [disabled]="busy != null ? !busy.closed : false" type="submit" class="btn btn-primary">Guardar</button>
+                </div>        
+            </div>   
+        </form>         
+        
+        <form *ngIf="servicioBasico" [formGroup]="sbForm" #sbf="ngForm" (ngSubmit)="saveServicioBasico(sbf.value)">
+            <div class="card">        
+                <h6 class="card-header bg-primary text-white">DATOS DE SERVICIOS BASICOS <strong class="text-danger">(*)</strong> </h6>        
+                <div class="card-body border border-primary">        
+                    <div class="row"> 
+                        <div class="col-sm border border-secondary border-top-0 border-bottom-0 border-left-0">
+                            <label class="col-form-label-sm"><strong>Provisión de Agua:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-3">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true" 
+                                            formControlName="agua"
+                                            type="radio"
+                                            class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-3">                                 
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="false"         
+                                                formControlName="agua"                                                                                                 
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">No</span>
+                                    </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">TIPO:</label> 
+                                    <div *ngIf="sbForm.controls.agua.value">
+                                        <div *ngFor="let obj of aguaOptionSI">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoAgua"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description" 
+                                                    [class.text-danger]="sbForm.controls.tipoAgua.errors != null && sbForm.controls.tipoAgua.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>                                                   
+                                        </div>                                      
+                                    </div>
+                                    <div *ngIf="!sbForm.controls.agua.value">
+                                        <div *ngFor="let obj of aguaOptionNO">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoAgua"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoAgua.errors != null && sbForm.controls.tipoAgua.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>                                                     
+                                        </div>                                       
+                                    </div>                                                                         
+                                </div>
+                            </div> 
+                        </div>       
+                        <div class="col-sm">
+                            <label class="col-form-label-sm"><strong>Servicio Sanitario:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-3">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true"            
+                                                formControlName="sanitario"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-3">                                 
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="false" 
+                                                formControlName="sanitario"                                                                                                         
+                                                type="radio" class="custom-control-input"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">No</span>
+                                    </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">TIPO:</label>
+                                    <div *ngIf="sbForm.controls.sanitario.value">
+                                        <div *ngFor="let obj of sanitarioOptionSI">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoSanitario"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoSanitario.errors != null && sbForm.controls.tipoSanitario.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                                         
+                                    </div>
+                                    <div *ngIf="!sbForm.controls.sanitario.value">
+                                        <div *ngFor="let obj of sanitarioOptionNO">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoSanitario"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoSanitario.errors != null && sbForm.controls.tipoSanitario.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                                         
+                                    </div>                       
+                                </div>
+                            </div> 
+                        </div>        
+                
+                        <div class="col-sm border border-secondary border-top-0 border-bottom-0">
+                            <label class="col-form-label-sm"><strong>Electricidad/o Energía:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-3">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true"        
+                                                formControlName="energia"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-3">                                 
+                                        <label class="custom-control custom-radio">
+                                            <input  [value]="false"      
+                                                    formControlName="energia"
+                                                    type="radio"
+                                                    class="custom-control-input form-control-sm"> 
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description">No</span>
+                                        </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">TIPO:</label>                                
+                                    <div *ngIf="sbForm.controls.energia.value">
+                                        <div *ngFor="let obj of energiaOptionSI">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoEnergia"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoEnergia.errors != null && sbForm.controls.tipoEnergia.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                                                               
+                                    </div>
+                                    <div *ngIf="!sbForm.controls.energia.value">
+                                        <div *ngFor="let obj of energiaOptionNO">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoEnergia"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoEnergia.errors != null && sbForm.controls.tipoEnergia.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                                                               
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>  
+                    
+                        <div class="col-sm">
+                            <label class="col-form-label-sm"><strong>Tipo de combustible o energía que utilza para cocinar:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-3">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true"                        
+                                                formControlName="cocinar"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-3">                                 
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="false"    
+                                                formControlName="cocinar"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">No</span>
+                                    </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">TIPO:</label>
+                                    <div *ngIf="sbForm.controls.cocinar.value">
+                                        <div *ngFor="let obj of cocinarOptionSI">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoCocinar"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoCocinar.errors != null && sbForm.controls.tipoCocinar.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                          
+                                    </div>
+                                    <div *ngIf="!sbForm.controls.cocinar.value">
+                                        <div *ngFor="let obj of cocinarOptionNO">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoCocinar"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoCocinar.errors != null && sbForm.controls.tipoCocinar.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>                          
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="col-sm border border-secondary border-top-0 border-bottom-0 border-right-0">
+                            <label class="col-form-label-sm"><strong>Telecomunicaciones:</strong></label> 
+                            <div class="row">                                                
+                                <div class="col-sm-3">                                
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="true"               
+                                                formControlName="telecomunicacion"
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Si</span>
+                                    </label>                                                 
+                                </div>                            
+                                <div class="col-sm-3">                                 
+                                    <label class="custom-control custom-radio">
+                                        <input  [value]="false"  
+                                                formControlName="telecomunicacion"                                                                                                        
+                                                type="radio"
+                                                class="custom-control-input form-control-sm"> 
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">No</span>
+                                    </label>                                                             
+                                </div>                              
+                            </div>  
+                            <div class="row">                            
+                                <div class="col-sm">     
+                                    <label class="col-form-label-sm">TIPO:</label>
+                                    <div *ngIf="sbForm.controls.telecomunicacion.value">
+                                        <div *ngFor="let obj of telecomOptionSI">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoTelecomunicacion"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoTelecomunicacion.errors != null && sbForm.controls.tipoTelecomunicacion.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>  
+                                    </div>  
+                                    <div *ngIf="!sbForm.controls.telecomunicacion.value">
+                                        <div *ngFor="let obj of telecomOptionNO">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="obj"         
+                                                        formControlName="tipoTelecomunicacion"                                                                                                 
+                                                        type="radio"
+                                                        class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description"
+                                                    [class.text-danger]="sbForm.controls.tipoTelecomunicacion.errors != null && sbForm.controls.tipoTelecomunicacion.errors?.msg != null">
+                                                    <small>{{obj.name}}</small>
+                                                </span>
+                                            </label>             
+                                        </div>  
+                                    </div>                         
+                                </div>
+                            </div> 
+                        </div>                                                              
+                    </div>             
+                <button [disabled]="busy1 != null ? !busy1.closed : false" type="submit" class="btn  btn-primary">Guardar</button>
+                </div> 
+            </div>
+        </form>       
+        
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">FOTOS</div>
+                    <div class="card-body border border-primary" *ngIf="registerId != 0">                                            
+                        <label class="col-form-label-sm">Vivienda:</label>
+                        
+                        <!--input  type="file" accept="image/*"  class="form-control-file" (change)="onChangeDomicilio($event)"-->                                                              
+                        <a *ngIf="showPhotos" class="btn btn-sm btn-secondary" href="{{URL_PHOTO}}/upload.jsp?id={{registerId}}&field=d" target="_blank">Subir Fotos - VIVIENDA</a><br>
+                        <label class="col-form-label-sm">Familia:</label><br>              
+                        <a *ngIf="showPhotos" class="btn btn-sm btn-secondary" href="{{URL_PHOTO}}/upload.jsp?id={{registerId}}&field=f" target="_blank">Subir Foto - FAMILIA</a>                
+                        <!--iframe width="100%" height="300" src="http://localhost:8080/upload.jsp?id={{registerId}}&field=f"></iframe-->
+                        <!--input  type="file" class="form-control-file" (change)="onChangeFamily($event)"-->                                             
+                    </div>
+                </div> 
+            </div>   
+            <div class="col-sm-9">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">Observaciones</div>
+                        <div class="card-body border border-primary" *ngIf="registerId != 0 && observation != null">                                            
+                            <textarea class="form-control form-control-sm" [(ngModel)]="observation.obs" style="height:160px;"></textarea>
+                            <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-primary" (click)="saveObservation()">Guardar</button>
+                            <label class="badge badge-pill badge-danger">{{errorObservation}}</label>
+                        </div>
+                    </div> 
+            </div>  
+        </div>
+    </fieldset>
+    <nav class="navbar navbar-inverse bg-primary">        
+        <button class="btn btn-primary btn-sm"  (click)="goBack()">&larr; Atras</button> 
+    </nav>           
+</div>
+    
+ <ngb-alert *ngIf="errors" style="max-height: 80px; overflow-y: scroll; padding:0" class="fixed-bottom {{bgClass}} text-white" type="custom"  (close)="errors = null"><strong *ngFor="let e of errors">{{e.msg}}<br></strong></ngb-alert>

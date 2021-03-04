@@ -1,0 +1,35 @@
+<div class="modal-header bg-primary text-white">
+    <h6>Formulario</h6>     
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('edwin')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm" *ngIf="registers">
+            <table class="table table-sm txt11">
+                <thead>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Estado</th>
+                        <th>Causal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of registers">
+                        <td>{{r.person.nombres}} {{r.person.paterno}} {{r.person.materno}} <br> <b>CI: {{r.person.document}} {{r.person.expedido.name}}</b> </td>
+                        <td>{{r.estado.name}} <br>
+                            <label class="text-danger"><b>{{r.error}}</b></label> 
+                        </td>
+                        <td><input class="form-control" type="text" [(ngModel)]="r.msg"></td>
+                        <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-primary" (click)="save(r)">Guardar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('edwin')">Cerrar</button>
+</div>

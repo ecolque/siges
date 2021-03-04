@@ -1,0 +1,62 @@
+<div class="modal-header bg-primary text-white">      
+    <div>{{projectCode}} - Solicitantes Evaluados</div>  
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">        
+        <div class="row">
+            <div class="col-sm-4" style="max-height: 650px; overflow: scroll;">
+                <div class="list-group">                    
+                    <div *ngFor="let p of people; let i = index;" class="list-group-item list-group-item-action flex-column align-items-center" (click)="setClickedRow(p.id)" [class.active]="p.id == selectedRow"> <!--active-->
+                        <div class="row no-padding d-flex w-100 justify-content-between">
+                            <div class="mb-1 txt11"><b>{{i+1}}. {{p.name}}</b></div>
+                            <small class="txt13"><b>CI:{{p.document}} Edad:{{p.edad}}</b></small>
+                        </div>
+                        <div class="row no-padding">
+                            <div class="col-sm-6 no-padding border" (click)="showPicture(p.id)"><img src="{{URL_PICTURE}}{{p.id}}d.jpg" width="100%"></div>
+                            <div class="col-sm-6 no-padding border" (click)="showPicture(p.id)"><img src="{{URL_PICTURE}}{{p.id}}f.jpg" width="100%"></div>
+                        </div>                        
+                        <div class="row row">
+                            <small class="txt13 no-padding">Fecha Evaluacion: {{p.date}} <br>
+                                {{p.lat}}, {{p.lng}}
+                            </small>
+                            <button class="btn btn-sm btn-primary txt13" (click)="findMarker(p.id)">&#9673; Mapa</button>
+                        </div>
+                    </div>                                        
+                </div>
+            </div>
+            <div class="col-sm-8 animate-left" *ngIf="idPicture == 0">
+                <div class="card" *ngIf="locations">
+                    <div class="card-body border border-primary no-padding">
+                        <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [mapTypeControl]='true' [fullscreenControl]="true">
+                            <agm-marker *ngFor="let l of locations; let i = index;" [latitude]="l.lat" [longitude]="l.lng">
+                            </agm-marker>
+                        </agm-map>
+                    </div>
+                    <button class="btn btn-sm" (click)="resetLocations()">Restablecer Ubicaciones</button>
+                </div>
+            </div>
+            <div class="col-sm-8 animate-right" *ngIf="idPicture != 0">
+                <div class="row">
+                    <div class="col-sm-12 border no-padding">
+                        <img src="{{URL_PICTURE}}{{idPicture}}d.jpg" width="100%">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 border no-padding">
+                        <img src="{{URL_PICTURE}}{{idPicture}}f.jpg" width="100%">
+                    </div>
+                </div>
+            </div>
+            <!--div class="col-sm-8">
+                <img *ngIf="geoPhoto" width="100%" height="auto" [src]="'data:image/jpeg;base64,'+ geoPhoto.thumb | safeHtml" alt="First slide">
+            </div>                        
+            <div class="col-sm-4">
+                <h5 class="card-title">Descripción</h5>
+                <p class="card-text">{{description}}  <br> <small><b>Fecha Realizada: </b></small>  {{date}} <br> <small><b>Fecha Cargada: </b></small> {{created}}</p>                       
+                <button type="button" class="float-right btn btn-outline-danger" (click)="activeModal.close('')">Cerrar</button>            
+            </div-->
+        </div>        
+</div>
+      

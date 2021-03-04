@@ -1,0 +1,66 @@
+
+<div class="modal-header bg-primary text-white">    
+    <h6>Formulario de Reemplazo</h6>     
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('edwin')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">  
+    <div class="row">
+        <div class="col-sm">
+            <div class="alert alert-danger col-sm" role="alert" *ngIf="error">                                
+                {{error}} 
+            </div>
+            <p class="font-weight-bold">NOMBRE: {{register?.person.nombres}} {{register?.person.paterno}} {{register?.person.paterno}}</p>
+            <p class="font-weight-bold">NUM. DOCUMENTO:  {{register?.person.document}}</p>                       
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">               
+                <h6 class="card-header" *ngIf="!cancelReemplazo">LISTA DE SOLICITANTES A SER REEMPLAZADOS</h6>      
+                <h6 class="card-header bg-info text-white" *ngIf="cancelReemplazo" >REEMPLAZO POR</h6>  
+                <div class="card-body border">
+                    <table class="table table-bordered table-sm table-responsive-sm" *ngIf="registers">
+                        <thead class="thead-inverse">
+                            <tr>                                
+                                <th><small>Paterno</small></th>
+                                <th><small>Materno</small></th>
+                                <th><small>Nombres</small></th>
+                                <th><small>Num. Doc.</small></th>                            
+                                <th><small>Tipo Doc.</small></th>
+                                <th><small>F. Nac.</small></th>
+                                <th><small>Puntaje</small></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let obj of registers">                                                                                                      
+                                <td><small>{{obj.person.paterno}}</small></td>
+                                <td><small>{{obj.person.materno}}</small></td>
+                                <td><small>{{obj.person.nombres}}</small></td>
+                                <td><small>{{obj.person.document}}</small></td>
+                                <td><small>{{obj.person.tipoDoc.name}}</small></td>
+                                <td><small>{{obj.person.fnac.year}}/{{obj.person.fnac.month}}/{{obj.person.fnac.day}}</small></td>
+                                <td>
+                                    <small><span class="badge badge-pill badge-dark">
+                                            {{obj.puntaje}}
+                                           </span>
+                                    </small>
+                                </td>
+                                <td>
+                                    <button *ngIf="!cancelReemplazo" type="button" class="btn btn-sm btn-warning" (click)="guardarReemplazo(obj)">Reemplazar</button>
+                                    <button *ngIf="cancelReemplazo" type="button" class="btn btn-sm btn-danger" (click)="cancelRegisterReemplazo(obj)">Desaher el reemplazo</button>
+                                </td>
+                            </tr>            
+                        </tbody>
+                    </table>                                         
+                </div>
+            </div>
+        </div>
+    </div>                                      
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('edwin')">Cerrar</button>
+</div>

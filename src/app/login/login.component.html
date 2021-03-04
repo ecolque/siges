@@ -1,0 +1,17 @@
+<br>
+<div id="body" class="text-center animate-zoom">
+  <form [formGroup]="form" #f="ngForm" (ngSubmit)="onSubmit(f.value)" class="form-signin">              
+        <h1 class="h3 mb-3 font-weight-normal">SIGES</h1>        
+        <ngb-alert type="danger" [dismissible]="false" [hidden]="!error">
+          <strong>Error: </strong> {{error | json}}
+        </ngb-alert>                  
+          <input required
+                 formControlName="username"
+                 type="text" class="form-control" aria-describedby="emailHelp" placeholder="Nombre de usuario">                    
+        <input required
+                 formControlName="password"
+                 type="password" class="form-control" placeholder="Contraseña">        
+        <button [disabled]=" busy != null ? !busy.closed : false"  type="submit" class="btn btn-lg btn-primary btn-block">Ingresar</button>
+        <p class="mt-5 mb-3 text-muted">&copy; AEV-2018</p>    
+  </form>
+</div>

@@ -1,0 +1,80 @@
+<div class="modal-header" style="height:30px">      
+    <div>Reporte</div>  
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">        
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            REPORTES
+        </div>
+        <div class="card-body border border-primary">            
+            <a href="{{URL_PRINT}}getReportByDepartment?dept={{department}}&year={{year}}" class="btn btn-sm btn-danger animate-right" target="_blank"><small>REPORTE GENERAL POR PROYECTO (PDF) 2018</small></a>
+            <a href="{{URL_PRINT}}getReportByBeneficiary?dept={{department}}&year={{year}}" class="btn btn-sm btn-primary animate-right" target="_blank"><small>REPORTE POR BENEFICIARIO (PDF) 2018</small></a>
+            <table class="table txt11">
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Proyecto
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Edwin                             
+                        </td>
+                        <td>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            AEV-PND-004
+                                        </td>
+                                        <td>
+                                            <table class="table">
+                                                <tr>
+                                                    <td>Inpeccion 1</td>
+                                                </tr>                                                    
+                                                <tr>
+                                                    <td>Inpeccion 2</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Inpeccion 3</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Inpeccion 4</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Inpeccion 5</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            AEV-PND-005
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Juan Alberto
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Pedro Pedro
+                        </td>
+                    </tr>      
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+          

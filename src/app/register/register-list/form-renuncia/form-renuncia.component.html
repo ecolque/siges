@@ -1,0 +1,31 @@
+
+<div class="modal-header bg-primary text-white">    
+        <h6>RENUNCIA/OTROS</h6>     
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('edwin')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">  
+        <div class="row">
+            <div class="col-sm">
+                <p class="font-weight-bold">{{register?.person.nombres}} {{register?.person.paterno}} {{register?.person.materno}}  {{register?.person.document}}</p>                
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm" *ngIf="renuncia">
+                    <div class="alert alert-danger col-sm" role="alert" *ngIf="error">{{error}}</div>
+                    <span class="badge badge-pill badge-primary">{{copyObs}}</span><br>
+                    <label class="col-form-label-sm">Observación:</label>                    
+                    <textarea [(ngModel)]="renuncia.obs" class="form-control form-control-sm"></textarea>     
+                    
+                    <p class="text-warning">NOTA: ASEGURESE DE INGRESAR UNA OBSERVACION COHERENTE.</p>
+            </div>
+        </div>                                      
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!renuncia?.renuncia" [disabled]="busy != null ? !busy.closed : false" (click)="okRenuncia()" type="button" class="btn btn-sm btn-primary">GUARDAR</button>
+        <button *ngIf="renuncia?.renuncia" [disabled]="busy != null ? !busy.closed : false" (click)="cancelRenuncia()" type="button" class="btn btn-sm btn-danger">DESHACER RENUNCIA</button>
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('edwin')">Cerrar</button>
+    </div>
+    

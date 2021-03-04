@@ -1,0 +1,583 @@
+<ngb-tabset>
+    <ngb-tab title="Reporte General">
+        <ng-template ngbTabContent>
+                <div class="row">    
+                        <div class="col-sm">
+                          <div class="card">                            
+                            <div class="card-body">                                       
+                              <form ngNoForm action="{{URL_PRINT}}reportByParameters" target="_blank" method="POST" onsubmit="return confirm('Generar reporte?');">                                 
+                                  <div class="row">                                      
+                                      <div class="col-sm">
+                                                  <div class="text-center"><u><strong>❶ FILTROS</strong></u></div>
+                                                  <div class="row">
+                                                        <div class="rounded col-sm border table-danger">
+                                                            <label class="col-form-label-sm"><b>TIPO PROGRAMA</b></label><br>
+                                                            <label class="custom-control custom-radio col-form-label-sm">
+                                                                <input id="radio1" name="typeProgram" type="radio" class="custom-control-input" value="1" checked [(ngModel)]="typeProgram" (change)="change()">
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description">Proyectos Regulares</span>
+                                                            </label>
+                                                            <label class="custom-control custom-radio col-form-label-sm">
+                                                                <input id="radio2" name="typeProgram" type="radio" class="custom-control-input" value="2" [(ngModel)]="typeProgram" (change)="change()">
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description">Viviendas a Credito (Postulantes Aceptados)</span>
+                                                            </label>
+                                                        </div>
+                                                        <div *ngIf="typeProgram == 1" class="rounded col-sm-3 border table-primary animate-left">
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="estadoProyecto">
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-danger">Estado Proyecto</span>
+                                                            </label><br>
+                                                            <label class="col-form-label-sm"><b>ESTADOS BENEFICIARIOS</b><br>
+                                                                <small class="text-danger" *ngIf="!acep && !reemAcep && !reemAcepEspera && !rech && !reemRech && !ren"><b>ESTADO REQUERIDO</b></small>
+                                                            </label><br>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="acep" [(ngModel)]="acep"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-success">Aceptados</span>
+                                                            </label>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="reemAcep" [(ngModel)]="reemAcep"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-success">Reemplazantes Aceptados</span>
+                                                            </label>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="reemAcepEspera" [(ngModel)]="reemAcepEspera"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-warning">Reemplazantes Aceptados en Espera</span>
+                                                            </label>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="rech" [(ngModel)]="rech"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-danger">Rechazados</span>
+                                                            </label>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="reemRech" [(ngModel)]="reemRech"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-danger">Reemplazantes Rechazados</span>
+                                                            </label>
+                                                            <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                <input  type="checkbox" class="custom-control-input"
+                                                                        name="ren" [(ngModel)]="ren"> 
+                                                                <span class="custom-control-indicator"></span>
+                                                                <span class="custom-control-description text-primary">Renuncia</span>
+                                                            </label>
+                                                        </div> 
+                                                      <!--div class="col-sm border border-primary border-right-0"-->                                        
+                                                          <div class="rounded col-sm border table-success">
+                                                              <label class="col-form-label-sm"><strong>GESTION </strong><br>
+                                                                <small class="text-danger" *ngIf="sdGestions.length == 0"><b>SELECCIONE GESTION</b></small>
+                                                              </label>
+                                                              <br>
+                                                              <select  multiple [(ngModel)]="sdGestions" class="form-control txt1"  (change)="change()">
+                                                                  <option  *ngFor="let g of gestions" [value]="g">{{g}}</option>                    
+                                                              </select>                                                             
+                                                              <select required name="gestions"  multiple style="display:none" >
+                                                                  <option *ngFor="let g of sdGestions" value="{{g}}" selected>{{g}}</option>
+                                                              </select>
+                                                          </div>                                    
+                                                          <div class="rounded col-sm border table-danger">
+                                                              <label class="col-form-label-sm"><strong>AREA DE INTERVENCION</strong><br>
+                                                                <small class="text-danger" *ngIf="!rural && !urbano && !urbrural"><b>SELECCIONE AREA DE INTERVENCION</b></small>
+                                                              </label><br>
+                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                          name="rural" [(ngModel)]="rural" (change)="change()"> 
+                                                                  <span class="custom-control-indicator"></span>
+                                                                  <span class="custom-control-description">Rural</span>
+                                                              </label>                    
+                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                          name="urbano" [(ngModel)]="urbano" (change)="change()"> 
+                                                                  <span class="custom-control-indicator"></span>
+                                                                  <span class="custom-control-description">Urbano</span>
+                                                              </label>
+                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                              name="urbrural" [(ngModel)]="urbrural" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Urbano/Rural</span>
+                                                                </label>
+                                                          </div>                                    
+                                                          <div class="rounded col-sm-3 border table-warning">
+                                                                  <label class="col-form-label-sm"><b>DEPARTAMENTOS</b><br>
+                                                                     <small class="text-danger" *ngIf="!ch && !lp && !cb && !or && !pt && !sc && !pd && !be && !tr"><b>SELECCIONE UN DEPARTAMENTO</b></small>
+                                                                  </label><br>
+                                                                  <label *ngIf="_ch" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="ch" [(ngModel)]="ch" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Chuquisaca</span>                                
+                                                                  </label>
+                                                                  <label *ngIf="_lp" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                              name="lp" [(ngModel)]="lp" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">La Paz </span>
+                                                                  </label>
+                                                                  <label *ngIf="_cb" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                              name="cb" [(ngModel)]="cb" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Cochabamba</span>
+                                                                  </label> 
+                                                                  <label *ngIf="_or" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="or" [(ngModel)]="or" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Oruro</span>
+                                                                  </label> 
+                                                                  <label *ngIf="_pt" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="pt" [(ngModel)]="pt" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Potosi</span>
+                                                                  </label> 
+                                                                  <label *ngIf="_sc" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="sc" [(ngModel)]="sc" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Santa Cruz</span>
+                                                                  </label> 
+                                                                  <label *ngIf="_pd" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="pd" [(ngModel)]="pd" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Pando</span>
+                                                                  </label>
+                                                                  <label *ngIf="_be" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="be" [(ngModel)]="be" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Beni</span>
+                                                                  </label>
+                                                                  <label *ngIf="_tr" class="custom-control custom-checkbox col-form-label-sm">
+                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                          name="tr" [(ngModel)]="tr" (change)="change()"> 
+                                                                      <span class="custom-control-indicator"></span>
+                                                                      <span class="custom-control-description">Tarija</span>
+                                                                  </label>
+                                                          </div>              
+                                                      <!--/div-->
+                                                      
+                                                  </div>                                                  
+                                                  <div class="text-center"><u><strong>❷ VARIABLES A MOSTRAR (columnas en excel)</strong></u></div>                         
+                                                  <div class="row">
+                                                      <div class="col-sm">
+                                                          <div class="row">
+                                                              <!--div class="col-sm"-->       
+                                                                      <div class="rounded col-sm border table-success">
+                                                                              <label class="col-form-label-sm"><b>DATOS TITULAR</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input type="checkbox" checked disabled>Paterno Materno, Especial, Nombres, Num.Doc,Exp, F.Nac, Género, Ingreso
+                                                                                  <input type="hidden" name="titular" [ngModel]="true">
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="actlab" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Actividad Laboral</span>
+                                                                              </label>                                                                             
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="gradoinst" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Grado de Instrucción</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="estadoCivil" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Estado Civil</span>
+                                                                              </label>  
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                <input  type="checkbox" class="custom-control-input"
+                                                                                        name="asalariado" [ngModel]="false"> 
+                                                                                <span class="custom-control-indicator"></span>
+                                                                                <span class="custom-control-description">Asalariado</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                <input  type="checkbox" class="custom-control-input"
+                                                                                        name="indigenaNombre" [ngModel]="false"> 
+                                                                                <span class="custom-control-indicator"></span>
+                                                                                <span class="custom-control-description">Nación o Pueblo Indígena</span>
+                                                                              </label>                                                                              
+
+                                                                      </div>
+                                                                      <div class="rounded col-sm border table-danger">
+                                                                              <label class="col-form-label-sm"><b>DATOS CONYUGUE</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="cony" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Paterno Materno, Especial, Nombres, Num.Doc,Exp, F.Nac, Género, Ingreso</span>                                
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="actlabcony" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Actividad Laboral</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="gradoinstcony" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Grado de Instrucción</span>
+                                                                              </label>                            
+                                                                      </div>                      
+                                                                      <div class="rounded col-sm border table-primary">
+                                                                              <label class="col-form-label-sm"><b>CRITERIOS</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                <input  type="checkbox" class="custom-control-input"
+                                                                                        name="respfam" [ngModel]="false"> 
+                                                                                <span class="custom-control-indicator"></span>
+                                                                                <span class="custom-control-description">Responsable Familia</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="dependientes" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Num. de Dependientes</span>                                
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="discapacidad" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Num. Discapacidad</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="terceraedad" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Num. Tercera Edad</span>
+                                                                              </label>                            
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm" style="display:none">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="padremadre" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Padre/Madre</span>
+                                                                              </label>
+                                                                      </div>                                                 
+                                                                      
+                                                              <!--/div-->
+                                                          
+                                                                      <div class="rounded col-sm border table-warning">
+                                                                              <label class="col-form-label-sm"><b>DATOS DE SERVICIOS BASICOS</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="agua" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Servicio de Agua</span>                                
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="sanitario" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Servicio Sanitario</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="electricidad" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Electricidad/ Energía</span>
+                                                                              </label>                            
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="combustible" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Tipo de combustible</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="telecom" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Telecomunicaciones</span>
+                                                                              </label>
+                                                                      </div>                                                                                                                              
+                                                                      <div class="rounded col-sm border table-secondary">
+                                                                              <label class="col-form-label-sm"><b>TENENCIA DE TERRENO Y DOCUMENTACION</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="terreno" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Cuenta con Terreno</span>                                
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="doccuenta" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Propio Documento que Cuenta</span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="condvivienda" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Condición de Vivienda</span>
+                                                                              </label>                                        
+                                                                      </div>                                                 
+                                                                      <div class="rounded col-sm border table-info">
+                                                                              <label class="col-form-label-sm"><b>DATOS DEL DOMICILIO ACTUAL</b></label><br>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="residencia" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Departamento/ Provincia/ Municipio</span>                                
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                  <input  type="checkbox" class="custom-control-input"
+                                                                                          name="comunidad" [ngModel]="false"> 
+                                                                                  <span class="custom-control-indicator"></span>
+                                                                                  <span class="custom-control-description">Comunidad/ Zona </span>
+                                                                              </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                    <input  type="checkbox" class="custom-control-input"
+                                                                                            name="zona" [ngModel]="false"> 
+                                                                                    <span class="custom-control-indicator"></span>
+                                                                                    <span class="custom-control-description">Distrito/Zona/Urb/Barrio/Otros</span>
+                                                                               </label>
+                                                                              <label class="custom-control custom-checkbox col-form-label-sm">
+                                                                                      <input  type="checkbox" class="custom-control-input"
+                                                                                              name="alquilada" [ngModel]="false"> 
+                                                                                      <span class="custom-control-indicator"></span>
+                                                                                      <span class="custom-control-description">Propia/Alquilada</span>
+                                                                              </label>                                                                              
+                                                                      </div>
+                                                          </div>                   
+                                                      </div>
+                                                  </div>
+                                      </div>                                      
+                                  </div>
+                                  <div class="row">                                          
+                                      <div class="col-sm border border-primary border-right-0 border-bottom-0 border-top-0">    
+                                              <input type="hidden" name="byproject" [ngModel]="isCollapsed"> 
+                                              <select name="projects"  multiple style="display:none" >
+                                                  <option *ngFor="let p of projectsIds" value="{{p}}" selected>{{p}}</option>
+                                              </select>
+
+                                              <div class="text-center"><u><strong>❸ BUSCAR POR PROYECTO</strong></u>
+                                                <label class="text-danger txt11"><b>
+                                                    <label *ngIf="sdGestions.length == 0"> Seleccione: Gestión</label>
+                                                    <label *ngIf="!rural && !urbano && !urbrural">Seleccione: Area de Intervención; </label>
+                                                    <label *ngIf="!ch && !lp && !cb && !or && !pt && !sc && !pd && !be && !tr">Seleccione: Departamento.</label></b>
+                                                </label>
+                                                <label *ngIf="sdGestions.length > 0 && (rural || urbano || urbrural)
+                                                                                    && (ch || lp || cb || or || pt || sc || pd || be || tr)" class="custom-control custom-checkbox col-form-label-sm animate-zoom">
+                                                        <input type="checkbox" class="custom-control-input" (change)="serchByProject()" [(ngModel)]="byProject"> 
+                                                        <span class="custom-control-indicator"></span>
+                                                        <span class="custom-control-description btn btn-sm btn-primary text-white">(Click aqui para) REPORTE POR PROYECTO <b>({{selecteds.length}})</b></span>
+                                                </label>
+                                              </div>
+                                              <small *ngIf="isCollapsed && projectsIds.length == 0"  class="text-danger"><b>Seleccione un PROYECTO</b></small>
+                                              <fieldset [disabled]="!isCollapsed">
+                                                      <div class="row">                                                                                                                                            
+                                                              <div class="col-sm-8">
+                                                                  <!--label class="col-form-label-sm">Filtrar por Codigo/Nombre Proyecto:</label>                                            
+                                                                  <input type="text" class="form-control form-control-sm"-->                                                                
+                                                                  <div *ngIf="projects.length > 0" class="table-responsive" style="overflow: scroll; max-height: 400px">
+                                                                      <table class="table table-sm table-bordered table-hover txt1">                
+                                                                          <thead class="thead-dark txt1">                                                                              
+                                                                              <th><small>Gestión</small></th>
+                                                                              <th><small>Codigo</small></th>
+                                                                              <th>Nombre (Ctrl+F para buscar)</th>
+                                                                              <th><small>Departamento</small></th>
+                                                                              <th><small>Area Intervención</small></th>
+                                                                              <th><small>UH</small></th>
+                                                                              <th><small>Confirmados</small></th>
+                                                                              <th><small>Aceptados</small></th>
+                                                                              <th><small>Reemp. Acept. en Espera</small></th>
+                                                                              <th><small>Rechazados</small></th>
+                                                                              <th><small>Renuncia</small></th>
+                                                                              <th><small>Proyecto Cerrado</small></th>
+                                                                              <th></th>
+                                                                          </thead>
+                                                                          <tbody>
+                                                                              <tr *ngFor="let p of projects, let i = index;">                                                                                  
+                                                                                  <td><small>{{p.nameC}}</small></td>
+                                                                                  <td><small><strong>{{p.code}}</strong></small></td>
+                                                                                  <td><small>{{p.name}}</small></td>
+                                                                                  <td><small>{{p.codeC}}</small></td>
+                                                                                  <td><small>{{p.areaIntervencion}}</small></td>
+                                                                                  <td class="text-white {{p.uh != 0 && p.uh == p.confirm ? 'bg-success' : 'bg-danger'}}"><small>{{p.uh}}</small></td>
+                                                                                  <td class="text-white {{p.uh != 0 && p.uh == p.confirm ? 'bg-success' : 'bg-danger'}}"><small>{{p.confirm}}</small></td>
+                                                                                  <td><small>{{p.acep}}</small></td>
+                                                                                  <td><small>{{p.reemAcepEspera}}</small></td>
+                                                                                  <td><small>{{p.rechazado}}</small></td>
+                                                                                  <td><small>{{p.renuncia}}</small></td>
+                                                                                  <td><small>{{p.iclose ? 'SI' : 'NO'}}</small></td>
+                                                                                  <td>                                                                                    
+                                                                                    <button class="btn btn-sm btn-secondary" (click)="atach(p, i)"><small>Añadir</small> <span class="badge badge-light">➜</span></button>
+                                                                                  </td>
+                                                                              </tr>                                           
+                                                                          </tbody>
+                                                                      </table>                      
+                                                                  </div>              
+                                                              </div>      
+                                                              <div class="col-sm-4">
+                                                                    <div class="col-sm border border-info bg-secondary animate-zoom" *ngFor="let p of selecteds, let i = index;">                                        
+                                                                        <div class="badge-light txt "><input class="btn btn-sm btn-danger" type="button" value="x" (click)="detach(p, i)"><small>{{p.code}} - {{p.name}}</small> </div>                                    
+                                                                    </div>
+                                                               </div>                                                                                                                                                   
+                                                      </div>
+                                              </fieldset>                                                                                
+                                              <ul class="nav bg-primary" *ngIf="projects.length > 0"> 
+                                                  <li class="nav-item">
+                                                      <input class="btn btn-primary" type="button" value="Proyectos Encontrados {{projects.length}}">
+                                                  </li>                                                                                                              
+                                              </ul>                                        
+                                      </div>                                    
+                                  </div>            
+                                  
+                                      <ul class="nav justify-content-end fixed-bottom">
+                                          <li class="nav-item ">
+                                              <button type="submit" class="btn btn-lg btn-danger" [disabled]="(busy != null ? !busy.closed : false) 
+                                                                                                             || sdGestions.length == 0 
+                                                                                                             || (!acep && !reemAcep && !reemAcepEspera && !rech && !reemRech && !ren) 
+                                                                                                             || (!rural && !urbano && !urbrural)
+                                                                                                             || (!ch && !lp && !cb && !or && !pt && !sc && !pd && !be && !tr)
+                                                                                                             || (isCollapsed && projectsIds.length == 0)">EXCEL ↓</button>
+                                          </li>                            
+                                      </ul>   
+                                  
+                              </form>                                                                           
+                            </div>
+                          </div>
+                        </div>
+                </div>
+        </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Estado de PROYECTOS-SIGES">        
+        <ng-template ngbTabContent>  
+            <div class="card">
+                <div class="card-body">                                                                                                                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label-sm">Departameno:</label>                           
+                                    <select [(ngModel)]="department"
+                                            class="form-control form-control-sm">
+                                            <!--option value="2">LA PAZ</option-->
+                                        <option *ngFor="let dept of departamentos" [value]="dept.id">{{dept.name}}</option>    
+                                    </select>                                                         
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label-sm">Gestión:</label>   
+                                    <div class="input-group">
+                                        <select [(ngModel)]="year"                                                                      
+                                                class="form-control form-control-sm">                            
+                                            <option *ngFor="let year of years" [value]="year">{{year}}</option>    
+                                        </select>                    
+                                        <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-primary" (click)="searchStateProjects()">Buscar</button>                                        
+                                        <a *ngIf="year != 0" href="{{URL_PRINT}}getStateProjectsByYear?y={{year}}" class="btn btn-sm btn-danger" target="_blank">Descargar Reporte General ({{year}})</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                                                                        
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div *ngIf="stateProjects && stateProjects.length > 0">
+                                <table class="table table-sm table-hover table-responsive-sm table-bordered table-striped txt10">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="bg-dark text-white" rowspan="2">#</th>
+                                            <th class="bg-dark text-white" colspan="8">PROYECTO</th>
+                                            <th class="bg-primary text-white" colspan="6">SOLICITANTES</th>
+                                            <th class="bg-info text-white" colspan="3">LISTA INICIAL 
+                                                <button class="btn btn-sm btn-info" (click)="filterInicial()"><span class="badge badge-light">{{countInicial}}</span> ✔</button>
+                                                <button class="btn btn-sm btn-info" (click)="filterNotInicial()"><span class="badge badge-light">{{countNotInicial}}</span> &#10008;</button>
+                                            </th>
+                                            <th class="bg-warning text-white" colspan="3">LISTA FINAL 
+                                                <button class="btn btn-sm btn-warning" (click)="filterFinal()"><span class="badge badge-light">{{countFinal}}</span> ✔</button>
+                                                <button class="btn btn-sm btn-warning" (click)="filterNotFinal()"><span class="badge badge-light">{{countNotFinal}}</span> &#10008;</button>                                                
+                                            </th>
+                                            <th class="bg-dark text-white" rowspan="2">Responsables</th>             
+                                        </tr>
+                                        <tr>                                            
+                                            <th class="bg-dark text-white">Estado</th>
+                                            <th class="bg-dark text-white"></th>
+                                            <th class="bg-dark text-white">Tipo</th>
+                                            <th class="bg-dark text-white">Codigo</th>
+                                            <th class="bg-dark text-white">Nombre</th>
+                                            <th class="bg-dark text-white">Area Intervecion</th>
+                                            <th class="bg-dark text-white">Estado</th>
+                                            <th class="bg-dark text-white">uh</th>                                                
+                                            <th class="bg-primary text-white">Confirmados</th>
+                                            <th class="bg-primary text-white">Aceptados</th>
+                                            <th class="bg-primary text-white">Reemplazantes Aceptados</th>
+                                            <th class="bg-primary text-white">Reemplazante Aceptados en Espera</th>
+                                            <th class="bg-primary text-white">Rechazados</th>
+                                            <th class="bg-primary text-white">Renuncia</th>
+                                            <th class="bg-info text-white">Cerrado</th>
+                                            <th class="bg-info text-white">Fecha</th>
+                                            <th class="bg-info text-white">Usuario</th>
+                                            <th class="bg-warning text-white">Cerrado</th>
+                                            <th class="bg-warning text-white">Fecha</th>
+                                            <th class="bg-warning text-white">Usuario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="txt11">
+                                        <tr *ngFor="let p of stateProjects; let i = index" [class.table-danger]="p.uh == 0">
+                                            <td>{{i+1}}</td>
+                                            <th>{{p.active ? 'Activo' : 'Baja'}} <br> {{p.state}} </th>
+                                            <th><button class="btn btn-sm" (click)="updateName(p.id)" [disabled]="busy != null ? !busy.closed : false">&#x21ba;</button></th>
+                                            <th>{{p.metrica == 1 ? 'Cuantitativo' : (p.metrica == 2 ? 'Cualitativo' : '')}} <br>{{p.tipoProy}}</th>
+                                            <td class="{{p.codeC ? 'table-warning' : ''}}"><b>{{p.code}} <br> <small *ngIf="p.codeC" class="text-danger">{{p.codeC}}</small></b></td>
+                                            <td class="{{p.nameC ? 'table-warning' : ''}}"><b>{{p.name}} <br> <small *ngIf="p.nameC" class="text-danger">{{p.nameC}}</small></b></td>
+                                            <td>{{p.areaIntervencion}}</td>
+                                            <td>{{p.stateProject}}</td>
+                                            <td class="text-white {{p.uh != 0 && p.uh == p.confirm ? 'bg-success' : 'bg-danger'}}">{{p.uh}} <br> <small *ngIf="p.uhC != 0" class="text-white"><b>{{p.uhC}}</b></small></td>                                                
+                                            <td class="text-white {{p.uh != 0 && p.uh == p.confirm ? 'bg-success' : 'bg-danger'}}">{{p.confirm}}</td>
+                                            <td>{{p.acep}}</td>
+                                            <td>{{p.reemAcep}}</td>
+                                            <td>{{p.reemAcepEspera}}</td>
+                                            <td class="text-danger">{{p.rechazado}}</td>
+                                            <td>{{p.renuncia}}</td>
+                                            <td class="text-white {{p.iclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.iclose}}</td>
+                                            <td class="text-white {{p.iclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.dateIniClose}}</td>
+                                            <td class="text-white {{p.iclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.userIniClose}}</td>
+                                            <td class="text-white {{p.fclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.fclose}}</td>      
+                                            <td class="text-white {{p.fclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.dateFinClose}}</td>
+                                            <td class="text-white {{p.fclose == 'Si' ? 'bg-success' : 'bg-danger' }}">{{p.userFinClose}}</td>
+                                            <td>{{p.responsable}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>                                                                                                                        
+                </div>
+            </div>
+        </ng-template>
+    </ngb-tab>   
+</ngb-tabset>
+
+
+<br>
+<!--div class="row">
+  <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-warning">DATOS GENERALES</div>
+            <div class="card-header border border-warning">
+                <p><ngb-progressbar type="success" [value]="25">25 ecolque</ngb-progressbar></p>
+                <p><ngb-progressbar [showValue]="true" type="info" [value]="50">urtado</ngb-progressbar></p>
+                <p><ngb-progressbar showValue="true" type="warning" [value]="150" [max]="200"></ngb-progressbar></p>
+                <p><ngb-progressbar [showValue]="true" type="danger" [value]="150" [max]="150"></ngb-progressbar></p>
+            </div>
+        </div>
+  </div>
+  <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">DATOS GENERALES</div>
+            <div class="card-header border border-success"></div>
+        </div>
+  </div>  
+</div-->

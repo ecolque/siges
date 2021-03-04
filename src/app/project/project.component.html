@@ -1,0 +1,99 @@
+
+<div class="sticky-top">    
+    <small class="sticky-top bg-dark text-white float-sm-left" *ngIf="project?.name"><small class="bg-success text-white">{{project?.metricaId == 1 ? 'Viv.Nueva' : (project?.metricaId == 2 ? 'Cuali.' : '')}}</small><small class="bg-danger text-white">{{project?.urbano ? 'URB.' : (project?.rural ? 'RUR.' : 'URB./RUR.')}}</small> {{project?.name}}</small>
+    <small class="float-sm-left bg-danger text-white"><b> UH: {{project?.uh}}</b></small>
+    <h1 *ngIf="showPoints" class="float-sm-right {{register?.estado?.color}}">{{register?.puntaje}}</h1>
+    <strong class="badge badge-dark float-sm-right" *ngIf="register">{{register?.person.nombres}} {{register?.person.paterno}} {{register?.person.materno}} - {{register?.person.document}}</strong><br>      
+</div>   
+
+<div class="row">
+  <div class="col-sm-7">
+    <div class="row animate-left" [hidden]="!isSelectedSearchTypeProyect">
+      <div class="col-sm">
+            <ng-template #rt let-r="result" let-t="term">
+              <small><strong>{{ r.name}}</strong></small>
+            </ng-template>
+            <div class="input-group" >
+                <button class="btn btn-sm" type="button" (click)="resetPeople()">&#10008;</button>
+                <input id="typeahead-template" type="text" [(ngModel)]="project" [ngbTypeahead]="search" [resultTemplate]="rt"
+                  [inputFormatter]="formatter" class="form-control form-control-sm" placeholder="Escriba aqui para buscar un proyecto"/>
+                <button class="btn btn-primary" type="button" (click)="searchPeople()">Buscar</button>
+            </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-2">
+      <label class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" [(ngModel)]="buscarTodos" (click)="searchByTypeProject()">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Buscar por tipo de proyecto</span>
+      </label>
+      <!--div class="btn-group from-control form-control-sm" data-toggle="buttons"> 
+          <label class="btn-primary" ngbButtonLabel>
+              <input type="checkbox" ngbButton [(ngModel)]="buscarTodos" (click)="searchByTypeProject()" > Buscar por tipo de proyecto
+          </label>
+      </div-->
+  </div>    
+  <div class="col-sm-3">
+    <div class="btn-group">
+      <!--div *ngIf="project?.cerradoInicial"><span class="badge badge-light">{{project?.userCerradoInicial}}(Inicial)</span></div-->
+      <!--button *ngIf="project?.id && !project.cerradoInicial && isAcceses(12)" class="btn btn-sm btn-light" (click)="closeInicialProject()"><span class="badge badge-light"><img src="app/assets/images/open.png"></span> Cerrar Lista Inical?</button-->
+      <button *ngIf="project?.cerrado && project.cerradoInicial && isAcceses(2)" class="btn btn-sm btn-light" (click)="openProject()"><span class="badge badge-light"><img src="app/assets/images/closed.png"> {{project?.userCerrado}}</span> Abrir Proyecto?</button>
+      <!--button *ngIf="project?.id && !project.cerrado && project.cerradoInicial  && isAcceses(13)" class="btn btn-sm btn-light" (click)="closeProject()"><span class="badge badge-light"><img src="app/assets/images/open.png"></span> Cerrar Proyecto?</button-->
+    </div>
+  </div>       
+</div>
+
+<div class="row">
+    <div class="col col-lg-3 animate-zoom" [ngbCollapse]="isSelectedSearchTypeProyect">
+        <div class="card">
+            <h5 class="card-header  bg-primary text-white">Proyectos</h5>
+            <div class="card-body border border-primary">
+                <!--input id="filter" #filter (keyup)="tree.treeModel.filterNodes(filter.value)" placeholder="filter nodes"/>
+                <input id="filter2" #filter2 (keyup)="tree.treeModel.filterNodes(filter2.value, false)" placeholder="filter nodes"/>
+                <input id="filter3" #filter3 (keyup)="filterFn(filter3.value, tree.treeModel)" placeholder="filter nodes by fuzzy search"/>
+                  <button (click)="tree.treeModel.filterNodes(filter.value)">Buscar</button>
+                  <button (click)="tree.treeModel.clearFilter()">Clear Filter</button-->
+                <div style="height: 600px;">
+                    <tree-root #tree [focused]="true"  [nodes]="nodes" > <!--[options]="options"-->
+                      <ng-template #treeNodeTemplate let-node>
+                        <div title="{{node.data.name}}"  (click)="go(node.data)"><small>{{ node.data.name }}</small></div>                
+                      </ng-template>
+                    </tree-root>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <div class="{{classDivSearch}}" >
+          <div class="card">
+            <div class="card-header {{project?.cerrado ? 'bg-dark' : ''}} no-padding" >
+              <ul class="nav nav-tabs nav-pills nav-fill  border-top-0 {{register?.valid ? 'border-dark' : 'border-primary'}}">
+                <li class="nav-item">
+                  <a *ngIf="project.id != 0" [routerLink]="[project? project.id : 0, 'list']" [queryParams]="{regid:register? register.id : ''}" routerLinkActive="active" class="nav-link"><small><strong>LISTA</strong></small></a>
+                </li>
+                <li class="nav-item">
+                  <a *ngIf="register?.id" [routerLink]="[register? register.id : 0, 'edit']" routerLinkActive="active" class="nav-link"><small><strong>TITULAR</strong></small></a>
+                </li>
+                <li class="nav-item">
+                  <a *ngIf="register?.id && (register?.person?.residenciaPermanente || register?.person?.viviendaPropia)" [routerLink]="[register? register.id : 0, 'family']" routerLinkActive="active" class="nav-link"><small><strong>FAMILIA /INGRESOS </strong></small></a>
+                </li>
+                <li class="nav-item">
+                  <a *ngIf="register?.id && (register?.person?.residenciaPermanente || register?.person?.viviendaPropia)" [routerLink]="[register? register.id : 0, 'domicilio']" routerLinkActive="active" class="nav-link"><small><strong>DOMICILIO ACTUAL</strong></small></a>
+                </li>
+                <li class="nav-item">
+                  <a *ngIf="register?.id && (register?.person?.residenciaPermanente || register?.person?.viviendaPropia)" [routerLink]="[register? register.id : 0, 'tenencia']" routerLinkActive="active" class="nav-link"><small><strong>TERRENO /Serv. BASICOS /FOTOS /OBS.</strong></small></a>
+                </li>
+              </ul>
+            </div>
+            <!--a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">INGRESOS ECONOMICOS</a>
+              <a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">TENENCIA DE LA VIVIENDA/DATOS SERVICIOS BASICOS</a-->         
+            <div class="card-body" style="padding:0">
+              <div class="row">
+                  <div class="col-sm-12 {{project?.cerrado ? 'bg-dark' : ''}}">
+                      <router-outlet></router-outlet>
+                  </div>
+              </div>
+            </div>
+          </div>
+      </div>
+</div>

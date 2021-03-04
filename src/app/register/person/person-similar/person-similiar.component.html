@@ -1,0 +1,65 @@
+
+<div class="modal-header bg-primary text-white">    
+    <h6>Personas SIMILARES</h6>     
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">    
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <h6 class="card-header" >LISTA DE PERSONAS SIMILARES</h6>                          
+                <div class="card-body border">
+                    <div style="overflow: scroll;">
+                        <table class="table table-bordered table-sm table-hover table-responsive-sm" *ngIf="people">
+                            <thead class="bg-dark text-white text-center">
+                                <tr>                            
+                                    <th><small>DATOS DE</small></th>                                          
+                                    <th><small>Paterno</small></th>
+                                    <th><small>Materno</small></th>
+                                    <th><small>Nombre</small></th>
+                                    <th><small>Ap. Esp.</small></th>
+                                    <th><small>Num. Doc.</small></th>                                
+                                    <th><small>F. Nac.</small></th> 
+                                    <th><small>Estado Civil</small></th>                                
+                                    <th><small>Edad</small></th>
+                                    <th><small>Parentesco</small></th>                                
+                                    <th><small>Nombre Proyecto</small></th>
+                                    <th><small>Estado</small></th>
+                                    <th><small>Tipo</small></th>                                
+                                    <th><small>Observación</small></th>
+                                    <th></th>                                
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let person of people" class="{{person.error ? 'bg-danger text-white' : '' }}"> 
+                                    <td><small><b>{{person.beneficio}}</b></small></td>
+                                    <td><small>{{person.paterno}}</small></td>
+                                    <td><small>{{person.materno}}</small></td>
+                                    <td><small>{{person.nombres}}</small></td>
+                                    <td><small>{{person.especial}}</small></td>
+                                    <td><small><b>{{person.document}}</b> {{person.complementoVisible ? person.complemento : ''}}</small></td>                                
+                                    <td><small>{{person.fnacimiento}}</small></td>
+                                    <td><small>{{person.estadoCivil}}</small></td>
+                                    <td><small>{{person.edad}}</small></td>
+                                    <td><small>{{person.parentesco}}</small></td>                                
+                                    <td><small><b>{{person.codeProy}}</b> - {{person.nameProy}}</small></td>
+                                    <td><small>{{person.estado}}</small></td>
+                                    <td><small>{{person.tipo}}</small></td>                                                                
+                                    <td><small class="color-danger">{{person.observacion}}</small></td>  
+                                    <th>
+                                        <button *ngIf="person.procede" class="btn btn-sm btn-danger" (click)="selected(person)">Seleccionar</button>
+                                    </th>
+                                </tr>            
+                            </tbody>
+                        </table>           
+                    </div>                                                            
+                </div>
+            </div>
+        </div>
+    </div>                                      
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('')">Cerrar</button>
+</div>

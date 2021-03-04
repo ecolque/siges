@@ -1,0 +1,272 @@
+<div class="bg-danger text-white txt1" *ngIf="err">{{err}}</div>
+<div class="row">    
+    <div class="col-sm-5">
+            <div class="card">
+                <!--div class="card-header bg-primary text-white">Proyectos</div-->
+                <div class="card-body border border-primary" style="padding:0">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="txt1"><b>PROYECTOS </b>
+                                <!--button *ngIf="department != 0 && year != 0" class="btn btn-sm btn-warning float-right txt11" (click)="report()">Reportes</button-->
+                                <a href="{{URL_PRINT}}getInformeProject?ids={{projIds}}&r=0&byp=1" *ngIf="projIds.length" class="btn btn-sm btn-danger animate-right" target="_blank"><small>↓ ({{projIds.length}}) Por Proyecto</small></a>
+                                <a href="{{URL_PRINT}}getInformeProject?ids={{projIds}}&byp=0" *ngIf="projIds.length" class="btn btn-sm btn-danger animate-right" target="_blank"><small>↓ ({{projIds.length}}) Por Proyecto y Beneficiarios</small></a>                                
+                            </div>
+                        </div>
+                    </div>                    
+                    <div *ngIf="!isSpp" class="row" style="padding:6px;">                        
+                        <div class="col-sm-6">                                                 
+                            <select [(ngModel)]="department"
+                                    class="form-control form-control-sm" (change)="changeCbx()">
+                                    <!--option value="2">LA PAZ</option-->
+                                    <option *ngFor="let dept of departamentos" [value]="dept.id">{{dept.name}}</option>    
+                            </select>                                                         
+                        </div>
+                        <div class="col-sm-6">                            
+                            <div class="input-group">
+                                <select [(ngModel)]="year"                                                                      
+                                        class="form-control form-control-sm" (change)="changeCbx()">
+                                    <!--option value="2018">2018</option-->
+                                    <option *ngFor="let year of years" [value]="year">{{year}}</option>    
+                                </select>                    
+                                <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-primary" (click)="search()">Buscar</button>
+                                <button *ngIf="projects" class="btn btn-sm btn-danger" (click)="searchOnlyInspections()">Solo Ins.</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                    
+                    <!--ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Cras justo odio
+                            <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Dapibus ac facilisis in
+                            <span class="badge badge-primary badge-pill">2</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Morbi leo risus
+                            <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                    </ul-->
+
+                   <div *ngIf="projects" class="animate-left">                        
+                        <!--input type="text" class="form-control form-control-sm" placeholder="FILTRAR: codigo/nombre"-->
+                        <div class="border" style="height: 250px; overflow-y: scroll;"> 
+                           
+                                <table class="table table-sm table-bordered table-hover txt11">
+                                    <thead class="bg-dark text-white">
+                                        <tr>
+                                            <th>#</th>                                            
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Evaluacion</th>
+                                            <th>Inspección por Proyecto</th>
+                                            <th>Inpección por Solicitantes</th>     
+                                            <th></th>                                   
+                                        </tr>                                                                              
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let proy of projects; let i = index;" (click)="setClickedRowProject(proy.id)" [class.table-success]="proy.id == selectedRowProject" [class.text-dark]="proy.id == selectedRowProject"> 
+                                            <td>{{i+1}}</td>
+                                            <td>{{proy.code}}</td>
+                                            <td>{{proy.name}}</td>
+                                            <td><button class="btn btn-sm btn-info" (click)="openFormEvaluation(proy.id, proy.code)" *ngIf="proy.evaluations != 0">E. <span class="badge badge-light">{{proy.evaluations}}</span></button></td>
+                                            <td><button [disabled]="busy != null ? !busy.closed : false" *ngIf="proy.inspections != 0" class="btn btn-sm {{proy.color == null ? 'btn-danger' : proy.color}}" (click)="searchInspection(proy)">{{proy.inspections}} <small>Insp.</small> </button></td>
+                                            <td><button [disabled]="busy != null ? !busy.closed : false" *ngIf="proy.people != 0" class="btn btn-sm btn-warning" (click)="searchPerson(proy)">{{proy.people}} <small>Per.</small> </button></td>                          
+                                            <td>
+                                                <label class="custom-control custom-checkbox col-form-label-sm" >
+                                                    <input type="checkbox"  class="custom-control-input" [(ngModel)]="proy.selected" (change)="changeProjects(proy)">
+                                                    <span class="custom-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>                                
+                                </table>                                                                                    
+                        </div> 
+                    </div>        
+                            
+                    <!--div class="border border-primary" style="max-height: 650px; overflow: scroll; font-size:12px">
+                        <table class="table table-sm table-bordered table-hover txt1">                
+                            <thead class="thead-dark txt1">
+                                <th>Codigo/Nombre</th>                                          
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let proy of projects; let i = index;"  (click)="setClickedRow(proy.id)"   [class.table-success]="proy.id == selectedRow">                          
+                                    <td><small>{{proy.name}}</small></td>
+                                </tr>                      
+                            </tbody>
+                        </table>
+                    </div-->                                                   
+                </div>
+            </div>
+    </div>
+    <div class="col-sm-3 animate-right"  *ngIf="people">                               
+            <div class="card">
+                <!--div class="card-header">Beneficiarios</div-->
+                <div class="card-body border border-primary">  
+                    <label class="txt1"><b>BENEFICIARIOS</b></label>                              
+                    <!--input type="text" class="form-control form-control-sm" placeholder="FILTRAR: nombre/ci"--> 
+                    <div style="height: 250px; overflow: scroll;">
+                        <table class="table table-sm table-hover table-bordered txt11">
+                                <thead class="bg-dark text-white">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>                                    
+                                        <th>Insp.</th>
+                                    </tr>                                                                              
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let person of people; let i = index;" (click)="setClickedRowPerson(person.registerId)" [class.table-success]="person.registerId == selectedRowPerson" [class.text-dark]="person.registerId == selectedRowPerson">
+                                        <td>{{i+1}}</td>
+                                        <td>{{person.namePerson}}</td>
+                                        <td>{{person.statePerson}}</td>                                                                                        
+                                        <td><button [disabled]="busy != null ? !busy.closed : false" *ngIf="person.countInspection != 0" class="btn btn-sm {{person.color == null ? 'btn-danger' : person.color}}" (click)="getInspectionsByRegisterId(person.registerId, person.countInspection)">{{person.countInspection}} <small> Insp.</small></button></td>
+                                    </tr>                                               
+                                </tbody>
+                                
+                        </table>   
+                    </div>                                    
+                                
+                            
+                    <!--div class="border border-primary" style="max-height: 650px; overflow: scroll; font-size:12px">
+                        <table class="table table-sm table-bordered table-hover txt1">                
+                            <thead class="thead-dark txt1">
+                                <th>Codigo/Nombre</th>                                          
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let proy of projects; let i = index;"  (click)="setClickedRow(proy.id)"   [class.table-success]="proy.id == selectedRow">                          
+                                    <td><small>{{proy.name}}</small></td>
+                                </tr>                      
+                            </tbody>
+                        </table>
+                    </div-->                                                   
+                </div>
+            </div>                     
+    </div> 
+
+    
+    <div *ngIf="inspections" class="col-sm animate-right">
+            <div class="card ">                
+                <div class="card-body border border-primary txt11">  
+                    <label><b>INSPECCIONES </b>
+                        <a href="{{URL_PRINT}}getInformeInspeccion?ids={{insIds}}&pr={{projectId}}&r=0&byp=1" *ngIf="insIds.length > 0 && !people" class="btn btn-lg btn-danger animate-right" target="_blank"><small>↓ ({{insIds.length}})</small></a>
+                        <a href="{{URL_PRINT}}getInformeInspeccion?ids={{insIds}}&pr={{projectId}}&r={{registerId}}&byp=0" *ngIf="insIds.length > 0 && people && registerId != 0" class="btn btn-lg btn-danger animate-right" target="_blank"><small>↓ ({{insIds.length}})</small></a>
+                    </label>
+                    <div style="height: 250px; overflow: scroll;">
+                        <table class="table table-sm table-hover table-bordered">
+                                <thead class="bg-dark text-white">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Supervisor/Inspector</th>
+                                        <th>Nombre Inspección</th>                                                                            
+                                        <th>Hora Aprox de Inspección</th>
+                                        <th>Fotos</th>
+                                        <th>Recorrido</th>
+                                        <th><!--label class="custom-control custom-checkbox col-form-label-sm" >
+                                                <input type="checkbox"  class="custom-control-input">todos
+                                                <span class="custom-control-indicator"></span>
+                                            </label--> 
+                                        </th>
+                                    </tr>                                                                              
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let ins of inspections; let i = index;"  (click)="setClickedRowInspection(ins.id)" [class.table-success]="ins.id == selectedRowInspection" [class.text-dark]="ins.id == selectedRowPerson" >
+                                        <td>{{inspections.length - i}}</td>
+                                        <td>{{ins.user}}<br><b>{{ins.cargo}}</b></td>
+                                        <td><b>{{ins.description}}</b> <br><small>Fecha realizada: {{ins.date}};<br>Fecha cargada: {{ins.created}}</small></td>                                           
+                                        <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-success" (click)="getTime(ins)"> <label *ngIf="!ins.hr">&#9888;</label> {{ins.hr}}</button></td> 
+                                        <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-danger" (click)="getPhotos(ins.id)">{{ins.countPhoto}} <small>Fotos</small></button></td>                                        
+                                        <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm" (click)="getTraking(ins.id)"> <img src="app/assets/images/start.png"> VER</button></td>
+                                        <td>
+                                            <label class="custom-control custom-checkbox col-form-label-sm" >
+                                                <input type="checkbox"  class="custom-control-input" [(ngModel)]="ins.selected" (change)="changeInspections(ins)">
+                                                <span class="custom-control-indicator"></span>
+                                                <small>{{ins.id}}</small>
+                                            </label>                                            
+                                        </td>
+                                    </tr>                                               
+                                </tbody>                                
+                        </table>   
+                    </div>                                                                                                  
+                </div>
+
+                <!--label class="bg-dark text-white txt1 justify-content-between" style="height: 30px; padding: 6px"><b>INSPECCIONES</b></label>
+                <div class="card-top">                    
+                    <div class="list-group">
+                            <a class="list-group-item list-group-item-action flex-column align-items-start"  [class.list-group-item-success]="ins.id == selectedRowInspection"
+                                *ngFor="let ins of inspections; let i = index;" >
+                                <div class="d-flex w-100 justify-content-between" (click)="setClickedRowInspection(ins.id)"  (click)="getPhotos(ins.id)">
+                                        <b class="mb-1">{{ins.description}}</b>
+                                        <span><small>Fotos</small> <span  class="badge badge-success badge-pill">{{ins.countPhoto}}</span></span>
+                                </div>
+                                <div class="row">
+                                    <small>Fecha realizada: {{ins.date}}; Fecha cargada: {{ins.created}}</small>
+                                    <button (click)="alert('holas')">test</button>
+                                    <button (click)="alert('holas2')">test2</button>
+                                </div>                            
+                            </a>                                               
+                    </div>
+                </div-->                
+            </div>
+
+            <!--table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th><small><b>INSPECCIONES</b></small></th>                        
+                        <th><small><b>FOTOS</b></small></th>
+                    </tr>                                                                              
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ins of inspections; let i = index;" (click)="setClickedRowInspection(ins.id)" [class.table-success]="ins.id == selectedRowInspection" [class.text-dark]="ins.id == selectedRowInspection" (click)="getPhotos(ins.id)">
+                        <td><small>{{ins.description}}; <br> <b>Fecha realizada:</b> {{ins.date}};<br> <b>Fecha cargada: </b>{{ins.created}}</small></td>
+                        <td><button class="btn btn-sm btn-danger"><small>{{ins.countPhoto}}</small></button></td>
+                    </tr>                     
+                </tbody>                    
+            </table-->   
+    </div>   
+</div>
+
+<div class="row">         
+    <div class="col-sm-6 animate-left" *ngIf="photos">
+        <div class="border border-primary " style="height: 950px; overflow-y: scroll;">                          
+            <div class="row">
+                    <div class="card col-sm-6"   *ngFor="let pto of photos; let i = index;">                                                         
+                        <img *ngIf="pto.id > 1769326" class="card-img-top"   [src]="'data:image/jpeg;base64,'+ pto.thumb | safeHtml" alt="First slide">
+                        <img *ngIf="pto.id <= 1769326" class="card-img-top"   [src]="'http://ssp.aevivienda.gob.bo/sspUp/' + pto.id + 's.jpg'" alt="First slide">
+                        <div class="card-body">                            
+                            <small>
+                                <b>Descripción: </b>{{pto.description}} <br> 
+                                <b>Fecha Realizada: </b>  {{pto.date}} <br>
+                                <b>Fecha Cargada: </b> {{pto.created}} <br> 
+                                <b>Lat Lng: </b>{{pto.lat}}, {{pto.lng}} <small>({{pto.id}})</small>
+                            </small> 
+                                                          
+                            <div class="btn-group">
+                                <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-primary" (click)="zoomImg(pto)">Ampliar</button><button class="btn btn-sm btn-danger" (click)="findMarker(pto.id)">Ver Mapa</button>
+                            </div>
+                        </div>
+                    </div>                                              
+            </div>              
+        </div>            
+    </div> 
+    <div class="col-sm-6">
+        <div class="card" *ngIf="mapPhotos">             
+            <div class="card-body border border-primary padding">
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [mapTypeControl]='true' [fullscreenControl]="true">
+                    <agm-marker *ngFor="let m of mapPhotos; let i = index;" [latitude]="m.lat" [longitude]="m.lng" [iconUrl]="m.icon">
+                        <!-- agm-info-window>
+                            <strong *ngIf="{{p.windows = true}}">{{p.date}}</strong>
+                        </agm-info-window -->
+                    </agm-marker>                                                   
+                    <!--agm-polyline *ngFor="let time of times;" [strokeColor]="time.color" strokeWeight="0.2">
+                            <agm-polyline-point  *ngFor="let l of time.locations;" [latitude]="l.lat" [longitude]="l.lng">
+                            </agm-polyline-point>                               
+                    </agm-polyline-->
+                </agm-map>
+            </div>
+        </div>        
+    </div>          
+</div>
+  

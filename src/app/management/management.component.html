@@ -1,0 +1,330 @@
+<div class="container">
+    <ngb-tabset>
+        <ngb-tab title="Gestión Titular">
+            <ng-template ngbTabContent>
+                <div class="container" style="background: white">                    
+                    <div class="row" *ngIf="isAcceses(3) || isAcceses(5)">
+                        <div class="col-sm-6">                                
+                            <label class="col-form-label-sm" >Número de Documento:</label>
+                            <div class="input-group">
+                                <input type="text" [(ngModel)]="dni.document" class="form-control" placeholder="Ingrese Número de CI">                                                                
+                            </div>                            
+                        </div>
+                        <div class="col-sm-6">
+                            <small class="btn-danger">IMPORTANTE: Una vez realizado el cambio de proyecto y/o TITULAR, ASEGURESE que el SOCIAL actualice el PARENTESCO y completar datos del TITULAR.</small>   
+                        </div>                        
+                    </div>                    
+                    <br>
+                    <div class="card" *ngIf="isAcceses(3)">
+                        <div class="card-header bg-primary text-white" style="padding:4px 12px">CAMBIAR DE PROYECTO A:<b> TITULAR Y PERSONAS EXCLUIDAS</b> 
+                            <button class="btn btn-sm btn-danger float-right" (click)="changeProject()">BUSCAR - {{dni.document}}</button>
+                        </div>
+                        <div *ngIf="people && people.length > 0" class="card-body border border-primary">
+                            <div class="row">                                        
+                                <div  class="col-sm-12 border">                      
+                                    <h6>Resultado</h6>
+                                    <table class="table table-sm table-hover table-bordered" style="font-size:12px">
+                                        <thead class="bg-dark text-white text-center">
+                                            <tr>
+                                                <th colspan="8">Titular</th>
+                                                <th class="bg-danger" colspan="4">Proyecto</th>
+                                                <th class="bg-info" colspan="2">Estado</th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>Id</th>
+                                                <th>Nombre</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Especial</th>
+                                                <th>F. Nacimiento</th>
+                                                <th>Documento</th>
+                                                <th class="bg-danger">Codigo</th>
+                                                <th class="bg-danger">Nombre</th>
+                                                <th class="bg-danger">Gestion</th>
+                                                <th class="bg-danger">UH</th>
+                                                <th class="bg-info">Estado</th>
+                                                <th class="bg-info">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let p of people"  (click)="changePeople(p)" [class.table-success]="p.select">
+                                                <td>
+                                                    <label class="custom-control custom-checkbox" >
+                                                        <input [checked]="p.select" type="checkbox" class="custom-control-input">
+                                                        <span class="custom-control-indicator bg-info"></span>                                    
+                                                        <span class="custom-control-indicator bg-info"></span> 
+                                                    </label> 
+                                                </td>
+                                                <td>{{p.registerId}}</td>
+                                                <td>{{p.data.nombres}}</td>
+                                                <td>{{p.data.paterno}}</td>
+                                                <td>{{p.data.materno}}</td>
+                                                <td>{{p.data.especial}}</td>
+                                                <td>{{p.data.birthDate}}</td>
+                                                <td>{{p.data.documento}}</td>
+                                                <td><b>{{p.projectCode}}</b></td>
+                                                <td><b>{{p.projectName}}</b></td>
+                                                <td>{{p.gestion}}</td>
+                                                <td>{{p.uh}}</td>
+                                                <td><strong>{{p.estado}}</strong></td>
+                                                <td> <button [disabled]="!p.keep" class="btn btn-sm btn-danger" (click)="keePerson(p.registerId)">Mantener en Proyecto</button> </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>                                       
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 border">       
+                                    <h6>Seleccione Proyecto</h6>
+                                    <ng-template #rt let-r="result" let-t="term">  
+                                        <small><strong>{{ r.name}}</strong></small>
+                                    </ng-template>
+                                    <input id="typeahead-template" type="text" [(ngModel)]="project" [ngbTypeahead]="search" [resultTemplate]="rt"
+                                            [inputFormatter]="formatter" class="form-control form-control-sm" placeholder="Escriba aqui para buscar un proyecto"/>
+                                    <br>
+                                </div>   
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-sm btn-primary" (click)="saveChangeProjectPerson()" [disabled]="busy != null ? !busy.closed : false">GUARDAR</button>
+                                    <label class="badge badge-danger">{{errors}}</label><br>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" *ngIf="isAcceses(5)">
+                        <div class="card-header bg-info text-white" style="padding:4px 12px">CAMBIO DE TITULAR
+                            <button class="btn btn-sm btn-danger float-right" (click)="getCompFamily()" [disabled]="busy != null ? !busy.closed : false">BUSCAR - {{dni.document}}</button>
+                        </div>
+                        <div class="card-body border border-info" *ngIf="comFam && comFam.length > 0">
+                                <div class="row" >
+                                    <div class="col-sm-12" *ngFor="let data of comFam">
+                                        <table class="table table-sm table-bordered"  style="font-size:12px" >                        
+                                            <thead class="bg-dark text-white text-center">
+                                                <tr>
+                                                    <th colspan="2">TITULAR</th>
+                                                    <th rowspan="2">COMPONENTE FAMILIAR</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nombres</th>
+                                                    <th>Documento</th>                                                                                                       
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>{{data.person.paterno}} {{data.person.materno}} {{data.person.nombres}}</th>
+                                                    <th>{{data.person.documento}}</th>
+                                                    <td>
+                                                        <table class="table">
+                                                            <tr class="bg-info text-white text-center">
+                                                                <td>Nombres</td>
+                                                                <td>Documento</td>
+                                                                <th>Parentesco</th>                                                
+                                                            </tr>
+                                                            <tr *ngFor="let fam of data.families" (click)="setClickedRow(fam.personId)"  [class.bg-success]="fam.personId === selectedRow" [class.text-white]="fam.personId === selectedRow">
+                                                                <td (click)="selectedPerson(data.personId, fam)">{{fam.person.paterno}} {{fam.person.materno}} {{fam.person.nombres}}</td>
+                                                                <td (click)="selectedPerson(data.personId, fam)">{{fam.person.documento}}</td>
+                                                                <td (click)="selectedPerson(data.personId, fam)">{{fam.parentesco}}</td>                                                
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>  
+                                        
+                                        <input type="text" class="form-control" placeholder="Ingrese Causal de Cambio de Titular" [(ngModel)]="changeHolder.causal">
+                                        <button class="btn-primary" (click)="saveChangeHolder()" [disabled]="busy != null ? !busy.closed : false">Guardar</button>
+                                        
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>            
+            </ng-template>
+        </ngb-tab>        
+        <ngb-tab title="CONTROL DE CALIDAD">
+            <ng-template ngbTabContent>                
+                <div class="container" style="background: white">
+                    <br>
+                    <div class="card">
+                        <div class="card-header bg-danger text-white"  style="padding:6px 12px">Verificacion Doble Beneficio</div>
+                        <div class="card-body border border-danger">
+                            <div class="row">
+                                <div class="col-sm-6">                                                 
+                                    <select [(ngModel)]="department"
+                                            class="form-control form-control-sm">
+                                            <!--option value="2">LA PAZ</option-->
+                                            <option *ngFor="let dept of departaments" [value]="dept.id">{{dept.name}}</option>    
+                                    </select>                                                         
+                                </div>
+                                <div class="col-sm-6">                            
+                                    <div class="input-group">
+                                        <select [(ngModel)]="year"                                                     
+                                                class="form-control form-control-sm">                                            
+                                            <option *ngFor="let year of years" [value]="year">{{year}}</option>    
+                                        </select>                    
+                                        <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-primary" (click)="searchProjectsDobleBeneficio()">Buscar</button>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="max-height: 550px; overflow: scroll;">
+                                <table class="table table-sm table-bordered txt11">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Codigo</th>
+                                            <th>Nombre</th>
+                                            <th>Aceptados</th>
+                                            <th>Nro doble beneficio</th>
+                                            <th>Ultima Actualizacion</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let p of projects">
+                                            <td>{{p.id}}</td>
+                                            <td>{{p.code}}</td>
+                                            <td>{{p.name}}</td>
+                                            <td>{{p.uh}}</td>
+                                            <td><button (click)="showDobleBeneficio(p.id)" class="badge badge-pill badge-danger txt12">en desarrllo</button></td>
+                                            <td>02/01/2019</td>
+                                            <td><button (click)="verificarNuevamente(p.id)" class="btn btn-sm btn-warning">verificar</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-header bg-warning text-white"  style="padding:6px 12px">Programas Autorizados <small>(Solo proyectos de 2018 en adelante)</small></div>
+                        <div class="card-body border border-warning">
+                            <label class="col-form-label-sm">Programa:</label>
+                            <div class="input-group">
+                                <select class="form-control" [(ngModel)]="typeProgram">
+                                    <option value="0" disabled>Seleccione Programa</option>
+                                    <option value="1">PVS</option>
+                                    <option value="2">UEVE</option>
+                                    <option value="3">TITULACION</option>
+                                    <option value="4">TRESPORMIL</option>
+                                </select>
+                                <button class="btn btn-primary" (click)="searchDataByTypeProgram()">Buscar</button>
+                            </div>
+                            <br>
+                            <div style="max-height: 550px; overflow: scroll;" *ngIf="typePrograms && typePrograms.length > 0">
+                                <table class="table table-sm table-bordered txt12">
+                                    <thead class="bg-dark text-white text-center">
+                                        <tr>
+                                            <th colspan="5">DATOS SOLICITANTE/BENEFICIARIO</th>
+                                            <th colspan="6">DATOS PROGRAMA</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Código_Proyecto</th>
+                                            <th>Nombres</th>
+                                            <th>Nro. Documento</th>
+                                            <th>Parentesco</th>
+                                            <th>Causal</th>
+                                            <th>Código Proyecto</th>
+                                            <th>Nombre Proyecto</th>
+                                            <th>Nombres</th>
+                                            <th>Nro. Documento</th>
+                                            <th>Nombres Conyuge</th>
+                                            <th>Nro. Documento Conyuge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let t of typePrograms">
+                                            <td><b>{{t.code}}</b></td>
+                                            <td>{{t.name}}</td>
+                                            <td>{{t.doc}}</td>
+                                            <td>{{t.relation}}</td>
+                                            <td>{{t.causal}}</td>                                        
+                                            <td>{{t.projectCode}}</td>
+                                            <td>{{t.projectName}}</td>
+                                            <td>{{t.benName}}</td>
+                                            <td>{{t.benDoc}}</td>
+                                            <td>{{t.benNameWife}}</td>
+                                            <td>{{t.benDocWife}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>                    
+                </div>                    
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="PREGIPS">
+            <ng-template ngbTabContent>
+                <div class="container" style="background: white">
+                    <br>
+                    <div class="input-group">
+                        <ng-template #rt2 let-r="result" let-t="term">  
+                                <small><strong>{{ r.name}}</strong></small>
+                        </ng-template>    
+                        <button class="btn btn-sm" type="button" (click)="resetProject()">&#10008;</button>
+                        <input id="typeahead-template" type="text" [(ngModel)]="project2" [ngbTypeahead]="search2" [resultTemplate]="rt2"
+                                [inputFormatter]="formatter" class="form-control form-control-sm" placeholder="Escriba aqui para buscar un proyecto"/>
+                        <button class="btn btn-sm btn-warning" (click)="searchPeople()" [disabled]="busy != null ? !busy.closed : false">Buscar Beneficiarios</button>                        
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">            
+                            <div class="card">
+                                <div class="card-header bg-warning text-white" style="padding:6px 12px">
+                                    DATOS PREGIPS                    
+                                </div>
+                                <div class="card-body border border-warning">
+                                    <div style="max-height: 550px; overflow: scroll;" *ngIf="people2.length > 0">
+                                        <table class="table table-sm table-hover txt11">
+                                            <thead>
+                                                <th>#</th>
+                                                <th>id</th>
+                                                <th>Nombres</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Documento</th>
+                                                <th>Estado</th>
+                                                <th>Estado Probreza</th>
+                                                <th>Gasto Percapita</th>
+                                                <th>Reporte</th>                                                
+                                                <th></th>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let p of people2; let i = index;">
+                                                    <td>{{i+1}}</td>
+                                                    <td>{{p.id}}</td>
+                                                    <td>{{p.nombres}}<br><small class="text-danger" *ngIf="p.observacion">{{p.observacion}}</small></td>
+                                                    <td>{{p.paterno}}</td>
+                                                    <td>{{p.materno}}</td>
+                                                    <td>{{p.document}}</td>
+                                                    <td>{{p.estado}}</td>
+                                                    <td>{{p.codeProy}}</td>
+                                                    <td>{{p.especial}}</td>
+                                                    <td><a *ngIf="p.complemento" class="btn btn-sm btn-info txt11" href="{{p.complemento}}" target="_blank">Reporte</a></td>
+                                                    <!--td><button class="btn btn-sm btn-outline-danger txt11" (click)="editPeople(p.id)">Editar</button></td-->
+                                                    <td><button class="btn btn-sm btn-outline-warning txt11" (click)="validateRegisterPregips(p.id)" [disabled]="busy2 != null ? !busy2.closed : false">&#8593;</button></td>
+                                                </tr>                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div *ngIf="people2.length <= 0" class="text-danger"><small>No hay datos</small></div>
+                                </div>
+                                <div class="card-footer bg-warning" style="padding:0px 12px" *ngIf="people2.length > 0">
+                                    <button class="btn btn-sm btn-warning text-white" (click)="validatePregips()" [disabled]="busy2 != null ? !busy2.closed : false">ENVIAR TODOS A PREGIPS &#8593;</button>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>                    
+                    <br>    
+                </div>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+</div>    

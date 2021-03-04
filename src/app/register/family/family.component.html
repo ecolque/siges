@@ -1,0 +1,321 @@
+<img *ngIf="busy != null ? !busy.closed : false" src="app/assets/images/loader.gif">
+<div class="animate-right">
+<div class="row">
+    <div class="col-sm-12" >
+        <div class="card">
+            <h6 class="card-header bg-primary text-white">CARACTERISTICAS DE LOS COMPONENTES DE LA FAMILIA</h6>   
+            <div class="card-body border border-primary">          
+                <div class="row">
+                    <div class="col-sm">                        
+                        <button *ngIf="isAcceses(3)" (click)="addFamily()" class="float-left btn btn-primary">+ Nuevo </button>      
+                        <p class="col-form-label-sm text-right"><strong>TOTAL INGRESOS, TITULAR + FAMLIA:</strong></p> 
+                    </div>
+                    <div class="col-sm">
+                            <h4 class="text-left">{{totalIngresos}}<small> bs</small></h4> 
+                    </div> 
+                    <div class="col-sm">
+                        <button [disabled]="(busySegip != null ? !busySegip.closed : false) || people.length == 0" class="float-right btn btn-info btn-sm" (click)="validateSegip()"><small>Validar Con SEGIP</small></button>
+                    </div>                   
+                </div>                            
+                <div class="row border border-primary" style="max-height: 650px; overflow: scroll;">
+                    <table class="table table-sm table-hover table-responsive-sm table-bordered table-striped">                                    
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th>#</th>                                                                        
+                                <th><small>Nombre</small></th>
+                                <th><small>Paterno</small></th>
+                                <th><small>Materno</small></th>
+                                <th><small>Ap. Especial</small></th>
+                                <th><small>Num. Doc.</small></th>    
+                                <th><small>Exp.</small></th>
+                                <th><small>F.Nac.</small></th>
+                                <th><small>Edad</small></th>
+                                <th><small>Tercera Edad</small></th>
+                                <th><small>Discapacidad</small></th>
+                                <th><small>Asalariado</small></th>
+                                <th><small>Act. Económica</small></th>
+                                <th><small>Ingreso</small></th>                     
+                                <th><small>Parentesco</small></th>  
+                                <th><small>C/Entidad</small></th>     
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody> <!-- (dblclick)="edit(reg.id)" (click)="setRegisterSelected(reg)""-->
+                        <tr *ngFor="let person of people; let i = index;"  (click)="setClickedRow(person.id)"  [class.table-success]="person.id == selectedRow">
+                            <th scope="row">{{i+1}}</th>                
+                            <td (dblclick)="editFamily(person, i)"><small class="{{person.nombres != person.nameS ? 'text-danger' : ''}}">{{person.nombres}}</small><div class="txt13 text-primary">{{person.nameS}}</div></td>
+                            <td (dblclick)="editFamily(person, i)"><small class="{{person.paterno != person.fnameS ? 'text-danger' : ''}}">{{person.paterno}}</small><div class="txt13 text-primary">{{person.fnameS}}</div></td>
+                            <td (dblclick)="editFamily(person, i)"><small class="{{person.materno != person.lnameS ? 'text-danger' : ''}}">{{person.materno}}</small><div class="txt13 text-primary">{{person.lnameS}}</div></td>                                                        
+                            <td (dblclick)="editFamily(person, i)"><small>{{person.especial}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small class="{{person.document != person.documentS ? 'text-danger' : ''}}"><strong>{{person.document}}</strong></small><div class="txt13 text-primary">{{person.documentS}}</div></td>
+                            <td (dblclick)="editFamily(person, i)"><small>{{person.expedido.name}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small>{{person.fnac.year}}-{{person.fnac.month}}-{{person.fnac.day}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small>{{person.edad}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small class="badge badge-danger">{{person.edad >= 60 ? 'SI' : ''}}</small></td>
+                            <!--td (click)="setRegisterSelected(reg)">{{person.expedido.name}}</td-->                            
+                            <td (dblclick)="editFamily(person, i)"><small class="badge badge-danger">{{person.gradoDiscapacidad?.id > 0 ? '&#9855;' : ''}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small><strong>{{person.asalariado ? 'SI' : ''}}</strong></small></td>
+                            <td (dblclick)="editFamily(person, i)"><small>{{person.actEconomica?.name}}</small></td>
+                            <td (dblclick)="editFamily(person, i)"><small><strong>{{person.ingreso > 0 ? person.ingreso : ''}}</strong></small></td>                        
+                            <td (dblclick)="editFamily(person, i)"><small><strong>{{person.parentesco.name}}</strong></small></td>
+                            <td (click)="setRegisterSelected(reg)"> <!--Entidad-->                            
+                                <span class="badge badge-pill badge-secondary">{{person.entityS}}</span>
+                                <span class="txt13 badge badge-pill badge-secondary">{{person.obsS}}</span>
+                                <button *ngIf="person.employee" class="btn btn-sm btn-warning" ngbTooltip="se encotró registros en AEV" (click)="getEmployee(person)">웃</button>
+                            </td>
+                            <!--td (dblclick)="edit(reg.id)" (click)="setRegisterSelected(reg)"><small><b>{{reg.persona.document}} {{reg.person.typeDocument.name}}</b></small></td--> 
+                            <td><button (click)="editFamily(person, i)" type="button" class="btn btn-warning btn-sm">Editar</button></td>
+                            <td><button *ngIf="isAcceses(3)" (click)="deleteFamily(person.id, i)" type="button" class="btn btn-danger btn-sm"> Eliminar</button></td>            
+                        </tr>                     
+                        </tbody>
+                    </table> 
+                </div>                
+            </div> 
+        </div>                             
+    </div>    
+</div>    
+<br>
+
+<fieldset [disabled]="!isAcceses(3)">
+        <div *ngIf="showIngresos" class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <h6 class="card-header bg-primary text-white">INGRESOS ECONÓMICOS DE LA FAMILIA</h6> 
+                    <div class="card-body border border-primary">                                                    
+                        <form *ngIf="form" [formGroup]="form" #f="ngForm" (ngSubmit)="onSubmitIngreso(f)" >
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label-sm"><strong>Tiene Deudas?</strong></label> 
+                                    <div class="row">                                                
+                                        <div class="col-sm-2">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="true"  
+                                                            required  
+                                                            formControlName="deuda" 
+                                                            type="radio" class="custom-control-input"
+                                                            class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">Si</span>
+                                            </label>                                                 
+                                        </div>
+                                        <div class="col-sm-2">                                 
+                                                <label class="custom-control custom-radio">
+                                                    <input  [value]="false"  
+                                                                required  
+                                                                formControlName="deuda" 
+                                                                type="radio" class="custom-control-input"
+                                                                class="custom-control-input form-control-sm"> 
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">No</span>
+                                                </label>                                                             
+                                        </div>                              
+                                    </div>  
+                                    <div class="row"  *ngIf="form.controls.deuda.value">
+                                        <div class="col-sm">     
+                                            <label class="custom-control custom-checkbox">
+                                                    <input 
+                                                            formControlName="deudaFinanciera" 
+                                                            type="checkbox" 
+                                                            class="custom-control-input">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description"
+                                                        [class.text-danger]="form.controls.deudaFinanciera.errors != null && form.controls.deudaFinanciera.errors?.msg != null">
+                                                        Entidad financiera
+                                                    </span>                                           
+                                            </label>                                                                  
+                                            <small *ngIf="form.controls.deudaFinanciera.errors" class="text-danger">
+                                                    {{form.controls.deudaFinanciera.errors?.msg}}                        
+                                            </small>   
+                                        </div>
+
+                                        <div class="col-sm">     
+                                                <label class="custom-control custom-checkbox">
+                                                        <input formControlName="deudaParticular" type="checkbox" class="custom-control-input">
+                                                        <span class="custom-control-indicator"></span>
+                                                        <span class="custom-control-description"
+                                                                [class.text-danger]="form.controls.deudaParticular.errors != null && form.controls.deudaParticular.errors?.msg != null">
+                                                            Personas particulares
+                                                        </span>
+                                                </label>      
+                                                <small *ngIf="form.controls.deudaParticular.errors" class="text-danger">
+                                                        {{form.controls.deudaParticular.errors?.msg}}                        
+                                                </small>                             
+                                            </div>
+                                    </div> 
+                                </div>  
+                                <div class="col-sm">
+                                    <label class="col-form-label-sm"><strong>Usted realiza o realizo el aporte patronal para Vivienda?</strong></label>
+                                    <div class="row">                                                
+                                        <div class="col-sm-2">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="true"  
+                                                            required  
+                                                            formControlName="aportePatronal" 
+                                                            type="radio" class="custom-control-input"
+                                                            class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">Si</span>
+                                            </label>             
+                                        </div>                            
+                                        <div class="col-sm-2">                                 
+                                                <label class="custom-control custom-radio">
+                                                    <input  [value]="false"  
+                                                                required  
+                                                                formControlName="aportePatronal" 
+                                                                type="radio" class="custom-control-input"
+                                                                class="custom-control-input form-control-sm"> 
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">No</span>
+                                                </label>                                                             
+                                        </div>                              
+                                    </div>  
+                                    <div class="row"  *ngIf="form.controls.aportePatronal.value">
+                                        <div class="col-sm">     
+                                            <label class="col-form-label-sm">Número de años trabajados <strong class="text-danger">(*)</strong></label>
+                                            <input  required 
+                                                    formControlName="aniosTrabajo"  
+                                                    type="number" 
+                                                    class="form-control form-control-sm"
+                                                    [class.is-invalid]="(!form.controls.aniosTrabajo.valid && form.controls.aniosTrabajo.touched) || (form.controls.aniosTrabajo.errors != null && form.controls.aniosTrabajo.errors?.msg != null)"> 
+                                            <small *ngIf="form.controls.aniosTrabajo.errors" class="invalid-feedback">
+                                                    {{form.controls.aniosTrabajo.errors?.msg}}                        
+                                            </small>                                    
+                                        </div>
+
+                                        <div class="col-sm">     
+                                            <label class="col-form-label-sm">Fecha del ultimo aporte:</label>
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    <label class="col-form-label-sm">Mes</label>
+                                                    <input  required 
+                                                            formControlName="mesAporte"  
+                                                            type="number" 
+                                                            class="form-control form-control-sm"
+                                                            [class.is-invalid]="(!form.controls.mesAporte.valid && form.controls.mesAporte.touched) || (form.controls.mesAporte.errors != null && form.controls.mesAporte.errors?.msg != null)"> 
+                                                    <small *ngIf="form.controls.mesAporte.errors" class="invalid-feedback">
+                                                            {{form.controls.mesAporte.errors?.msg}}                        
+                                                    </small>  
+                                                </div>
+                                                <div class="col-sm">
+                                                    <label class="col-form-label-sm">Año</label>
+                                                    <input  required 
+                                                            formControlName="anioAporte"  
+                                                            type="number" 
+                                                            class="form-control form-control-sm"
+                                                            [class.is-invalid]="(!form.controls.anioAporte.valid && form.controls.anioAporte.touched) || (form.controls.anioAporte.errors != null && form.controls.anioAporte.errors?.msg != null)"> 
+                                                    <small *ngIf="form.controls.anioAporte.errors" class="invalid-feedback">
+                                                            {{form.controls.anioAporte.errors?.msg}}                        
+                                                    </small>  
+                                                </div>
+                                            </div>                            
+                                        </div>                               
+                                    </div> 
+                                </div> 
+                                <div class="col-sm">
+                                    <label class="col-form-label-sm"><strong>Manifiesta compromiso para cumplir con el aporte propio:</strong></label>
+                                    <div class="row">                                                
+                                        <div class="col-sm-2">
+                                            <label class="custom-control custom-radio">
+                                                <input  [value]="true"  
+                                                            required  
+                                                            formControlName="aportePropio" 
+                                                            type="radio" class="custom-control-input"
+                                                            class="custom-control-input form-control-sm"> 
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">Si</span>
+                                            </label>             
+                                        </div>                            
+                                        <div class="col-sm-2">                                 
+                                                <label class="custom-control custom-radio">
+                                                    <input  [value]="false"  
+                                                                required  
+                                                                formControlName="aportePropio" 
+                                                                type="radio" class="custom-control-input"
+                                                                class="custom-control-input form-control-sm"> 
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">No</span>
+                                                </label>                                                             
+                                        </div>                              
+                                    </div>                          
+                                    <div class="row"  *ngIf="form.controls.aportePropio.value">
+                                        <div class="col-sm">     
+                                            <label class="custom-control custom-checkbox">
+                                                    <input formControlName="aporteManoObra"  type="checkbox" class="custom-control-input">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">Mano de Obra</span>
+                                            </label>                                 
+                                        </div>
+                                        <div class="col-sm">     
+                                            <label class="custom-control custom-checkbox">
+                                                    <input formControlName="aporteMaterialContruccion" type="checkbox" class="custom-control-input">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">Material de Contrucción</span>
+                                            </label>                                 
+                                        </div>                                
+                                    </div>
+                                    <div class="row" *ngIf="form.controls.aportePropio.value">
+                                        <div class="col-sm">  
+                                            <label class="col-form-label-sm">Otros</label>
+                                            <input  required 
+                                                    formControlName="aporteOtros"  
+                                                    type="text" 
+                                                    class="form-control form-control-sm"
+                                                    [class.is-invalid]="(!form.controls.aporteOtros.valid && form.controls.aporteOtros.touched) || (form.controls.aporteOtros.errors != null && form.controls.aporteOtros.errors?.msg != null)"> 
+                                            <small *ngIf="form.controls.aporteOtros.errors" class="invalid-feedback">
+                                                    {{form.controls.aporteOtros.errors?.msg}}                        
+                                            </small>  
+                                        </div>
+                                    </div>
+                                </div>                                                                                               
+                            </div>            
+                            <div class="row">
+                                <div class="col-sm">   
+                                    <button [disabled]="busy != null ? !busy.closed : false" type="submit" class="btn btn-primary">Guardar</button>    
+                                </div>
+                            </div> 
+                        </form>            
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showCredito && credito" class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <h6 class="card-header bg-primary text-white">DATOS DE SIMULACION DE CREDITO</h6> 
+                    <div class="card-body border border-primary">
+                        <small>
+                                1. ¿A cuánto alcanza tus ingresos liquidos mensuales? (Bs.) <b>{{credito.ingreso}}</b><br>                        
+                                2. ¿A cuanto asciende tus ingresos adicionales o de tu conyuge (si corresponde)? (Bs.) <b>{{credito.ingresoConyugue}}</b><br>
+                                3. ¿Tienes préstamos en otras entidades financieras? <b>{{credito.prestamo == 1 ? "SI" : "NO"}}</b><br>
+                                3.1 ¿Cuánto pagas mensualmente por tus prestamos en otras entidades financieras? <b>{{credito.prestamoPago}}</b><br>    
+                                4. ¿Vives en casa Alquilada? <b>{{credito.viveEnAlquier == 1 ? "SI" : "NO"}}</b><br>
+                                4.1 ¿Cuánto pagas mensualmente de alquiler? <b>{{credito.montoPagoAlquiler}}</b><br>    
+                                5. ¿Por cuántos miembros esta compuesto la unidad familiar? <b>{{credito.miembrosFamilia}}</b><br> 
+                                7. ¿Usted cuenta con aporte propio? <b>{{credito.cuentaAportePropio == 1 ? "SI" : "NO"}}</b><br>
+                                7.1. ¿A cuanto alcanza su aporte propio? (AHORRO EN EFECTIVO Y/O ANTICRETICO) ($us) <b>{{credito.montoAportePropio}}</b><br>    
+                                8. ¿Es casado o conviviente? <b>{{credito.escasado == 1 ? "SI" : "NO"}}</b> <br>
+                        </small>                                                  
+                        <b>
+                            Capacidad Prestamo (Bs.) {{credito.capacidadPrestamo}} <br>                    
+                            Capacidad Endeudamiento (Bs.) {{credito.capacidadEndeudamiento}}
+                        </b>               
+                    </div>
+                </div>
+            </div>
+        </div>
+</fieldset>
+
+<ngb-alert *ngIf="errors" style="max-height: 80px; overflow-y: scroll; padding:0" class="fixed-bottom {{bgClass}} text-white" type="custom"  (close)="errors = null"><strong *ngFor="let e of errors">{{e.msg}}<br></strong></ngb-alert>
+
+<div class="row">
+    <div class="col-sm-12">
+        <nav class="navbar navbar-inverse bg-primary">        
+            <button class="btn btn-primary btn-sm" (click)="goBack()">&larr; Atras</button>         
+            <button *ngIf="registerId != 0" type="button" class="float-right btn btn-sm btn-primary" (click)="goNext()">Siguiente &rarr;</button>            
+        </nav>
+    </div>
+</div>
+
+</div>

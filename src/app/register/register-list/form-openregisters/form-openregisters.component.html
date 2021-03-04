@@ -1,0 +1,59 @@
+
+<div class="modal-header bg-primary text-white">    
+        <h6>LISTA DE REGISTRO CERRADOS</h6>     
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('edwin')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">                                      
+        <table class="table table-bordered table-sm table-hover table-responsive-sm txt11" *ngIf="registers">
+            <thead>
+                <tr>                  
+                    <th>#</th>                                                    
+                    <th>Nombre</th>
+                    <th>Num. Doc.</th>
+                    <th>Tipo Doc.</th>
+                    <th>F. Nac.</th>
+                    <th>
+                        <label class="custom-control custom-checkbox">
+                            <input [checked]="isAllChecked()" (change)="checkAll($event)" type="checkbox" class="custom-control-input">                                                                        
+                            <span class="custom-control-indicator"></span>                                    
+                            <!--span class="custom-control-description">{{countRegisters}}</span-->
+                        </label>
+                    </th>                                   
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reg of registers; let i = index;">
+                    <td><strong>{{i+1}}</strong></td>
+                    <td>{{reg.person.nombres}} {{reg.person.paterno}} {{reg.person.materno}}</td>
+                    <td>{{reg.person.document}}</td>
+                    <td>{{reg.person.tipoDoc.name}}</td>
+                    <td>{{reg.person.fnac.year}}/{{reg.person.fnac.month}}/{{reg.person.fnac.day}}</td>
+                    <th>
+                        <label class="custom-control custom-checkbox">
+                            <input *ngIf="typeList === 0" [(ngModel)]="reg.inicialClose" type="checkbox" class="custom-control-input">
+                            <input *ngIf="typeList === 1" [(ngModel)]="reg.close" type="checkbox" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="row">
+            <div class="col-sm">                                   
+                    <label class="col-form-label-sm">Justificación:</label>
+                    <textarea [(ngModel)]="observation" class="form-control form-control-sm"></textarea>
+                    <p class="text-warning">La justificación,  aplica a todos los registros que usted va a seleccionar.</p>
+                    <div class="alert alert-danger col-sm" role="alert" *ngIf="error">                                
+                        {{error}} 
+                    </div> 
+                    <button [disabled]="busy != null ? !busy.closed : false" type="button" class="btn btn-sm btn-primary" (click)="openRegisters()">Guardar Selección</button>                        
+            </div>
+        </div>                                
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('edwin')">Cerrar</button>
+    </div>
+    

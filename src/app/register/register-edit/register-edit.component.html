@@ -1,0 +1,13 @@
+  
+  <ngb-alert *ngIf="errors" style="max-height: 80px; overflow-y: scroll; padding:0" class="fixed-bottom {{bgClass}} text-white" type="custom"  (close)="errors = null"><strong *ngFor="let e of errors">{{e.msg}}<br></strong></ngb-alert>
+  <div *ngIf="register" class="row animate-right">  
+    <div class="col-sm">
+            
+      <app-person [disabled]="register.valid || (busy != null ? !busy.closed : false)"  [person]="register.person" [activeFormGroup]="personFormGroup" (savePerson)="saveRegister($event)" (cancelPerson)="goBack()" [disabled]=" busy != null ? !busy.closed : false"></app-person>          
+      <nav class="navbar navbar-inverse bg-primary">                
+          <button class="btn btn-primary btn-sm" (click)="goBack()">&larr; Atras</button>         
+          <button *ngIf="register.id != 0" type="button" class="float-right btn btn-sm btn-primary" (click)="goNext()">Siguiente &rarr;</button>  
+      </nav>          
+  </div>
+  </div>
+  

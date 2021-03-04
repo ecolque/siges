@@ -1,0 +1,50 @@
+agm-map {
+    height: 650px;
+  }
+
+ .txt14{
+    font-size: 14px;
+}
+
+select {padding:3px 0;color:#000;border:1px solid transparent;border-bottom:1px solid #000; font-size: 12px}
+
+#progress {
+    position: absolute;
+    /*bottom: 0;*/
+    top: 0;
+    left: 0;
+    height: 6px;
+    /*background: rgba(0, 60, 136, 0.4);*/
+    width: 0;
+    transition: width 250ms;
+    z-index: 1;
+  }
+
+  .wrapper {
+    position: relative;
+  }
+
+
+
+  .popup {
+    background-color:#FFF;
+    border: 1px solid #CCC;
+    padding: 0.1em 1em 0.5em 0.5em;
+    }
+#popup-closer {
+  float: right;
+}
+
+.scrollbar {		
+  height: 300px;
+  width: auto;	
+	background: #F5F5F5;
+  overflow-y: scroll;	
+  cursor: pointer
+}
+
+#map {
+  width: 100%;
+  height: 70vh;
+}
+

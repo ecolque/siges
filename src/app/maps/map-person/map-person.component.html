@@ -1,0 +1,40 @@
+<div class="modal-header bg-primary text-white" style="height:30px">      
+        <div>DATOS BENEFICIARIO</div>  
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body border border-primary">
+        <div class="row">
+            <div class="card col-sm-4" >
+                <img class="card-img-top" src="{{URL_PICTURE}}{{registerId}}d.jpg" >
+                <div class="card-body">
+                    <small>
+                        <b>Evaluación Social - DOMICILIO </b>  
+                    </small>
+                </div>
+            </div>
+            <div class="card col-sm-4" >
+                <img class="card-img-top" src="{{URL_PICTURE}}{{registerId}}f.jpg" >
+                <div class="card-body">
+                    <small>
+                        <b>Evaluación Social - FAMILIA </b>
+                    </small>
+                </div>
+            </div>
+        </div>            
+        <div class="row" *ngIf="photos">
+                <div class="card col-sm-4"   *ngFor="let pto of photos; let i = index;">
+                    <img *ngIf="pto.id > 1769326" class="card-img-top"   [src]="'data:image/jpeg;base64,'+ pto.thumb | safeHtmlMap" alt="First slide">
+                    <img *ngIf="pto.id <= 1769326" class="card-img-top"   [src]="'http://ssp.aevivienda.gob.bo/sspUp/' + pto.id + 's.jpg'" alt="First slide">
+
+                    <div class="card-body">
+                        <small>
+                            <b>Descripción: </b>{{pto.description}} <br> 
+                            <b>Fecha Realizada: </b>  {{pto.date}} <br>
+                        </small>                 
+                    </div>
+                </div>
+        </div>
+    </div>
+              

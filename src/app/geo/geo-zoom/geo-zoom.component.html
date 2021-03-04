@@ -1,0 +1,20 @@
+<div class="modal-header" style="height:30px">      
+    <div></div>  
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">        
+        <div class="row">
+            <div class="col-sm-8">
+                <img *ngIf="geoPhoto && geoPhoto.id > 1769326" width="100%" height="auto" [src]="'data:image/jpeg;base64,'+ geoPhoto.thumb | safeHtml" alt="First slide">
+                <img *ngIf="geoPhoto && geoPhoto.id <= 1769326" class="card-img-top"   [src]="'http://ssp.aevivienda.gob.bo/sspUp/' + geoPhoto.id + '.jpg'" alt="First slide">
+            </div>                        
+            <div class="col-sm-4">
+                <h5 class="card-title">Descripción</h5>
+                <p class="card-text">{{description}}  <br> <small><b>Fecha Realizada: </b></small>  {{date}} <br> <small><b>Fecha Cargada: </b></small> {{created}}</p>                       
+                <button type="button" class="float-right btn btn-outline-danger" (click)="activeModal.close('')">Cerrar</button>            
+            </div>
+        </div>    
+</div>
+      

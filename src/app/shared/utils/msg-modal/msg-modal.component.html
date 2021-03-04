@@ -1,0 +1,15 @@
+
+<div class="modal-header {{classHeader}} text-white">
+    <h4 class="modal-title">{{typeMsg}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    {{msg}}
+</div>
+<div class="modal-footer">
+    <button *ngIf="okBtn" type="button" class="btn btn-danger" (click)="activeModal.close('ok')">SI GUARDAR!!</button>
+    <button *ngIf="showBtn" type="button" class="btn btn-primary" (click)="activeModal.close('detail')">VER DETALLES!</button>    
+    <button type="button" class="btn btn-secondary" (click)="activeModal.close()">CERRAR</button>
+</div>

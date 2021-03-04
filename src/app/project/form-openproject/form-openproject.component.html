@@ -1,0 +1,24 @@
+
+<div class="modal-header bg-primary text-white">    
+        <h6>ABRIR PROYECTO</h6>     
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('edwin')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+</div>
+<div class="modal-body">  
+   
+    <div class="row">
+        <div class="col-sm" *ngIf="obj">
+                <div class="alert alert-danger col-sm" role="alert" *ngIf="error">                                
+                    {{error}} 
+                </div>                                     
+                <label class="col-form-label-sm">Causal:</label>                    
+                <textarea [(ngModel)]="obj.causal" class="form-control form-control-sm"></textarea>                                     
+        </div>
+    </div>                                      
+</div>
+<div class="modal-footer">
+    <button  [disabled]="busy != null ? !busy.closed : false" (click)="openProject()" type="button" class="btn btn-sm btn-primary">GUARDAR</button>    
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('edwin')">Cerrar</button>
+</div>
+    

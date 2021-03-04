@@ -1,0 +1,70 @@
+
+<div class="modal-header bg-primary text-white">    
+  <h6>FORMULARIO</h6>     
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">    
+  <div class="row">
+      <div class="col-sm">
+          <div class="card">
+              <h6 class="card-header" >LISTA DE FUNCIONARIOS</h6>                          
+              <div class="card-body border">
+                  <div style="overflow: scroll;">
+                      <table class="table table-bordered table-sm table-responsive-sm" *ngIf="people">
+                          <!--thead>
+                              <tr>                            
+                                  <th><small>Nombre</small></th>                                    
+                                  <th><small>Paterno</small></th>
+                                  <th><small>Materno</small></th>
+                                  <th><small>Cargo</small></th>
+                                  <th><small>Documento</small></th>                                                                  
+                                  <th><small>Oficina</small></th>
+                                  <th><small>COMPONENTE FAMILIA</small></th>                                  
+                              </tr>
+                          </thead-->
+                          <tbody>
+                              <tr *ngFor="let person of people"> 
+                                  <td>
+                                    <small>
+                                          <b>Nombre:</b> {{person.nombre}}.<br><b>Paterno: </b>{{person.paterno}}.<br><b>Materno:</b> {{person.materno}}.<br>
+                                          <b>Cargo:</b> {{person.cargo}}.<br><b>CI:</b> {{person.documento}}.<br><b>Oficina:</b> {{person.oficina}}.
+                                    </small>
+                                  </td>                                                                   
+                                  <td>
+                                      <table class="table table-bordered">
+                                        <thead>
+                                          <th><small>Nombre</small></th>
+                                          <th><small>Paterno</small></th>
+                                          <th><small>Materno</small></th>
+                                          <th><small>Relacion</small></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let fam of person.familias">
+                                                <td><small><b>{{fam.nombre}}</b></small></td>
+                                                <td><small>{{fam.paterno}}</small></td>
+                                                <td><small>{{fam.materno}}</small></td>
+                                                <td><small><b>{{fam.relacion}}</b></small></td>
+                                            </tr>
+                                        </tbody>
+                                      </table>
+                                  </td>                                  
+                              </tr>            
+                          </tbody>
+                      </table>           
+                  </div> 
+                <div *ngIf="personId != 0">
+                    <label class="col-form-label-sm">Observacion:</label>
+                    <textarea class="form-control form-control-sm" [(ngModel)]="causal"></textarea>                    
+                    <div class="alert alert-danger col-sm" role="alert" *ngIf="error">{{error}}</div> 
+                </div>                                                           
+              </div>
+          </div>
+      </div>
+  </div>                                      
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="save()">GUARDAR DE TODOS MODOS</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('')">Cerrar</button>
+</div>

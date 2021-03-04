@@ -1,0 +1,40 @@
+<div style="overflow: scroll; max-height: 780px" *ngIf="list && list.length > 0">            
+        <table class="table table-sm table-hover table-bordered "> <!-- *ngIf="data.length > 0" -->
+            <thead>                                            
+                <tr class="bg-dark text-white text-center">
+                  <th>PROYECTO</th>
+                  <th>Nombres</th>
+                  <th>Paterno</th>
+                  <th>Materno</th>
+                  <th>Num. Documento</th>
+                  <th>Nombre Conyugue</th>
+                  <th>Num. Documento Conyugue</th>
+                  <th>Codigo Proyecto</th>
+                  <th>Proyecto</th>
+                  <th>Departamento</th>
+                  <th>Estado</th>                              
+                  <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of list">
+                    <td> <h6><span class="badge badge-secondary rounded text-center">{{p.tipo}}</span></h6></td>
+                    <td> <label [class.bg-warning]="p.namecls" [class.bg-rounded]="p.namecls">{{p.nombres}}</label></td>
+                    <td> <label [class.bg-warning]="p.fnamecls" [class.bg-rounded]="p.fnamecls">{{p.paterno}}</label></td>
+                    <td> <label [class.bg-warning]="p.lnamecls" [class.bg-rounded]="p.lnamecls">{{p.materno}}</label></td>
+                    <td>{{p.documento}}</td>
+                    <td> 
+                        <label [class.bg-warning]="p.cnamecls" [class.bg-rounded]="p.cnamecls">{{p.nombresConyugue}}</label> 
+                        <label [class.bg-warning]="p.cfnamecls" [class.bg-rounded]="p.cfnamecls">{{p.paternoConyugue}}</label>  
+                        <label [class.bg-warning]="p.clnamecls" [class.bg-rounded]="p.clnamecls">{{p.maternoConyugue}}</label>
+                    </td>
+                    <td><label>{{p.ciConyugue}}</label></td>
+                    <td>{{p.proyCod}}</td>
+                    <td>{{p.proyecto}}</td>
+                    <td>{{p.departamento}}</td>
+                    <td>{{p.estado}}</td>                                
+                    <td class="text-danger">{{p.obs}}</td>
+                </tr>
+            </tbody>
+        </table>    
+</div>

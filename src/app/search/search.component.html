@@ -1,0 +1,323 @@
+<div class="card container">
+      <div class="card-header bg-primary text-white">    
+        <h6>Formulario de Busqueda/Doble Beneficio</h6>      
+      </div>
+      <div class="card-body border border-primary">        
+
+        <ngb-tabset >
+            <ngb-tab title="Buscar por Núm. de Documento">
+                <ng-template ngbTabContent>
+                  <br>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="row animate-left">
+                                <div class="col-sm">
+                                    <label class="col-form-label col-form-label-sm">Num. Documento</label>
+                                    <div class="input-group">
+                                        <button class="btn btn-sm" (click)="resetCi()">&#10008;</button>
+                                        <input type="text" class="form-control" [(ngModel)] = "ci">                                        
+                                        <button class="btn btn-primary" (click)="searchByDni()" [disabled]="(busy != null ? !busy.closed : false) || !ci">Buscar</button>
+                                        <form ngNoForm action="{{URL_PRINT}}dwCertificate" target="_blank" method="POST">
+                                            <input type="hidden" name="ci" value="{{ci}}">                                            
+                                            <input type="submit" value="↓" class="btn btn-info" [disabled]="!isDni">
+                                        </form>
+                                    </div>                          
+                                    <small class="text-danger" *ngIf="errCi"><b>{{errCi}}</b></small>
+                                </div>                                
+                            </div>   
+                        </div>                        
+                    </div>
+                    <br>
+                    <div class="row">                        
+                        <div class="col-sm border border-secondary rounded bg-light text-dark">  
+                            <small><b>DATOS PERSONALES</b></small><br>
+                            <table class="table table-sm table-bordered">
+                                <thead class="bg-dark text-white text-center">
+                                    <tr>
+                                        <th></th><th>Nombres</th><th>Fecha de Nacimiento</th><th>Num. Documento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of segip">
+                                        <td>SEGIP</td>
+                                        <td>{{p.nombres}} {{p.paterno}} {{p.materno}}</td>
+                                        <td>{{p.proyecto}}</td>
+                                        <td>{{p.documento}}</td>                                        
+                                    </tr>
+                                    <tr *ngFor="let p of corteElectoral">
+                                            <td>CORTE ELECTORAL</td>
+                                            <td>{{p.nombres}} {{p.paterno}} {{p.materno}}</td>
+                                            <td>{{p.proyecto}}</td>
+                                            <td>{{p.documento}}</td>                                        
+                                        </tr>
+                                </tbody>
+                            </table>                                                                                  
+                        </div>
+                    </div> 
+                    <br>
+                    <app-search-container [pvs]="pvs" [msgPvs]="msgPvs" [ueve]="ueve" [msgUeve]="msgUeve" [titulacion]="titulacion" [msgTitulacion]="msgTitulacion" [tresxmil]="tresxmil" [msgTresxmil]="msgTresxmil" [aev]="aev" [msgAev]="msgAev" [document]="ci"></app-search-container>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Buscar por Nombres">                  
+                <ng-template ngbTabContent>
+                    <form #f="ngForm" (ngSubmit)="searchByNames(f.value)" class="row">
+                        <div class="col-sm-12">                        
+                            <div class="row animate-left">
+                                <div class="col-sm-4" >
+                                    <label class="col-form-label col-form-label-sm">Nombres</label>                  
+                                    <input type="text" class="form-control form-control-sm" name="name" ngModel>
+                                    <small class="text-danger" *ngIf="errNames"><b>{{errNames}}</b></small>
+                                </div>
+                                <div class="col-sm-4">
+                                        <label class="col-form-label col-form-label-sm" >Ap. Paterno</label>                  
+                                        <input type="text" class="form-control form-control-sm"  name = "fname" ngModel>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-form-label col-form-label-sm"  >Ap. Materno</label>   
+                                    <input type="text" class="form-control form-control-sm" name = "lname" ngModel>
+                                </div>                                
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <button class="form-control btn btn-primary" type="submit" [disabled]="busy != null ? !busy.closed : false">Buscar</button>
+                                        <button class="form-control btn btn-danger" type="reset">Limpiar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!--div class="col-sm-6" >
+                                <label class="col-form-label col-form-label-sm">Nombres</label>                  
+                                <input type="text" class="form-control form-control-sm"  [(ngModel)] = "obj.name" uppercase>                                                          
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label col-form-label-sm" >Ap. Paterno</label>                  
+                                <input type="text" class="form-control form-control-sm"  [(ngModel)] = "obj.fname">                                                          
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label col-form-label-sm"  >Ap. Materno</label>                  
+                                <input type="text" class="form-control form-control-sm" [(ngModel)] = "obj.lname">                                                          
+                            </div>              
+                            <div class="col-sm-2"><br *ngIf="!errNames">                                                  
+                                <small class="text-danger" *ngIf="errNames"><b>{{errNames}}</b></small>
+                                <div class="input-group">                                    
+                                    <button class="form-control btn btn-primary" (click)="searchByNames()">Buscar</button>                                                                                                    
+                                    <button class="form-control btn btn-danger" (click)="searchByNames()">Limpiar</button>
+                                </div>
+                            </div-->                                          
+                           
+                            <br>                          
+
+                            <div class="row">
+                                <button type="button" class="col-sm-12 btn btn-sm btn-dark"  (click)="collCE = !collCE"
+                                    [class.btn-outline-dark]="collCE"><b>DATOS DE LA CORTE ELECTORAL</b>
+                                </button>
+                                <app-search-list-container class="table-responsive" [ngbCollapse]="collCE" [list]="data.corteElectoral"></app-search-list-container>
+                                <button type="button" class="btn btn-sm btn-dark" [disabled]="busy != null ? !busy.closed : false" *ngIf="data.corteElectoral && data.corteElectoral.length > 14" (click)="moreCorteElectoral(f.value)"><small>({{pageCorteElectoral + 15}}) ver mas +</small></button>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <button type="button" class="col-sm-12 btn btn-sm btn-dark"  (click)="collPvs = !collPvs"
+                                    [class.btn-outline-dark]="collPvs"><b>DATOS DE PROYECTOS PVS/UEVE</b>
+                                </button>
+                                <app-search-list-container class="table-responsive" [ngbCollapse]="collPvs" [list]="data.pvs"></app-search-list-container> 
+                                <button type="button" class="btn btn-sm btn-dark" [disabled]="busy != null ? !busy.closed : false" *ngIf="data.pvs && data.pvs.length > 14" (click)="morePvs(f.value)"><small>PVS ({{data.pvs.length + pagePvs + pagePvs}}) ver mas +</small></button>
+                            </div>
+                            <br>                                                   
+                            <div class="row">
+                                <button type="button" class="col-sm-12 btn btn-sm btn-dark"  (click)="collTit = !collTit"
+                                    [class.btn-outline-dark]="collTit"><b>DATOS DE PROYECTOS DE TITULACION</b>
+                                </button>
+                                <app-search-list-container class="table-responsive"  [ngbCollapse]="collTit" [list]="data.titulacion"></app-search-list-container> 
+                                <button type="button" class="btn btn-sm btn-dark" [disabled]="busy != null ? !busy.closed : false" *ngIf="data.titulacion && data.titulacion.length > 14" (click)="moreTitulacion(f.value)"><small> Titulación ({{data.titulacion.length  + pageTitulacion}}) ver mas +</small></button>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <button type="button" class="col-sm-12 btn btn-sm btn-dark"  (click)="collTres = !collTres"
+                                    [class.btn-outline-dark]="collTres"><b>DATOS DE PROYECTOS DE 3x1000</b>
+                                </button>
+                                <app-search-list-container class="table-responsive" [ngbCollapse]="collTres" [list]="data.tresxmil"></app-search-list-container> 
+                                <button type="button" class="btn btn-sm btn-dark" [disabled]="busy != null ? !busy.closed : false" *ngIf="data.tresxmil && data.tresxmil.length > 14" (click)="moreTresxmil(f.value)"><small>Tresxmil({{data.tresxmil.length + pageTresxmil}}) ver mas +</small></button>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <button type="button" class="col-sm-12 btn btn-sm btn-dark"  (click)="collAev = !collAev"
+                                    [class.btn-outline-dark]="collAev"><b>DATOS DE PROYECTOS DE AEVIVIENDA</b>
+                                </button>
+                                <app-search-list-container class="table-responsive" [ngbCollapse]="collAev" [list]="data.aev"></app-search-list-container> 
+                                <button type="button" class="btn btn-sm btn-dark" [disabled]="busy != null ? !busy.closed : false" *ngIf="data.aev && data.aev.length > 29" (click)="moreAev(f.value)"><small>AEV ({{data.aev.length + pageAev * 4}}) ver mas +</small></button>
+                            </div>
+                        </div>
+                    </form>
+                </ng-template>
+            </ngb-tab>                
+        </ngb-tabset>
+
+
+        <hr>
+        <!--div class="row">
+            <div class="col-sm-12">                               
+                                
+                <h6 class="{{msgPvs ? 'bg-success text-white rounded badge' : 'bg-danger text-white rounded badge'}}">DATOS DE PROYECTOS <b>PVS</b></h6>
+                    <table class="table table-sm table-hover table-bordered" *ngIf="pvs.length > 0">
+                        <thead>
+                            <tr>
+                              <th rowspan="2" class="bg-secondary text-white text-center">PROYECTO</th>
+                               <th colspan="4" class="bg-primary text-white text-center">TITULAR</th>  
+                               <th colspan="2" class="bg-info text-white text-center">CONYUGUE</th>                              
+                               <th colspan="4" class="bg-secondary text-white text-center">PROYECTO</th>                               
+                            </tr>
+                            <tr>
+                              <th class="bg-primary text-white">Nombres</th>
+                              <th class="bg-primary text-white">Paterno</th>
+                              <th class="bg-primary text-white">Materno</th>
+                              <th class="bg-primary text-white">Num. Documento</th>    
+                              <th class="bg-info text-white">Nombre Conyugue</th>
+                              <th class="bg-info text-white">Conyugue Num. Documento</th>                          
+                              <th class="bg-secondary text-white">Codigo Proyecto</th>
+                              <th class="bg-secondary text-white">Proyecto</th>
+                              <th class="bg-secondary text-white">Departamento</th>
+                              <th class="bg-secondary text-white">Estado</th>                              
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of pvs">
+                                <td> <h6><span class="badge badge-secondary rounded text-center">{{p.tipo}}</span></h6></td>
+                                <td>{{p.nombres}}</td>
+                                <td>{{p.paterno}}</td>
+                                <td>{{p.materno}}</td>
+                                <td><label class="{{ci == p.documento ? 'bg-dark text-white' : ''}}">{{p.documento}}</label></td>     
+                                <td>{{p.nombresConyugue}} {{p.paternoConyugue}} {{p.maternoConyugue}}</td>
+                                <td><label class="{{ci == p.ciConyugue ? 'bg-dark text-white' : ''}}">{{p.ciConyugue}}</label></td>                           
+                                <td>{{p.proyCod}}</td>
+                                <td>{{p.proyecto}}</td>
+                                <td>{{p.departamento}}</td>
+                                <td>{{p.estado}}</td>                                
+                            </tr>
+                        </tbody>
+                    </table>                                                                                            
+                    <div *ngIf="msgPvs" class="alert alert-success" role="alert">{{msgPvs}}</div>
+                <br>
+                <h6 class="{{msgTitulacion ? 'bg-success text-white rounded badge' : 'bg-danger text-white rounded badge'}}">DATOS DE PROYECTOS DE <b>TITULACIÓN</b></h6>
+                    <table class="table table-sm table-hover table-bordered" *ngIf="titulacion.length > 0">
+                        <thead>
+                            <tr>
+                              <th rowspan="2" class="bg-secondary text-white text-center">PROYECTO</th>
+                               <th colspan="4" class="bg-primary text-white text-center">TITULAR</th>                                
+                               <th colspan="4" class="bg-secondary text-white text-center">PROYECTO</th>                               
+                            </tr>
+                            <tr>
+                              <th class="bg-primary text-white">Nombres</th>
+                              <th class="bg-primary text-white">Paterno</th>
+                              <th class="bg-primary text-white">Materno</th>
+                              <th class="bg-primary text-white">Num. Documento</th>                              
+                              <th class="bg-secondary text-white">Codigo Proyecto</th>
+                              <th class="bg-secondary text-white">Proyecto</th>
+                              <th class="bg-secondary text-white">Departamento</th>
+                              <th class="bg-secondary text-white">Estado</th>                              
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of titulacion">
+                                <td> <h6><span class="badge badge-secondary rounded text-center">{{p.tipo}}</span></h6></td>
+                                <td>{{p.nombres}}</td>
+                                <td>{{p.paterno}}</td>
+                                <td>{{p.materno}}</td>
+                                <td><label class="{{ci == p.documento ? 'bg-dark text-white' : ''}}">{{p.documento}}</label></td>                                
+                                <td>{{p.proyCod}}</td>
+                                <td>{{p.proyecto}}</td>
+                                <td>{{p.departamento}}</td>
+                                <td>{{p.estado}}</td>                                
+                            </tr>
+                        </tbody>
+                    </table>                                                                                            
+                    <div *ngIf="msgTitulacion" class="alert alert-success" role="alert">{{msgTitulacion}}</div>
+                <br>
+                <h6 class="{{msgTresxmil ? 'bg-success text-white rounded badge' : 'bg-danger text-white rounded badge'}}">DATOS DE PROYECTOS DE <b> 3x1000</b></h6>
+                    <table class="table table-sm table-hover table-bordered" *ngIf="tresxmil.length > 0">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="bg-secondary text-white text-center">PROYECTO</th>
+                               <th colspan="4" class="bg-primary text-white text-center">TITULAR</th> 
+                               <th colspan="2" class="bg-info text-white text-center">CONYUGUE</th>
+                               <th colspan="4" class="bg-secondary text-white text-center">PROYECTO</th>                               
+                            </tr>
+                            <tr>
+                              <th class="bg-primary text-white">Nombres</th>
+                              <th class="bg-primary text-white">Paterno</th>
+                              <th class="bg-primary text-white">Materno</th>
+                              <th class="bg-primary text-white">Num. Documento</th>
+                              <th class="bg-info text-white">Nombre Conyugue</th>
+                              <th class="bg-info text-white">Conyugue Num. Documento</th>
+                              <th class="bg-secondary text-white">Codigo Proyecto</th>
+                              <th class="bg-secondary text-white">Proyecto</th>
+                              <th class="bg-secondary text-white">Departamento</th>
+                              <th class="bg-secondary text-white">Estado</th>                              
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of tresxmil">
+                                <td> <h6><span class="badge badge-secondary rounded text-center">{{p.tipo}}</span></h6></td>
+                                <td>{{p.nombres}}</td>
+                                <td>{{p.paterno}}</td>
+                                <td>{{p.materno}}</td>
+                                <td><label class="{{ci == p.documento ? 'bg-dark text-white' : ''}}">{{p.documento}}</label></td>
+                                <td>{{p.nombresConyugue}} {{p.paternoConyugue}} {{p.maternoConyugue}}</td>
+                                <td><label class="{{ci == p.ciConyugue ? 'bg-dark text-white' : ''}}">{{p.ciConyugue}}</label></td>
+                                <td>{{p.proyCod}}</td>
+                                <td>{{p.proyecto}}</td>
+                                <td>{{p.departamento}}</td>
+                                <td>{{p.estado}}</td>                                
+                            </tr>
+                        </tbody>
+                    </table>                                                                                            
+                    <div *ngIf="msgTresxmil" class="alert alert-success" role="alert">{{msgTresxmil}}</div>
+
+                
+                <br>
+                <h6 class="{{msgAev ? 'bg-success text-white rounded badge' : 'bg-danger text-white rounded badge'}}">DATOS DE PROYECTOS <b> AEVIVIENDA</b></h6>
+                                  
+                        <table class="table table-sm table-hover table-bordered" *ngIf="aev.length > 0">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="bg-secondary text-white text-center">PROYECTO</th>
+                                   <th colspan="4" class="bg-primary text-white text-center">TITULAR</th> 
+                                   <th colspan="2" class="bg-info text-white text-center">CONYUGUE</th>
+                                   <th colspan="4" class="bg-secondary text-white text-center">PROYECTO</th>                               
+                                </tr>
+                                <tr>
+                                  <th class="bg-primary text-white">Nombres</th>
+                                  <th class="bg-primary text-white">Paterno</th>
+                                  <th class="bg-primary text-white">Materno</th>
+                                  <th class="bg-primary text-white">Num. Documento</th>
+                                  <th class="bg-info text-white">Nombre Conyugue</th>
+                                  <th class="bg-info text-white">Conyugue Num. Documento</th>
+                                  <th class="bg-secondary text-white">Codigo Proyecto</th>
+                                  <th class="bg-secondary text-white">Proyecto</th>
+                                  <th class="bg-secondary text-white">Departamento</th>
+                                  <th class="bg-secondary text-white">Estado</th>                              
+                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let p of aev">
+                                    <td> <h6><span class="{{ p.orden == 1 ? '' : 'badge badge-secondary rounded text-center'}}">{{p.tipo == 'AEV OLD' ? 'AEV' : p.tipo}}</span></h6></td>
+                                    <td>{{p.nombres}}</td>
+                                    <td>{{p.paterno}}</td>
+                                    <td>{{p.materno}}</td>
+                                    <td><label class="{{ci == p.documento ? 'bg-dark text-white' : ''}}">{{p.documento}}</label></td>
+                                    <td>{{p.nombresConyugue}} {{p.paternoConyugue}} {{p.maternoConyugue}}</td>
+                                    <td><label class="{{ci == p.ciConyugue ? 'bg-dark text-white' : ''}}">{{p.ciConyugue}}</label></td>
+                                    <td>{{p.proyCod}}</td>
+                                    <td>{{p.proyecto}}</td>
+                                    <td>{{p.departamento}}</td>
+                                    <td>{{p.estado}}</td>                                
+                                </tr>
+                            </tbody>
+                        </table>                                                                                            
+                        <div *ngIf="msgAev" class="alert alert-success" role="alert">{{msgAev}}</div>
+            </div>            
+        </div-->                                                    
+      </div>
+</div>

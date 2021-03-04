@@ -1,1 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~angular-tree-component/dist/angular-tree-component.css';
+body{
+    background-color:#eeeeee !important;
+}
+
+.no-padding {
+    padding: 0px;
+}
+
+.txt10{
+    font-size: 10px;
+}
+
+.txt11{
+    font-size: 11px;
+}
+
+.txt12{
+    font-size: 12px;
+}
+
+.txt13{
+    font-size: 9px;
+}
+
+.animate-zoom {-webkit-animation:animatezoom 0.6s;animation:animatezoom 0.6s}
+@-webkit-keyframes animatezoom{from{-webkit-transform:scale(0)} to{-webkit-transform:scale(1)}}
+@keyframes animatezoom{from{transform:scale(0)} to{transform:scale(1)}}
+
+.animate-left{position:relative;-webkit-animation:animateleft 0.4s;animation:animateleft 0.4s}
+@-webkit-keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+@keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+
+.animate-right{position:relative;-webkit-animation:animateright 0.4s;animation:animateright 0.4s}
+@-webkit-keyframes animateright{from{right:-300px;opacity:0} to{right:0;opacity:1}}
+@keyframes animateright{from{right:-300px;opacity:0} to{right:0;opacity:1}}
+
+.input{display:block;width:100%; font-weight: bold;}
+.select{width:100%;color:#000; font-size: 13px; font-weight: bold;}
+
+

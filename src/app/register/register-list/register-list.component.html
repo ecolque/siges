@@ -1,0 +1,289 @@
+<ngb-alert *ngIf="error" class="fixed-bottom bg-danger text-white animate-zoom" type="custom"  (close)="error = null">{{error}}</ngb-alert>
+<div class="row animate-left">
+    <div class="col">             
+            <nav class="navbar navbar-expand-lg navbar-light bg-dark text-white" style="padding:0;margin:0">                
+                <ul class="navbar-nav mr-auto">                    
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-info" (click)="showConfirms()"><small>Confirmados</small> <span class="badge badge-light">{{sumInicialConfirmados}}</span></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-success" (click)="showAceptados()"><small>Aceptados</small> <span class="badge badge-light">{{sumAceptados}}</span></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-warning" (click)="showEnEspera()"><small>En Espera</small> <span class="badge badge-light">{{sumEspera}}</span></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-danger" (click)="showRechazados()"><small>Rechazados</small> <span class="badge badge-light">{{sumRechazados}}</span></button>    
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-sm btn-primary" (click)="showRenuncias()"><small>Renuncias</small> <span class="badge badge-light">{{sumRenuncias}}</span></button>      
+                    </li>
+                    <li class="nav-item" *ngIf="isAcceses(1)">
+                        <div ngbDropdown class="btn-group">
+                            <button class="btn btn-sm btn-secondary" id="dropdownBasic1" ngbDropdownToggle><small>Acciones</small></button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">                                                            
+                                <button class="dropdown-item" (click)="openRegistersInicial()">Abrir Registros Seleccionados</button>                                
+                                <!--button class="dropdown-item" (click)="openRegisters()">Abrir Registros (FINALES)</button-->
+                                <!--button class="dropdown-item">Another Action</button>
+                                <button class="dropdown-item">Something else is here</button-->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div ngbDropdown class="btn-group" *ngIf="isAcceses(10)">
+                            <button class="btn btn-sm btn-light" id="dropdownBasic2" ngbDropdownToggle><small>Reportes</small></button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic2">                                
+                                <small class="dropdown-item"><strong>Genera todos los datos en LISTA</strong></small>
+                                <a href="{{URL_PRINT}}getListByProyect?id={{projectId}}&li=0&odr=0" class="dropdown-item" target="_blank"><small>❶ Lista General (Excel) ordenado por Comunidad</small></a>
+                                <a href="{{URL_PRINT}}getListByProyect?id={{projectId}}&li=0&odr=1" class="dropdown-item" target="_blank"><small>❷ Lista General (Excel) ordenado por Puntaje</small></a>                                
+                                <div *ngIf="showPoints && project?.cerradoInicial" class="dropdown-item">
+                                    <small class="text-success">❸ CRITERIOS (pdf)</small>
+                                    <a href="{{URL_PRINT}}criteriosByProject?projectId={{projectId}}&type=0" class="btn btn-sm btn-warning txt10" target="_blank">Gestión</a>
+                                    <a href="{{URL_PRINT}}criteriosByProject?projectId={{projectId}}&type=1" class="btn btn-sm btn-success txt10" target="_blank">Ejecución</a>
+                                </div>
+                                <div *ngIf="showPoints && project?.cerradoInicial" class="dropdown-item">            
+                                    <small class="text-success">❹ REQUISITOS (pdf)</small>
+                                    <a href="{{URL_PRINT}}requisitosByProject?projectId={{projectId}}&type=0" class="btn btn-sm btn-warning txt10" target="_blank">Gestión</a>
+                                    <a href="{{URL_PRINT}}requisitosByProject?projectId={{projectId}}&type=1" class="btn btn-sm btn-success txt10" target="_blank">Ejecución</a>
+                                </div>                                
+
+                                <small *ngIf="showPoints && !project?.cerradoInicial">* Para Requisitos, criterios,población vulnerable y sustituciones debe cerrar Lista Inicial</small>
+                                <a *ngIf="registers" href="{{URL_PRINT}}getDobleBeneficioByProject?id={{projectId}}" class="dropdown-item" target="_blank"><small>❺ Reporte Doble Beneficios (pdf)</small></a>
+                                <a *ngIf="registers && project?.cerradoInicial" href="{{URL_PRINT}}getDiscAdultoMayorByProject?id={{projectId}}" class="dropdown-item" target="_blank"><small>❻ Personas de Población Vulnerable (excel)</small></a>                                
+                                <a *ngIf="registers && project?.cerradoInicial" href="{{URL_PRINT}}getSustitutions?id={{projectId}}" class="dropdown-item" target="_blank"><small>❼ Sustituciones/Cambio Titular (excel)</small></a>
+                                <a *ngIf="registers?.length > 0 && project?.cerradoInicial" href="{{URL_PRINT}}getBoleta?id={{projectId}}&id1=0" onclick="return confirm('esta de seguro?')" class="dropdown-item text-primary" target="_blank"><small>❽ Formularios (pdf)</small></a>
+                                <a *ngIf="registers?.length > 0 && project?.cerradoInicial" href="{{URL_PRINT}}fichaPersonal?id={{projectId}}&id1=0" onclick="return confirm('Esto puede tomar varios minutos, esta de acuerdo?')" class="dropdown-item text-primary" target="_blank"><small>❾ Visita Domiciliaria (pdf)</small></a>
+                                <!--&& isAcceses(13)-->
+                                <!--a href="{{URL_PRINT}}printDobleBeneficioByProject?id={{projectId}}" class="dropdown-item" target="_blank"><small>④ DOBLE BENEFICIOS (PDF)</small></a-->
+                                <div class="dropdown-divider border border-primary"></div>
+                                <small class="dropdown-item"><strong>Genera datos de Listas Marcadas/Seleccionadas</strong></small>
+                                <a href="{{URL_PRINT}}basicXLS?id={{projectId}}" class="dropdown-item" target="_blank"><small>❶ Reporte de Graficos (Excel)</small></a>
+                                <a href="{{URL_PRINT}}getListByProyect?id={{projectId}}&li=1&odr=0" class="dropdown-item" target="_blank"><small>❷ Reporte General (Excel) ordenado por Comunidad</small></a>
+                                <a href="{{URL_PRINT}}getListByProyect?id={{projectId}}&li=1&odr=1" class="dropdown-item" target="_blank"><small>❸ Reporte General (Excel) ordenado por Puntaje</small></a>
+                                <div class="dropdown-divider border border-primary"></div>
+                                <small class="dropdown-item"><strong>Reporte oficial para CIERRE de LISTAS</strong></small>
+                                <div class="dropdown-item">                                    
+                                    <small>❶ Lista INICIAL (PDF)</small>
+                                    <a href="{{URL_PRINT}}getInitPeopleByProject?id={{projectId}}&test=1" class="btn btn-sm btn-secondary txt10" target="_blank">Borrador</a>
+                                    <a *ngIf="project?.cerradoInicial && isAcceses(12)" href="{{URL_PRINT}}getInitPeopleByProject?id={{projectId}}&test=0" onclick="return confirm('esta de seguro?')" class="btn btn-sm btn-danger txt10" target="_blank">** OFICIAL {{project?.userPrintInicial}}</a>
+                                </div>
+                                <div class="dropdown-item" *ngIf="project?.cerradoInicial">
+                                    <fieldset [disabled]="!project?.cerradoInicial">
+                                        <small>❷ LISTA FINAL (PDF)</small>
+                                        <a href="{{URL_PRINT}}getFinalPeopleByProject?id={{projectId}}&test=1" class="btn btn-sm btn-secondary txt10" target="_blank">Borrador</a>
+                                        <a *ngIf="project?.cerrado && isAcceses(13)" href="{{URL_PRINT}}getFinalPeopleByProject?id={{projectId}}&test=0" onclick="return confirm('esta de seguro?')" class="btn btn-sm btn-danger txt10" target="_blank">** OFICIAL {{project?.userPrintFinal}}</a>
+                                    </fieldset>
+                                </div>                                
+                                <small class="dropdown-item">** certifican listas oficiales en SIGES y CMI</small>
+                                <div *ngIf="registers && project?.tipoProyId == 12">
+                                    <div class="dropdown-divider border border-primary"></div>
+                                    <small class="dropdown-item"><strong>Viviendas Credito/Mixto</strong></small>
+                                    <a href="{{URL_PRINT}}getVividaCredito?id={{projectId}}" class="dropdown-item" target="_blank"><small>❶ Reporte por Estados (pdf)</small></a>
+                                    <a href="{{URL_PRINT}}getViviedaGeneralData?id={{projectId}}" class="dropdown-item" target="_blank"><small>❷ Reporte detalle (excel)</small></a>
+                                </div>
+                                <!--button class="dropdown-item">Another Action</button>
+                                <button class="dropdown-item">Something else is here</button-->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button *ngIf="project?.userPrintInicial" class="btn btn-sm btn-info"><span class="badge badge-light">&#10004; reporte inicial</span><small> {{project?.userPrintInicial}}</small></button>
+                    </li>
+                    <li class="nav-item">
+                        <button *ngIf="project?.userPrintFinal" class="btn btn-sm btn-info"><span class="badge badge-light">&#10004; reporte final</span><small> {{project?.userPrintFinal}}</small></button> 
+                    </li>
+                </ul>
+                <ul class="navbar-nav float-right">
+                    <button *ngIf="isAcceses(3)" (click)="add()"  class="btn btn-sm btn-primary"><span class="badge badge-light">&#10010; 웃</span> NUEVO</button>
+                    <button [disabled]="(busy != null ? !busy.closed : false) || !isAcceses(3)" class="btn btn-sm btn-info" (click)="saveInicialRegisterSelecteds()"><span class="badge badge-light">{{sumInicialConfirmados}}</span> <small>Guardar Selección</small></button>                    
+                    <button class="btn btn-sm btn-warning" (click)="refresh()">&#x21ba;</button>
+                    <!--li class="nav-item">
+                        <button class="btn btn-sm btn-light btn-info">
+                            I&#10004;
+                            <span class="badge badge-danger"> <strong> {{sumInicialConfirmados}} </strong></span>
+                        </button>
+                    </li>               
+                    <li class="nav-item">
+                        <button [disabled]="busy != null ? !busy.closed : false" (click)="saveInicialRegisterSelecteds()" class="btn btn-sm btn-info float-right"><small>Guardar Selección</small></button>
+                    </li-->                                     
+                    <!--li class="nav-item">
+                        <button class="btn btn-sm btn-light">
+                            F&#9993;&#10004;
+                            <span class="badge badge-warning">{{sumConfirmados}}</span>
+                        </button>
+                    </li>               
+                    <li class="nav-item">
+                        <button [disabled]="busy != null ? !busy.closed : false" (click)="saveRegisterSelecteds()" class="btn btn-sm btn-secondary float-right"><small>Guardar Selección (Lista Final)</small></button>
+                    </li-->
+                </ul>                            
+            </nav>            
+            <div class="border border-primary" style="max-height: 650px; overflow: scroll;">
+                <table class="table table-sm table-hover table-responsive-sm table-bordered table-striped">
+                    <thead class="bg-primary text-white">                    
+                        <tr>
+                            <th colspan="12" class="text-center">DATOS TITULAR</th>
+                            <th *ngIf="showPoints" colspan="3" class="bg-info text-center">ESTADO</th>
+                            <th *ngIf="!showPoints" colspan="2" class="bg-info text-center">ESTADO</th>
+                            <th colspan="9" class="bg-danger text-center">ACCIONES</th>
+                        </tr>
+                        <tr>                            
+                            <th>#</th>                                                                  
+                            <th>ID</th>         
+                            <th>☭</th>
+                            <th><small>Nombre</small></th>
+                            <th><small>Paterno</small></th>
+                            <th><small>Materno</small></th>
+                            <th><small>Especial</small></th>
+                            <th><small>Num. Doc.</small></th>
+                            <th><small>Com.</small></th>
+                            <th><small>F.Nac</small></th>                            
+                            <th><small>Edad</small></th>
+                            <th><small>Acta</small></th>
+                            <th class="bg-info" *ngIf="showPoints"><small>Puntaje</small></th>                            
+                            <th class="bg-info"><small>Doble Beneficio</small></th>
+                            <th class="bg-info"><small>Estado</small></th>
+                            <th class="bg-danger"><small>Obs</small></th>
+                            <th class="bg-danger">                                                                    
+                                    <label class="custom-control custom-checkbox">
+                                        <input [checked]="isAllCheckedInicial()" (change)="checkAllInicial($event)" type="checkbox" class="custom-control-input">                                                                        
+                                        <span class="custom-control-indicator  bg-info"></span>                                    
+                                        <span class="custom-control-description">{{countIncialRegisters}}</span>
+                                    </label>                                                                    
+                                    <!--button [disabled]="busy != null ? !busy.closed : false" (click)="saveInicialRegisterSelecteds()" class="btn btn-sm btn-info"> <span class="badge badge-danger"> {{sumInicialConfirmados}}</span><small>Guardar Selección</small></button-->                                    
+                            </th>
+                            <!--th class="bg-danger">                                
+                                <label class="custom-control custom-checkbox">
+                                    <input [checked]="isAllChecked()" (change)="checkAll($event)" type="checkbox" class="custom-control-input">                                                                        
+                                    <span class="custom-control-indicator  bg-warning"></span>                                    
+                                    <span class="custom-control-description">{{countRegisters}}</span><small>F</small>
+                                </label>                                
+                            </th-->
+                            <th class="bg-danger"><small>Renuncia</small></th>
+                            <th class="bg-danger"><small>C/Est.</small></th>
+                            <th class="bg-danger"><small>Edit</small></th>
+                            <!--th class="bg-danger"><small class="txt13">Form</small></th-->
+                            <th class="bg-danger"><small class="txt13">V.Dom</small></th>                            
+                            <th class="bg-danger"><small>Excluir</small></th>
+                        </tr>
+                    </thead>
+                    <tbody class="{{project?.cerrado ? 'text-white' : ''}}"> <!-- (dblclick)="edit(reg.id)" (click)="setRegisterSelected(reg)""-->  <!--[class.table-danger]="reg.puntaje < 51" [class.table-success]="reg.puntaje >= 51"-->
+                        <tr *ngFor="let reg of registers; let i = index;"  (click)="setClickedRow(reg.id)"   [class.table-success]="reg.id == selectedRow" [class.font-weight-bold]="reg.id == selectedRow">                               
+                            <th >{{i+1}}</th>
+                            <td  (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><small>{{reg.id}}</small></td> 
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><button class="btn btn-sm btn-light" (click)="showRecord(reg.id, reg.person.id)">☭</button></td>
+                            <!--td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12 {{reg.person.nombres != reg.person.nameS ? 'text-danger' : ''}}">{{reg.person.nombres}}</div><div class="txt13 text-primary">{{reg.person.nameS}}</div></td-->
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12 {{compareStr(reg.person.nombres,reg.person.nameS)}}">{{reg.person.nombres}}</div><div class="txt13 text-primary">{{reg.person.nameS}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12 {{compareStr(reg.person.paterno,reg.person.fnameS)}}">{{reg.person.paterno}}</div><div class="txt13 text-primary">{{reg.person.fnameS}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12 {{compareStr(reg.person.materno,reg.person.lnameS)}}">{{reg.person.materno}}</div><div class="txt13 text-primary">{{reg.person.lnameS}}</div></td>                        
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12">{{reg.person.especial}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12 {{compareStr(reg.person.document,reg.person.documentS)}}">{{reg.person.document}}</div><div class="txt13 text-primary">{{reg.person.documentS}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12">{{reg.person.complemento}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt10 {{compareStr(reg.person.fnacH, reg.person.fnacS)}}">{{reg.person.fnacH}}</div><small class="txt13 text-primary">{{reg.person.fnacS}}</small></td>                            
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"><div class="txt12">{{reg.person.edad}}</div></td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)">
+                                <a *ngIf="reg?.acta" class="btn btn-sm" href="http://sigepro.aevivienda.gob.bo/actaindividual/{{reg.acta}}" target="_blank" ><span class="badge badge-light">&#10004;</span><small></small></a>
+                            </td>
+                            <td *ngIf="showPoints" (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)">
+                                <span class="badge badge-pill {{reg.estado.color}}">
+                                    {{reg.puntaje}}
+                                </span>
+                            </td>
+                            <td (dblclick)="edit(reg)" (click)="setRegisterSelected(reg)"> <!--Doble Beneficio-->
+                                <!--button *ngIf="reg.pvs" type="button" class="btn btn-success btn-sm"><small>NoTiene</small></button-->
+                                <span *ngIf="reg.pvs.name" type="button" class="badge badge-pill {{reg.pvs.clase}}">{{reg.pvs.msg}}</span>
+                                <span *ngIf="reg.ueve.name" type="button" class="badge badge-pill {{reg.ueve.clase}}">{{reg.ueve.msg}}</span>
+                                <span *ngIf="reg.titulacion.name" type="button" class="badge badge-pill {{reg.titulacion.clase}}">{{reg.titulacion.msg}}</span>
+                                <span *ngIf="reg.tresxmil.name" type="button" class="badge badge-pill {{reg.tresxmil.clase}}">{{reg.tresxmil.msg}}</span>                                                                  
+                                <span *ngIf="reg.aev.name" type="button" class="badge badge-pill {{reg.aev.clase}}">{{reg.aev.msg}}</span>
+                                <span *ngIf="reg.sinarep.name" type="button" class="badge badge-pill {{reg.sinarep.clase}}"><small>{{reg.sinarep.msg}}</small></span>
+                            </td>
+                            <td (click)="setRegisterSelected(reg)"> <!--Estado-->
+                                <div>
+                                    <small class="{{reg.estado.color}}" (click)="showBeneficio(reg)" style="padding:0 5px; cursor: pointer;"><strong>{{reg.estado.name}}</strong></small>
+                                    <!--reemplazo-->
+                                    <button *ngIf="reg.estado.btn && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-pill badge-light" (click)="showFormReemplazo(reg)">{{reg.estado.btnTxt}}</button> 
+                                    <button *ngIf="reg.estado.cancelRenuncia && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-light" (click)="cancelRenuncia(reg)">Deshacer Renuncia?</button>
+                                    <button *ngIf="reg.reemplazante.id != 0 && isAcceses(3) && project?.tipoProyId != 12" (click)="cancelReemplazante(reg)" type="button" class="btn btn-sm btn-light" ngbPopover="{{reg.reemplazante.nombres}}" triggers="mouseenter:mouseleave" popoverTitle="REEMPLAZADO POR:">
+                                        &#9755;                                
+                                    </button>
+                                    <button *ngIf="reg.estado.slctVentas && project?.tipoProyId == 12" (click)="showFormEstadoCredito(reg.id, reg.person.nombres, reg.person.paterno, reg.person.materno, reg.credito)" class="badge badge-pill txt11 {{reg.credito.id == 0 ? 'badge-light' : (reg.credito.input ? 'btn-warning' : 'btn-primary')}}">{{reg.credito.id == 0 ? 'Sin Estado' : reg.credito.name}}</button>
+                                </div>
+                            </td>
+                            <td (click)="setRegisterSelected(reg)"> <!--Entidad-->                            
+                                <span *ngIf="reg.person.entityS" class="txt13 text-white bagde badge-pill badge-primary">{{reg.person.entityS}},</span>
+                                <span class="txt13 text-primary">{{reg.person.obsS}}</span>                            
+                                <button *ngIf="reg.person.employee" class="btn btn-sm btn-warning" ngbTooltip="se encotró registros en AEV" (click)="getFuncionarios(reg)">웃</button>
+                                <button *ngIf="isAcceses(14)" class="txt13 {{reg.sinV && reg.sinObs == '' ? 'text-white bagde badge-pill badge-success' : (reg.sinObs == '' ? 'text-warning' : 'text-danger badge-pill table-danger')}}"
+                                        ngbPopover="{{reg.sinObs}}" triggers="mouseenter:mouseleave">
+                                    <b>Rev.En Sinarep {{reg.sinV ? 'SI' : 'NO'}}</b>
+                                </button>     
+                                <button *ngIf="reg.chHolder" class="btn btn-sm table-warning" ngbTooltip="{{reg.chHolder}}">⚢☝</button>                            
+                            </td>
+                            <!--td>
+                                <div  ngbDropdown  class="btn-group">
+                                    <button type="button" class="btn btn-sm {{reg.estado.color}}" >{{reg.estado.name}}</button>
+                                    <button class="btn btn-sm  dropdown-toggle-split {{reg.estado.color}}" ngbDropdownToggle (click)="setRegisterSelected(reg)"></button>
+                                    <div class="dropdown-menu" ngbDropdownMenu >
+                                        <button class="dropdown-item">PVS</button>
+                                        <button class="dropdown-item">Titulacion</button>
+                                        <button class="dropdown-item">Tres Por Mil</button>
+                                    </div>
+                                </div>
+                            </td--> 
+                            <!--td (dblclick)="edit(reg.id)" (click)="setRegisterSelected(reg)"><small><b>{{reg.persona.document}} {{reg.person.typeDocument.name}}</b></small></td--> 
+                            <td (click)="setRegisterSelected(reg)"> <!--INICIAL-->
+                                <label class="custom-control custom-checkbox" *ngIf="reg.estado.checkbox && !reg.inicialValid">
+                                    <input [(ngModel)]="reg.inicialClose" type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator bg-info"></span>                                    
+                                </label>                            
+                                <button *ngIf="reg.inicialValid" class="btn btn-sm btn-info"><small>{{reg.confirmado ? '&#10004;' : '&#8986;'}}</small></button>
+                                <span class="txt13 badge badge-pill badge-danger">{{reg.error}}</span>                                
+                            </td>
+                            <!--td (click)="setRegisterSelected(reg)">
+                                <label class="custom-control custom-checkbox" *ngIf="reg.estado.checkbox && !reg.valid">
+                                    <input [(ngModel)]="reg.close" type="checkbox" class="custom-control-input">
+                                    <span class="custom-control-indicator bg-warning"></span>                                    
+                                </label>                            
+                                <button *ngIf="reg.valid" class="btn btn-sm btn-light">&#9993;&#10004;</button>
+                            </td-->                        
+                            <td (click)="setRegisterSelected(reg)">
+                                <button *ngIf="reg.estado.btnRenuncia && !reg.valid && isAcceses(3) && project?.tipoProyId != 12" (click)="renunciar(reg)" type="button" class="btn btn-sm btn-light" ngbTooltip="El solicitante RENUNCIA al beneficio">
+                                    &#9755;&#10005;
+                                </button>
+                            </td>
+                            <td (click)="setRegisterSelected(reg)"><button [disabled]="busyChageState != null ? !busyChageState.closed : false" *ngIf="reg.estado.cambioEstado && !reg.valid && isAcceses(3) && project?.tipoProyId != 12" (click)="cambioEstado(reg)" type="button" class="btn btn-sm btn-light" ngbTooltip="Cambia el estado de la Persona.">&#8633;</button></td>
+                            <td (click)="setRegisterSelected(reg)"><button *ngIf="!reg.valid" (click)="edit(reg)" type="button" class="btn btn-sm btn-light">&#9998;</button></td>
+                            <!--td (click)="setRegisterSelected(reg)"><a href="{{URL_PRINT}}getBoleta?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>F</small></a></td-->
+                            <td (click)="setRegisterSelected(reg)"><a *ngIf="project?.tipoProyId != 12 || (reg.inicialValid && project?.tipoProyId == 12)" href="{{URL_PRINT}}fichaPersonal?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>VD</small></a></td>
+                            <td (click)="setRegisterSelected(reg)"><button *ngIf="reg.estado.btnExcluir && !reg.valid && reg.reemplazante.id == 0 && isAcceses(3)" (click)="delete(reg.id, i)" type="button" class="btn btn-sm btn-light" ngbTooltip="El solicitante deja de estar en esta lista">&#10006;</button></td>
+                        </tr>    
+                    </tbody>
+                </table>  
+                
+                <img *ngIf="isGetRegisters" src="app/assets/images/loader.gif">
+            </div>             
+        <!--*ngIf="registers" -->
+                <ngb-pagination *ngIf="pages > 12 && registers" [collectionSize]="pages" (pageChange)="pageChange($event)" [(page)]="page" [boundaryLinks]="true" size="sm"></ngb-pagination>
+                <nav class="navbar navbar-inverse {{project?.cerrado ? 'bg-dark' : 'bg-primary'}}">
+                    <form  class="form-inline">
+                        <button *ngIf="project?.cerradoInicial" class="btn btn-sm btn-warning"><span class="badge badge-light"><img src="app/assets/images/closed.png"> Gestión por: {{project?.userCerradoInicial}}</span></button>
+                        <button *ngIf="project?.cerrado" class="btn btn-sm btn-danger"><span class="badge badge-light"><img src="app/assets/images/closed.png"> PROYECTO CERRADO ({{project?.userCerrado}})</span></button>
+                        <button *ngIf="project?.id && !project.cerradoInicial && isAcceses(12)" [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-light" (click)="closeInicialProject()"><span class="badge badge-light"><img src="app/assets/images/open.png"></span> Cerrar Lista Inical?</button>
+                        <button *ngIf="project?.cerrado && project.cerradoInicial && isAcceses(2)" class="btn btn-sm btn-light" (click)="openProject()"><span class="badge badge-light"><img src="app/assets/images/closed.png"> {{project?.userCerrado}}</span> Abrir Proyecto?</button>
+                        <button *ngIf="project?.id && !project.cerrado && project.cerradoInicial  && isAcceses(13)" [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-danger" (click)="closeProject()"><span class="badge badge-light"><img src="app/assets/images/open.png"></span> Cerrar Proyecto?</button>
+                        <!--button [disabled]="(busySegip != null ? !busySegip.closed : false) || registers.length == 0" class="float-left btn btn-warning btn-sm" (click)="pregips()"><small>PREGIPS</small></button-->
+                        <!--button class="float-left btn btn-primary btn-sm" (click)="verficarBeneficio()"><small>Evaluar Nuevamente</small></button-->
+                        <!--button class="btn btn-primary btn-sm"><small>Verificar</small> 3XMIL</button>
+                        <button class="btn btn-primary btn-sm"><small>Verificar</small> TITULACÍON</button>
+                        <button class="btn btn-primary btn-sm"><small>Verificar</small> PVS</button-->                                          
+                    </form>
+                    <div class="float-right btn-group">
+                        <button [disabled]="(busySegip != null ? !busySegip.closed : false) || registers.length == 0" class="btn btn-warning btn-sm" (click)="validateSegip()"><small>Validar Con SEGIP</small></button>
+                        <button type="button" class="btn btn-sm btn-primary " (click)="goNext()" [disabled]="register ? (register.id > 0 ? false : true) : true">Siguiente &rarr;</button>                    
+                    </div>                    
+                </nav>                                 
+       
+    </div>    
+</div>
+
+

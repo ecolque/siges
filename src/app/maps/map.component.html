@@ -1,0 +1,235 @@
+<div class="row">
+    <div class="col-md-2 col-sm-4 border border-secondary">
+            <label class="txt11">GESTION:</label>
+            <select [(ngModel)]="year" (change)="changeYear()">
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+            </select>
+            <div *ngIf="year != 0" class="animate-right">
+                <label class="txt11">DEPARTAMENTO:</label>
+                <select [(ngModel)]="department" (change)="changeDepartment()">
+                    <option value="1">CHUQUISACA</option>
+                    <option value="2">LA PAZ</option>
+                    <option value="3">COCHABAMBA</option>
+                    <option value="4">ORURO</option>
+                    <option value="5">POTOSI</option>
+                    <option value="6">TARIJA</option>
+                    <option value="7">SANTA CRUZ</option>
+                    <option value="8">BENI</option>
+                    <option value="9">PANDO</option>
+                </select>
+            </div>
+
+            <!--script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script-->
+
+                <!--div *ngFor="let p of people; let i = index;" class="list-group-item list-group-item-action flex-column align-items-center" (click)="setClickedRow(p.id)" [class.active]="p.id == selectedRow"-->
+                <div *ngIf="year != 0 && department != 0" class="animate-right">                    
+                    <!--input class="form-control form-control-sm" placeholder="Filtrar por codigo de proyecto" type="text"-->                    
+                    <div class="txt11 bg-primary text-white"><strong>PROYECTOS:</strong> <span *ngIf="projects">{{projects.length}}</span></div>
+                    <div style="max-height: 400px; overflow: scroll;" class="no-padding border border-primary">
+                            <div class="list-group">
+                                <div *ngFor="let p of projects; let i = index;" (click)="getPeople(p.id)" [class.active]="p.id == selectedRow" class="list-group-item list-group-item-action flex-column align-items-center">
+                                    <div class="row no-padding d-flex w-100 justify-content-between">
+                                        <div class="mb-1 txt11"><b>{{i+1}}. {{p.code}}</b></div>
+                                        <span><b class="txt11">UH:</b> <span class="badge badge-primary">{{p.uh}}</span>  <b class="txt11">Benef.:</b> <span class="badge {{p.people == p.uh ? 'badge-primary' : 'badge-danger'}}">{{p.people}}</span></span>
+                                    </div>
+                                    <div class="row no-padding txt10">
+                                        <div>
+                                            {{p.name}}
+                                        </div>
+                                        <div>
+                                            {{p.areaIntervencion}}; Estado: <b>{{p.desc}}</b>
+                                        </div>
+                                    </div>
+                                </div>                                  
+                            </div>
+                    </div>
+                    <div class="badge badge-danger">?</div><small class="txt10"> En Proceso de cierre de EJECUCION</small>
+                </div>
+                <div *ngIf="year != 0 && activities" class="animate-right">
+                    <div class="txt11 bg-primary text-white"><strong>BENEFICIARIOS DE SECTORES DE LA C.O.B.</strong></div>
+                    <div class="border border-primary" style="background-color: #fff">
+                        <table class="table table-sm txt11">
+                            <thead>
+                                <tr><th>Actividad Laboral</th><th>AEVIVIENDA</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let a of activities; let i = index;" [class.bg-warning]="a.id == selectedRowActivities">
+                                    <td>{{a.name}}</td><td>{{a.num}}</td><td><button *ngIf="a.id > 0 && peopleTmp?.length > 0" (click)="selectedActivity(a.id)">+</button></td>
+                                </tr>                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </div>
+    <div class="col-md-10 col-sm-12">
+        <div class="row">
+            <div class="col-md-9 col-sm-12">
+
+
+                    
+                            <div class="wrapper" >
+                                <div id="progress" class="bg-warning"></div>
+                                <div id="map"></div>
+                            </div> 
+            
+                            <!--div id="nodelist"></div>
+                            <iframe style="width: 100%; height: 250px; border: none;" seamless src="https://www.google.com" frameborder="0" allowfullscreen onload="this.width=screen.width"></iframe-->
+            
+                            <!--div id="popup" class="popup">
+                                <a href="/" id="popup-closer">X</a>
+                                <div id="popup-content" class="txt11">
+                                    <small><b>Beneficiarios</b></small><br>
+                                    <div class="scrollbar">                            
+                                        <table class="table table-sm table-hover">                                
+                                            <tbody class="no-padding">
+                                                <tr *ngFor="let p of points; let i = index" (click)="edwin(p.id)">
+                                                    <td>{{i+1}}. {{p.name}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                        
+                                </div>
+                            </div-->
+            
+                            <div class="bg-white txt11 border border-primary" style="right:6px; top:6px; position:absolute;padding:3px; width: 200px">
+                                <b>CAPAS</b><br>
+                                <b>1. Mapas</b><br>
+                                <div style="padding-left:16px">
+                                    <label><input type="radio" name="lay"  (change)="addLayerMap(1)" checked>OSM</label><br>
+                                    <label><input type="radio" name="lay"  (change)="addLayerMap(2)">Satelite</label><br>
+                                </div>
+                                <b>2. Capas Disponibles</b><br>
+                                <div style="padding-left:6px">
+                                    <label class="{{isCheckAreaNacional ? 'font-weight-bold' : ''}}"><input type="checkbox" [(ngModel)]="isCheckAreaNacional" (change)="addAreaProtNacl(isCheckAreaNacional)">Areas Protegidas Nacionales 2016</label><br>
+                                    <label class="{{isCheckAreaDept ? 'font-weight-bold' : ''}}"><input type="checkbox" [(ngModel)]="isCheckAreaDept" (change)="addAreaProtDept(isCheckAreaDept)">Areas Protegidas Departamentales 2002</label><br>
+                                    <label class="{{isLocPoblacionEst ? 'font-weight-bold' : ''}}"><input type="checkbox" [(ngModel)]="isLocPoblacionEst" (change)="addLocPoblacionEst(isLocPoblacionEst)">Localizacion de poblaciones del Estado Plurinacional de Bolivia 2016</label><br>
+                                </div>
+                                <!--b>2. NBI POBREZA</b><br>
+                                <div style="padding-left:16px">
+                                    <label><input type="checkbox">CHUQUISACA</label><br>
+                                    <label><input type="checkbox" [(ngModel)]="isCheckLp" (change)="addProbreLP(isCheckLp)">LA PAZ</label><br>
+                                    <label><input type="checkbox" [(ngModel)]="isCheckCbba" (change)="addProbreCbba(isCheckCbba)">COCHABAMBA</label><br>
+                                    <label><input type="checkbox">ORURO</label><br>
+                                    <label><input type="checkbox">POTOSI</label><br>
+                                    <label><input type="checkbox">TARIJA</label><br>
+                                    <label><input type="checkbox">SANTA CRUZ</label><br>
+                                    <label><input type="checkbox">BENI</label><br>
+                                    <label><input type="checkbox">PANDO</label>
+                                </div-->
+                            </div>                                                                 
+
+
+
+
+
+
+
+                <!--agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [mapTypeControl]='true' [fullscreenControl]="true">
+                    <agm-marker *ngFor="let p of people; let i = index;" [latitude]="p.lat" [longitude]="p.lng" [iconUrl]="getIcon(p)" (markerClick)="showInfoPeople(p.registerId, 0)">
+                            <agm-info-window>
+                            <strong>{{p.name}} <small (click)="showInfoPeople(p.registerId, 1)" class="text-primary">Mas..</small></strong>
+                        </agm-info-window>
+                    </agm-marker>
+                </agm-map-->
+            </div>            
+                <div class="col-md-3 col-sm-12 no-padding bg-white animate-right" *ngIf="dataGrl">
+                            <div class="card border border-primary" >
+                                <div class="card-header bg-primary text-white" style="height:35px"><small>CRITERIOS</small></div>
+                                <div class="card-body" style="max-height: 612px; overflow: scroll; overflow-x:hidden;">
+                                    <label><b  class="txt11">GESTION {{year}}: </b><span class="badge badge-warning">TOTAL: {{dataGrl.total}}</span></label><br>
+                                    <span class="badge badge-light"> <img [src]="iconMSola" height="25px"> <span class="text-danger">Madre Sola: {{dataGrl.totalMadreSolo}}</span></span>
+                                    <span class="badge badge-light"> <img [src]="iconPSolo" height="30px"> <span class="text-danger">Padre Solo: {{dataGrl.totalPadreSolo}}</span></span>           
+                                    <span class="badge badge-light"><img [src]="iconTerceraEdad" height="25px"><span class="text-primary">Tercera Edad: {{dataGrl.totalTerceraEdad}}</span></span>
+                                    <span class="badge badge-light"><img [src]="iconDisc" height="25px"> <span class="text-primary">Discapacidad: {{dataGrl.totalDiscapacidad}}</span></span><br>
+                                    <label class="txt11"><b>POR DEPARTAMENTO</b></label>
+                                    <div class="row no-padding txt10">
+                                        <!--div class="col-sm-12 border border-left-0 border-top-0 border-bottom-0 border-primary"-->
+                                        <div *ngFor="let d of dataGrl.details; let i = index;">
+                                            <div class="col-sm rounded" [class.bg-primary]="d.departmentId == department" [class.rounded-pill]="d.departmentId == department" [class.text-white]="d.departmentId == department">
+                                                <b> {{i+1}}. {{d.deparment}}</b>
+                                                <ul>
+                                                    <li>Madre Sola: {{d.madreSola}}</li>
+                                                    <li>Padre Solo: {{d.padreSolo}}</li>
+                                                    <li>Tercera Edad: {{d.terceraEdad}}</li>
+                                                    <li>Discapacidad: {{d.discapacidad}}</li>
+                                                </ul>
+                                            </div>
+                                        </div>                                                                                                  
+                                    </div>               
+                                </div>
+                            </div>
+                    
+                </div>
+        </div>
+        <div class="row">            
+                    <div class="col-sm-12 txt14 border border-primary no-padding bg-white animate-left" *ngIf="peopleTmp.length > 0">
+                            <div class="card bg-primary" >
+                                <div class="card-header text-white no-padding" style="height:35px">
+                                    <small>BENEFICIARIOS</small>
+                                    <span  class="badge badge-light">
+                                        <img [src]="iconMSola" height="25px">
+                                        <span>Madre Sola: {{madreSolo}}</span>                            
+                                    </span>
+                                    <span  class="badge badge-light">
+                                        <img [src]="iconPSolo" height="30px">
+                                        <span> Padre Solo: {{padreSolo}}</span>
+                                    </span>
+                                    <span class="badge badge-light">
+                                        <img [src]="iconTerceraEdad" height="25px">
+                                        Tercera Edad: {{terceraEdad}}
+                                    </span>
+                                    <span class="badge badge-light">
+                                        <img [src]="iconDisc" height="25px">
+                                         Discapacidad: {{disc}}
+                                    </span>
+                                    <span class="badge badge-light">
+                                        <img [src]="iconFam" height="25px">
+                                        Otros: {{otros}}
+                                    </span>
+                                    <small *ngIf="peopleTmp.length > 0 && (isCheckAreaNacional || isCheckAreaDept || isLocPoblacionEst)" class="bg-danger text-white">Para ver fotos de los beneficiarios, no debe haber ninguna capa sobrepuesta</small>
+                                    <button class="btn btn-sm btn-light float-right" (click)="resetPeople()">restablecer</button>
+                                </div>
+                            </div>
+                            <label *ngFor="let p of peopleTmp; let i = index;" class="border border-secondary badge" (click)="showInfoPeople(p.registerId, 2)" [class.bg-success]="p.registerId == selectedRowPerson" [class.bg-warning]="p.actId == selectedRowActivities" [class.text-white]="p.registerId == selectedRowPerson">
+                                <label *ngIf="p.lat == 0" class="text-danger">*</label>
+                                <b>{{i+1}}. {{p.name}}</b>
+                                <label *ngIf="p.padreSolo == 1" class="bg-danger text-white rounded">Padre Solo</label>
+                                <label *ngIf="p.madreSolo == 1" class="bg-danger text-white rounded">Madre Sola</label>
+                                <label *ngIf="p.disc == 1 || p.discFam == 1" class="bg-success text-white rounded">Discapacidad</label>
+                                <label *ngIf="p.terceraEdad == 1 || p.terceraEdadFam == 1" class="bg-primary text-white rounded">Tercera Edad</label>
+                            </label>
+                            <div class="text-danger txt10">* No cuenta con inspecciones</div>
+                    </div>
+                    <small *ngIf="msgList"><b>{{msgList}}</b></small>            
+        </div>
+    </div>
+</div>
+
+<div class="row">    
+    
+    <!--div class="col-sm-6 border border-primary txt10 card no-padding">
+        <div style="max-height: 250px; overflow: scroll;">
+            <table class="table table-sm table-bordered table-hover">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>#</th>
+                        <th>Beneficiarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of people; let i = index;" (click)="showInfoPeople(p.registerId)" [class.table-success]="p.registerId == selectedRowPerson">
+                        <th>{{i+1}}</th>
+                        <th>
+                            {{p.name}} 
+                            <label *ngIf="p.padreSolo == 1" class="bg-danger text-white rounded">Padre Solo</label>
+                            <label *ngIf="p.madreSolo == 1" class="bg-danger text-white rounded">Madre Sola</label>
+                            <label *ngIf="p.disc == 1 || p.discFam == 1" class="bg-success text-white rounded">Discapacidad</label>
+                            <label *ngIf="p.terceraEdad == 1 || p.terceraEdadFam == 1" class="bg-primary text-white rounded">Tercera Edad</label>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div-->
+</div>    

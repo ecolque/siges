@@ -1,0 +1,108 @@
+
+<div class="modal-header bg-primary text-white">    
+        <h6>{{person}}</h6>     
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger col-sm" role="alert" *ngIf="error">{{error}}</div>        
+        <fieldset [disabled]="credito?.input">
+            <div class="row">
+                <div class="col-sm-4">
+                    <ul class="list-group">
+                        <li class="list-group-item justify-content-between" *ngFor="let e of estados; let i = index">
+                            <span class="badge badge-pill {{e.dependency < credito.id ? 'badge-success' : 'badge-danger'}}">{{i+1}}</span>
+                            {{e.name}}
+                            <div class="input-group" *ngIf="e.txt && e.id == credito.id">
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="e.causal">
+                                <button class="btn btn-sm btn-danger" (click)="desistirCredito(e)">Desistir?</button>
+                             </div>                        
+                            <button *ngIf="e.id > credito.id" [disabled]="e.dependency > credito.id" (click)="updateState(e)" type="button" class="btn btn-primary btn-sm btn-block">{{e.name}}?</button>
+                        </li>                        
+                    </ul>
+                </div>
+                <div class="col-sm" *ngIf="credito?.id > 0">
+                    <label for="col-form-label-sm"><b>Datos Financieros</b></label>                    
+                    <div class="row">                        
+                        <div class="col-sm">
+                            <label for="col-form-label-sm"><b>Entidad Financiera</b></label>
+                            <select *ngIf="data" class="form-control form-control-sm" [(ngModel)]="data.dato.id">
+                                <option *ngFor="let e of data?.entidades" [ngValue]="e.id">{{e.name}}</option>                            
+                            </select>                    
+                        </div>
+                        <div class="col-sm">
+                            <label for="col-form-label-sm"><b>Oficial Credito - Nro. Celular</b></label>
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="data?.dato.name">                    
+                        </div>
+                    </div>                    
+                    <button *ngIf="credito?.id != 7" class="btn btn-sm btn-warning" (click)="saveEntityAndOficialByRegisterId()">Guardar</button>
+                    <br><br>
+                    <label for="col-form-label-sm"><b>Datos Inmuleble</b></label>
+                    <h4>{{data?.inmueble}}</h4>
+                    <div class="row">
+                        <div class="col-sm txt11">
+
+                            <ngb-tabset type="pills">
+                                <ngb-tab *ngFor="let i of data?.inmuebles" title="{{i.name}}">
+                                    <ng-template ngbTabContent>
+                                        <div style="max-height: 350px; overflow: scroll;">
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>Inmueble</th><th>Oficial Credito</th><th>Solicitante</th><th></th>
+                                                    </tr>
+                                                    <tr *ngFor="let d of i.datos" class="{{d.person != null ? 'table-success' : ''}}">
+                                                        <td>{{d.name}}</td>
+                                                        <td>{{d.ofCredito}}</td>
+                                                        <td>{{d.person}} </td>
+                                                        <td><button *ngIf="d.person == null && credito?.id != 7" class="btn btn-sm txt11" (click)="asignarInmueble(d)">Asignar</button></td>
+                                                    </tr>
+                                                </table>
+                                        </div>
+                                    </ng-template>
+                                </ngb-tab>
+                            </ngb-tabset>
+
+                            <!--div style="max-height: 450px; overflow: scroll;">                                
+                                <div *ngFor="let i of data?.inmuebles" class="txt11">
+                                    <b>{{i.name}}</b>       
+                                    <div style="max-height: 250px; overflow: scroll;">
+                                        <table class="table">
+                                            <tr>
+                                                <th>Inmueble</th><th>Oficial Credito</th><th>Solicitante</th><th></th>
+                                            </tr>
+                                            <tr *ngFor="let d of i.datos" class="{{d.person != null ? 'table-success' : ''}}">
+                                                <td>{{d.name}}</td>
+                                                <td>{{d.ofCredito}}</td>
+                                                <td>{{d.person}} </td>
+                                                <td><button *ngIf="d.person == null" class="btn btn-sm txt11" (click)="asignarInmueble(d)">Asignar</button></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>                                                               
+                            </div-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--div class="row">
+                <div class="col-sm-4" *ngFor="let e of estados; let i = index">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4><span class="badge {{e.dependency < credito.id ? 'badge-success' : 'badge-danger'}}">{{i+1}}.</span>{{e.name}}</h4>                            
+                            <div class="input-group" *ngIf="e.txt && e.id == credito.id">
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="e.causal">
+                                <button class="btn btn-sm btn-danger" (click)="desistirCredito(e)">Desistir?</button>
+                            </div>                        
+                            <button *ngIf="e.id > credito.id" [disabled]="e.dependency > credito.id" (click)="updateState(e)" type="button" class="btn btn-primary btn-sm btn-block">{{e.name}}?</button>
+                        </div>
+                    </div>
+                </div>            
+            </div-->
+            
+            
+        </fieldset>        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="closeModal()">Cerrar</button>
+    </div>

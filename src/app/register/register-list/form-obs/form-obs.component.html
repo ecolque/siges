@@ -1,0 +1,315 @@
+
+<div class="modal-header bg-primary text-white">    
+    <h6>Formulario</h6>     
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('edwin')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm">
+            <p class="font-weight-bold">{{register?.person.nombres}} {{register?.person.paterno}} {{register?.person.paterno}} - {{register?.person.document}}</p>            
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="col-sm">    
+                <ngb-tabset >
+                        <ngb-tab title="BENEFICIOS">
+                        <ng-template ngbTabContent>
+                                <br>
+                            <fieldset [disabled]="!isAcceses(3)">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="card">
+                                                <h6 class="card-header text-white" [class.bg-success]="listCorte" [class.text-success]="!listCorte">DATOS DE LA CORTE ELECTORAL</h6>      
+                                                <div class="card-body border" [class.border-success]="listPvs" style="padding:0">
+                                                    <table class="table table-bordered table-sm table-responsive" *ngIf="listCorte">
+                                                        <thead class="thead-inverse">
+                                                            <tr>                                                                      
+                                                                <th><small>Nombres</small></th>
+                                                                <th><small>Paterno</small></th>
+                                                                <th><small>Materno</small></th>
+                                                                <th><small>Num. Doc.</small></th>                            
+                                                                <th><small>Tipo Doc.</small></th>
+                                                                <th><small>F. Nac.</small></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let obj of listCorte">                                                                      
+                                                                <td><small>{{obj.nombres}}</small></td>
+                                                                <td><small>{{obj.paterno}}</small></td>
+                                                                <td><small>{{obj.materno}}</small></td>
+                                                                <td><small>{{obj.documento}}</small></td>
+                                                                <td><small>{{obj.departamento}}</small></td>
+                                                                <td><small>{{obj.proyecto}}</small></td>
+                                                            </tr>            
+                                                        </tbody>
+                                                    </table>      
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                        
+                                    <br>                                
+                                    <div class="row">                                   
+                                        <div class="col-sm">   
+                                            <div class="card">
+                                                <h6 class="card-header text-white" [class.bg-danger]="listPvs && !register?.pvs.manual" [class.bg-info]="register?.pvs.manual" [class.text-success]="!listPvs">DATOS DE PROYECTOS PVS / UEVE.</h6>
+                                                <div class="card-body border" [class.border-danger]="listPvs" style="padding:0">                                                
+                                                    <small *ngIf="!listPvs" style="padding:12px"><b>La persona no se encuentra registrada en la Base de Datos de Proyectos del PVS / UEVE !!!</b></small>
+                                                    <table class="table  table-sm table-responsive-sm table-bordered" *ngFor="let obj of listPvs">
+                                                        <thead>
+                                                            <tr>                                      
+                                                                <th><small><b>ESPOSO: {{obj.nombres}} {{obj.paterno}} {{obj.materno}}</b></small></th>                                                
+                                                                <th><small><b>CONYUGUE</b></small></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>              
+                                                                <td>
+                                                                    <small>Nombres: <b>{{obj.nombres}}</b></small><br>
+                                                                    <small>Paterno: <b>{{obj.paterno}}</b></small><br>
+                                                                    <small>Materno: <b>{{obj.materno}}</b></small><br>
+                                                                    <small>Num. Doc.: <b>{{obj.documento}}</b></small><br>                                                               
+                                                                </td>                                                                                                                                                
+                                                                <td>                                                    
+                                                                    <small>Nombres: <b>{{obj.nombresConyugue}}</b></small><br>
+                                                                    <small>Paterno: <b>{{obj.paternoConyugue}}</b></small><br>
+                                                                    <small>Materno: <b>{{obj.maternoConyugue}}</b></small><br>
+                                                                    <small>Num. Doc.: <b>{{obj.ciConyugue}}</b></small><br>
+                                                                </td>
+                                                            </tr>    
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                        <small>Programa: <b>{{obj.tipo}}</b></small><br>
+                                                                        <small>Código Proyecto: <b>{{obj.proyCod}}</b></small><br>
+                                                                        <small>Nombre Proyecto: <b>{{obj.proyecto}}</b></small><br>
+                                                                        <small>Situación: <b>{{obj.estado}}</b></small><br>
+
+                                                                        <small><b>Autorizar?</b></small>  
+                                                                        <select [(ngModel)]="obj.autorizado"
+                                                                                class="form-control form-control-sm">
+                                                                            <option [ngValue]="true">Si</option>    
+                                                                            <option [ngValue]="false">No</option>    
+                                                                        </select>                                                                                                        
+                                                                        <textarea *ngIf="obj.autorizado" class="form-control form-control-sm" [(ngModel)]="obj.causal"></textarea>
+                                                                        <button *ngIf="!register.valid" (click)="autorizarBeneficio(obj)" type="button" class="btn btn-sm btn-primary">Guardar Autoriazción</button>
+                                                                        <label class="badge badge-dark">{{obj.msg}}</label>
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>      
+                                                </div>
+                                            </div>     
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                    <div class="col-sm">
+                                        <div class="card">
+                                            <h6 class="card-header text-white" [class.bg-danger]="listTitulacion && !register?.titulacion.manual" [class.bg-info]="register?.titulacion.manual" [class.text-success]="!listTitulacion">DATOS DE PROYECTOS DE TITULACION. </h6>
+                                            <div class="card-body border" [class.border-danger]="listTitulacion" style="padding:0">
+                                                <small *ngIf="!listTitulacion" style="padding:12px"><b>La persona no se encuentra registrada en la Base de Datos de Proyectos del TITULACION !!!</b></small>
+                                                <table class="table  table-sm table-responsive-sm table-bordered" *ngFor="let obj of listTitulacion">
+                                                    <thead class="thead-inverse">
+                                                        <tr>                            
+                                                        <th><small><b>{{obj.nombres}} {{obj.paterno}} {{obj.materno}}</b></small></th>                                            
+                                                        <th><small>Observaciones</small></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>              
+                                                            <td>
+                                                                <small>Nombres: <b>{{obj.nombres}}</b></small><br>
+                                                                <small>Paterno: <b>{{obj.paterno}}</b></small><br>
+                                                                <small>Materno: <b>{{obj.materno}}</b></small><br>
+                                                                <small>Num. Doc.: <b>{{obj.documento}}</b></small><br>                                                    
+                                                                <small>Nombre Proyecto: <b>{{obj.proyecto}}</b></small><br>
+                                                                <small>Departamento: <b>{{obj.departamento}}</b></small>
+                                                            </td>
+                                                            <td style="width:50%">                                                    
+                                                                <small><b>Autorizar?</b></small>  
+                                                                <select [(ngModel)]="obj.autorizado"
+                                                                        class="form-control form-control-sm">
+                                                                    <option [ngValue]="true">Si</option>    
+                                                                    <option [ngValue]="false">No</option>    
+                                                                </select>                                                                                                        
+                                                                <textarea *ngIf="obj.autorizado" class="form-control form-control-sm" [(ngModel)]="obj.causal"></textarea>
+                                                                <button *ngIf="!register.valid" (click)="autorizarBeneficio(obj)" type="button" class="btn btn-sm btn-primary">Guardar Autoriazción</button>
+                                                                <label class="badge badge-dark">{{obj.msg}}</label>
+                                                            </td>
+                                                        </tr>            
+                                                    </tbody>
+                                                </table>   
+                                            </div>     
+                                        </div>                          
+                                    </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm">    
+                                            <div class="card">
+                                                <h6 class="card-header text-white" [class.bg-danger]="list3xmil && !register?.tresxmil.manual" [class.bg-info]="register?.tresxmil.manual" [class.text-success]="!list3xmil">DATOS DE PROYECTOS DE 3X1000.</h6>
+                                                <div class="card-body border" [class.border-danger]="list3xmil" style="padding:0">
+                                                    <small *ngIf="!list3xmil" style="padding:12px"><b>La persona no se encuentra registrada en la Base de Datos de Proyectos del 3XMIL !!!</b></small>
+                                                    <table class="table  table-sm table-responsive-sm table-bordered" *ngFor="let obj of list3xmil">
+                                                        <thead class="thead-inverse">
+                                                            <tr>                            
+                                                                <th><small><b>{{obj.nombres}} {{obj.paterno}} {{obj.materno}}</b></small></th>                                                
+                                                                <th><small>Observaciones</small></th>                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>              
+                                                                <td>
+                                                                    <small>Nombres: <b>{{obj.nombres}}</b></small><br>
+                                                                    <small>Paterno: <b>{{obj.paterno}}</b></small><br>
+                                                                    <small>Materno: <b>{{obj.materno}}</b></small><br>
+                                                                    <small>Num. Doc.: <b>{{obj.documento}}</b></small><br>                                                    
+                                                                    <small>Nombre Proyecto: <b>{{obj.proyecto}}</b></small><br>
+                                                                    <small>Departamento: <b>{{obj.departamento}}</b></small>
+                                                                    <small>Estado: <b>{{obj.estado}}</b></small>
+                                                                </td>
+                                                                <td style="width:50%">                                                    
+                                                                    <small><b>Autorizar?</b></small>  
+                                                                    <select [(ngModel)]="obj.autorizado"
+                                                                            class="form-control form-control-sm">
+                                                                        <option [ngValue]="true">Si</option>    
+                                                                        <option [ngValue]="false">No</option>    
+                                                                    </select>                                                                                                        
+                                                                    <textarea *ngIf="obj.autorizado" class="form-control form-control-sm" [(ngModel)]="obj.causal"></textarea>
+                                                                    <button *ngIf="!register.valid" (click)="autorizarBeneficio(obj)" type="button" class="btn btn-sm btn-primary">Guardar Autoriazción</button>                                                    
+                                                                    <label class="badge badge-dark">{{obj.msg}}</label>
+                                                                </td>
+                                                            </tr>            
+                                                        </tbody>
+                                                    </table>
+                                                </div>  
+                                            </div>                                  
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm">  
+                                            <div class="card">
+                                                <h6  class="card-header text-white" [class.bg-danger]="listAev && !register?.aev.manual" [class.bg-info]="register?.aev.manual" [class.text-success]="!listAev">DATOS DE PROYECTOS AEVIVIENDA.</h6>
+                                                <div class="card-body border" [class.border-danger]="listAev" style="padding:0">                                                  
+                                                    <small *ngIf="!listAev" style="padding:12px"><b>La persona no se encuentra registrada en la Base de Datos de Proyectos de la AEV !!!</b></small>                                                        
+                                                        <table class="table  table-sm table-responsive-sm table-bordered" *ngFor="let obj of listAev">
+                                                            <thead class="thead-inverse">
+                                                            <tr>    
+                                                                <th><small><b>{{obj.descripcion}} - {{obj.nombres}} {{obj.paterno}} {{obj.materno}}</b></small></th>
+                                                                <th><small>Observaciones</small></th>                                                                                      
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>              
+                                                                    <td>
+                                                                        <small>Tipo: <b>{{obj.descripcion}}</b></small><br>
+                                                                        <small>Nombres: <b>{{obj.nombres}}</b></small><br>
+                                                                        <small>Paterno: <b>{{obj.paterno}}</b></small><br>
+                                                                        <small>Materno: <b>{{obj.materno}}</b></small><br>
+                                                                        <small>Num. Doc.: <b>{{obj.documento}}</b></small><br>                                                    
+                                                                        <small>Estado: <b>{{obj.estado}}</b></small><br>
+                                                                        <small>Nombre Proyecto: <b>{{obj.proyecto}}</b></small><br>
+                                                                        <small>Departamento: <b>{{obj.departamento}}</b></small><br>
+                                                                        <!--small>Estado Proyecto: <b>{{obj.estado}}</b></small-->
+                                                                    </td>
+                                                                    <td style="width:50%">                                                    
+                                                                        <small><b>Autorizar?</b></small>  
+                                                                        <select [(ngModel)]="obj.autorizado"
+                                                                                class="form-control form-control-sm">
+                                                                            <option [ngValue]="true">Si</option>    
+                                                                            <option [ngValue]="false">No</option>    
+                                                                        </select>                                                                                                        
+                                                                        <textarea *ngIf="obj.autorizado" class="form-control form-control-sm" [(ngModel)]="obj.causal"></textarea>
+                                                                        <button *ngIf="!register.valid" (click)="autorizarBeneficio(obj)" type="button" class="btn btn-sm btn-primary">Guardar Autoriazción</button>  
+                                                                        <label class="badge badge-dark">{{obj.msg}}</label>
+                                                                    </td>
+                                                                </tr>            
+                                                            </tbody>
+                                                        </table>                                                         
+                                                </div>
+                                            </div>       
+                                        </div>                                       
+                                    </div>  
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm">  
+                                            <div class="card">
+                                                <h6  class="card-header text-white bg-success" [class.bg-info]="register?.sinarep.manual" [class.text-success]="!listSinarep">DATOS - SINAREP.</h6>
+                                                <div class="card-body border" [class.border-danger]="listAev" style="padding:0">                                                                                                      
+                                                    <table class="table  table-sm table-responsive-sm table-bordered" *ngFor="let obj of listSinarep">                                                        
+                                                        <tbody>
+                                                            <tr>                                                                              
+                                                                <td style="width:50%">                                                    
+                                                                    <small><b>REGISTRAR BENEFICIO SINAREP? (esta acción hara que la persona se cambie a Rechazado)</b></small>  
+                                                                    <select [(ngModel)]="obj.autorizado"
+                                                                            class="form-control form-control-sm">
+                                                                        <option [ngValue]="true">Si</option>    
+                                                                        <option [ngValue]="false">No</option>    
+                                                                    </select>                                                                                                        
+                                                                    <textarea *ngIf="obj.autorizado" class="form-control form-control-sm" [(ngModel)]="obj.causal"></textarea>
+                                                                    <button *ngIf="!register.valid" (click)="autorizarBeneficioSinarep(obj)" type="button" class="btn btn-sm btn-primary">Guardar Autoriazción</button>  
+                                                                    <label class="badge badge-dark">{{obj.msg}}</label>
+                                                                </td>
+                                                            </tr>            
+                                                        </tbody>
+                                                    </table>                                                         
+                                                </div>
+                                            </div>       
+                                        </div>                                       
+                                    </div>
+                            </fieldset>                                                                         
+                        </ng-template>
+                        </ngb-tab>
+                        <ngb-tab *ngIf="showPoints">
+                        <ng-template ngbTabTitle><b>PUNTAJES</b></ng-template>
+                        <ng-template ngbTabContent>                  
+                                <br>                                                                
+                                    <table class="table table-bordered table-sm table-responsive">
+                                        <thead class="thead-inverse">
+                                            <tr>              
+                                                <th><small>#</small></th>
+                                                <th><small>Variable</small></th>
+                                                <th><small>Puntaje</small></th>                        
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let obj of puntajes; let i = index;">              
+                                                <td><small>{{i+1}}</small></td>
+                                                <td><small>{{obj.variable}}</small></td>
+                                                <td><span class="badge badge-pill"
+                                                                [class.badge-primary]="obj.puntaje > 0"
+                                                                [class.badge-danger]="obj.puntaje == 0">
+                                                            {{obj.puntaje}}
+                                                    </span>
+                                                </td>                            
+                                            </tr>      
+                                            <tr>
+                                                <td colspan="2">
+                                                    TOTAL:
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-pill"
+                                                                [class.badge-primary]="totalPuntaje > 0"
+                                                                [class.badge-danger]="totalPuntaje == 0">
+                                                            {{totalPuntaje}}
+                                                    </span>                                
+                                                </td>
+                                            </tr>      
+                                        </tbody>
+                                    </table>  
+                                
+                        </ng-template>
+                        </ngb-tab>          
+                </ngb-tabset>  
+            </div>
+    </div>                                      
+
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('edwin')">Cerrar</button>
+</div>

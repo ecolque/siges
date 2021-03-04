@@ -1,0 +1,10 @@
+
+<a *ngIf="register?.id" [routerLink]="[register? register.id : 0, 'edit']" >SOLICITANTE</a>
+<a *ngIf="register" [routerLink]="[register? register.id : 0, 'family']">MIEMBROS DEL HOGAR</a>
+<!--a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">INGRESOS ECONOMICOS</a>
+<a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">TENENCIA DE LA VIVIENDA/DATOS SERVICIOS BASICOS</a-->           
+{{register}}
+<!--a *ngIf="register" [routerLink]="[register? register.id : 0, 'family']">MIEMBROS DEL HOGAR</a>
+<a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">INGRESOS ECONOMICOS</a>
+<a *ngIf="register" [routerLink]="[register? register.id : 0, 'list']">TENENCIA DE LA VIVIENDA/DATOS SERVICIOS BASICOS</a-->
+ <router-outlet></router-outlet>

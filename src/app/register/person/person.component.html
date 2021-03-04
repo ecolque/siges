@@ -1,0 +1,621 @@
+<form [formGroup]="form" #f="ngForm" (ngSubmit)="onSubmit(f)">           
+    
+    <div *ngIf="error" class="alert alert-danger">        
+        {{error}}        
+    </div>            
+<fieldset [disabled]="!isAcceses(3)">
+    <div class="card  border border-primary">        
+        <h6 class="card-header bg-primary text-white" *ngIf="!activeFamilyForm">DATOS DEL TITULAR</h6>        
+        <div class="card-body">   
+            <fieldset [disabled]="labelDisabled">
+                <div class="row">                               
+                    <div class="col-sm">
+                        <label class="col-form-label-sm" 
+                            [class.text-success]="form.controls.paterno.value"
+                            [class.font-weight-bold]="form.controls.paterno.value"> Apellido Paterno: <small>{{form.controls.fnameS.value}}</small></label>
+                        <input  uppercase 
+                                required 
+                                formControlName="paterno"  
+                                type="text" 
+                                class="form-control form-control-sm input"
+                                [class.is-invalid]="(!form.controls.paterno.valid && form.controls.paterno.touched) || (form.controls.paterno.errors != null && form.controls.paterno.errors?.msg != null)"
+                                [class.is-valid]="form.controls.paterno.value != null"> 
+                        <small *ngIf="form.controls.paterno.errors" class="invalid-feedback">
+                            {{form.controls.paterno.errors?.msg}}                        
+                        </small>                    
+                    </div>
+
+                    <div class="col-sm form-group" 
+                            [class.text-success]="form.controls.materno.value"
+                            [class.font-weight-bold]="form.controls.materno.value">
+                        <label for="lname" class="col-form-label-sm">Apellido Materno: <small>{{form.controls.lnameS.value}}</small></label>
+                        <input formControlName="materno" 
+                                type="text" 
+                                class="form-control form-control-sm input" 
+                                [class.is-invalid]="(!form.controls.materno.valid && form.controls.materno.touched) || (form.controls.materno.errors != null && form.controls.materno.errors?.msg != null)"
+                                [class.is-valid]="form.controls.materno.value != null">     
+                        <small *ngIf="form.controls.materno.errors" class="invalid-feedback">
+                            {{form.controls.materno.errors?.msg}}                        
+                        </small>                            
+                    </div>
+
+                    <div class="col-sm form-group" [class.text-success]="form.controls.especial.value != null">
+                        <label for="lname" class="col-form-label-sm">Apellido especial:</label>
+                        <input formControlName="especial" 
+                                type="text" 
+                                class="form-control form-control-sm input" 
+                                [class.is-invalid]="(!form.controls.especial.valid && form.controls.especial.touched) || (form.controls.especial.errors != null && form.controls.especial.errors?.msg != null)"
+                                [class.is-valid]="form.controls.especial.value != null">        
+                        <small *ngIf="form.controls.especial.errors" class="invalid-feedback">
+                            {{form.controls.especial.errors?.msg}}                        
+                        </small>                        
+                    </div>
+
+                    <div class="col-sm" 
+                            [class.text-success]="form.controls.nombres.value"
+                            [class.font-weight-bold]="form.controls.nombres.value">                                        
+                        <label for="nombres" class="col-form-label-sm">Nombres: <small>{{form.controls.nameS.value}}</small></label>
+                        <input id="nombres" required
+                                formControlName="nombres" 
+                                class="form-control form-control-sm input" 
+                                type="text" 
+                                [class.is-invalid]="(!form.controls.nombres.valid && form.controls.nombres.touched)  || (form.controls.nombres.errors != null && form.controls.nombres.errors?.msg != null)"
+                                [class.is-valid]="form.controls.nombres.value != null">
+                        <small *ngIf="form.controls.nombres.errors" class="invalid-feedback">
+                            {{form.controls.nombres.errors?.msg}}                        
+                        </small>                                     
+                    </div>
+                </div>   
+            </fieldset>
+                <div class="row">        
+                    <div class="col-sm">
+                        <!--[class.has-danger]="form.controls.genero.errors"-->
+                        <label class="col-form-label-sm">Género</label>                               
+                        <div>                        
+                            <label class="custom-control custom-radio col-form-label-sm" *ngFor="let gen of genders">
+                                <input  [value]="gen"  
+                                        required  
+                                        formControlName="genero" 
+                                        type="radio" class="custom-control-input"
+                                        class="custom-control-input form-control-sm"
+                                        [class.is-invalid]="form.controls.genero.errors"> 
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">{{gen.name}}</span>
+                            </label>                                                                                       
+                        </div> 
+                        <small *ngIf="form.controls.genero.errors" style="color:red">
+                                {{form.controls.genero.errors?.msg}}
+                        </small>  
+                    </div>            
+                    
+                    <!--DATOS NACIMIENTO-->
+                    <div class="col-sm-2">
+                        <label class="col-form-label-sm" >Departamento. Nac.:</label>
+                         <select required 
+                                formControlName="deptNac" 
+                                (change) = "searchProvincias()"
+                                class="form-control form-control-sm select"                                
+                                [class.is-invalid]="(form.controls.deptNac.touched && form.controls.deptNac.value.id <= 0) || (form.controls.deptNac.errors != null && form.controls.deptNac.errors?.msg != null)">
+                            <option *ngFor="let dept of deptNacs" [ngValue]="dept">{{dept.name}}</option>    
+                        </select> 
+                        <small *ngIf="form.controls.deptNac.errors" class="invalid-feedback"> 
+                            {{form.controls.deptNac.errors?.msg}}
+                        </small>  
+                    </div>                     
+
+                    <div class="col-sm-2">
+                        <label class="col-form-label-sm" >Provincia. Nac.:</label>
+                         <select required 
+                                formControlName="provNac" 
+                                class="form-control form-control-sm select"
+                                [class.is-invalid]="(form.controls.provNac.touched && form.controls.provNac.value.id <= 0) || (form.controls.provNac.errors != null && form.controls.provNac.errors?.msg != null)">
+                            <option *ngFor="let prov of provNacs" [ngValue]="prov">{{prov.name}}</option>    
+                        </select> 
+                        <small *ngIf="form.controls.provNac.errors" class="invalid-feedback"> 
+                            {{form.controls.provNac.errors?.msg}}
+                        </small>  
+                    </div>
+
+                    <div class="col-sm">                                        
+                        <label for="localidad" class="col-form-label-sm">Localidad Nac:</label>
+                        <input id="localidad" required
+                                formControlName="localidad" 
+                                class="form-control form-control-sm input" 
+                                type="text" 
+                                [class.is-invalid]="(!form.controls.localidad.valid && form.controls.localidad.touched)  || (form.controls.localidad.errors != null && form.controls.localidad.errors?.msg != null)">
+                        <!--label><small><input type="checkbox"> Extranjero?</small></label-->
+                        <small *ngIf="form.controls.localidad.errors" class="invalid-feedback">
+                            {{form.controls.localidad.errors?.msg}}                        
+                        </small>                                     
+                    </div>
+
+                    <!--div class="col-sm-5">                                        
+                        <template #rt let-r="result" let-t="term">        
+                            {{ r.name}}
+                        </template>
+                        <label class="col-form-label-sm" >Lugar de Nacimiento: <small>(mun-prov-dept)</small> </label>                    
+                        <input [ngbTypeahead]="search" 
+                                [resultTemplate]="rt" 
+                                [inputFormatter]="formatter"
+                                required  
+                                formControlName="munNac" 
+                                type="text"
+                                class="form-control form-control-sm" 
+                                [class.is-invalid]="(!form.controls.munNac.valid && form.controls.munNac.touched) || (form.controls.munNac.errors != null && form.controls.munNac.errors?.msg != null)">                   
+                        <small *ngIf="form.controls.munNac.errors" style="color:red"> 
+                            {{form.controls.munNac.errors?.msg}}
+                        </small> 
+                    </div--> 
+                    
+                    <!--FECHA NACIMIENTO-->
+                    <fieldset [disabled]="labelDisabled">
+                        <div class="col-sm">                                    
+                            <label class="col-form-label-sm" 
+                                [class.text-success]="form.controls.fnac.value?.year"
+                                [class.font-weight-bold]="form.controls.fnac.value?.year">
+                                Fecha De Nacimiento:<strong class="text-danger">(*)</strong> <small>yyyy-mm-dd</small>
+                            </label>
+                            <div class="input-group ">
+                                <input id="fname"  ngbDatepicker #d="ngbDatepicker" 
+                                        required 
+                                        formControlName="fnac" 
+                                        class="form-control form-control-sm input" placeholder="yyyy-mm-dd"
+                                        [class.is-invalid]="(!form.controls.fnac.valid && form.controls.fnac.touched) || (form.controls.fnac.errors != null && form.controls.fnac.errors?.msg != null)"
+                                        [class.is-valid]="form.controls.fnac.value != null"> 
+                                <div class="input-group-addon" (click)="d.toggle()" >                        
+                                    <label style="width: 1.2rem; height: 1rem; cursor: pointer;">▓</label>                        
+                                </div>
+                            </div>                    
+                            <small *ngIf="form.controls.fnac.errors" style="color:red">
+                                    {{form.controls.fnac.errors?.msg}}
+                            </small> 
+                        </div>                                
+                    </fieldset>
+                </div>            
+
+            <div class="row">            
+                
+                <div class="col-sm-5" >                                       
+                    <label class="col-form-label-sm" [class.text-danger]="(form.controls.document.touched && form.controls.document.value <= 0) || (form.controls.document.errors != null && form.controls.document.errors?.msg != null)">
+                        <strong>Num. Documento: <small>{{form.controls.documentS.value}}</small></strong>
+                    </label>                
+                    <div class="input-group">                       
+                        <input onfocus=""
+                            formControlName="document"
+                            required 
+                            name="person.document" 
+                            type="text"                           
+                            class="form-control form-control-sm"
+                            (keyup)="controlChangeDocument()"                                                       
+                            [class.is-invalid]="(form.controls.document.touched && form.controls.document.value <= 0) || (form.controls.document.errors != null && form.controls.document.errors?.msg != null)"
+                            placeholder="Ingrese numero de CI">                           
+                        <div class="input-group-append">                            
+                            <button [disabled]="busy != null ? !busy.closed : false" class="btn btn-default" type="button" (click)="searchDNI()">BUSCAR</button>                                                
+                            <label>
+                                <input type="checkbox" (click)="clickSearchSegip()">
+                                <small>SEGIP?</small>
+                            </label>                                
+                        </div>
+                    </div>                 
+                     <small *ngIf="form.controls.document.errors" class="text-danger"> 
+                        {{form.controls.document.errors?.msg}}
+                    </small>   
+                    <small class="form-text text-muted">
+                        Ingrese Numero de CI y Presione en boton BUSCAR.
+                    </small>
+                </div>
+
+                <div class="col-sm-2">  
+                    <label class="col-form-label-sm">
+                        <strong>Complemento:</strong>
+                    </label>
+                    <div class="input-group">
+                        <input 
+                            formControlName="complemento"
+                            required                             
+                            type="text"                           
+                            class="form-control form-control-sm input"                                                                               
+                            [class.is-invalid]="(form.controls.complemento.touched && form.controls.complemento.value <= 0) || (form.controls.complemento.errors != null && form.controls.complemento.errors?.msg != null)">                        
+                    </div>                 
+                        <small *ngIf="form.controls.complemento.errors" class="text-danger"> 
+                        {{form.controls.complemento.errors?.msg}}
+                    </small>                       
+                </div>
+                
+
+                <div class="col-sm-3">                    
+                    <label class="col-form-label-sm" >Tipo Documento:</label>
+                    <select required 
+                            formControlName="tipoDoc" 
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.tipoDoc.touched && form.controls.tipoDoc.value.id <= 0) || (form.controls.tipoDoc.errors != null && form.controls.tipoDoc.errors?.msg != null)">
+                        <option *ngFor="let typeDoc of typeDocuments" [ngValue]="typeDoc">{{typeDoc.name}}</option>    
+                    </select>                    
+                     <small *ngIf="form.controls.tipoDoc.errors" class="invalid-feedback"> 
+                        {{form.controls.tipoDoc.errors?.msg}}
+                    </small>                     
+                </div>
+            
+                <div class="col-sm-2">
+                    <label class="col-form-label-sm" >Expedición:</label>
+                     <select required 
+                            formControlName="expedido" 
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.expedido.touched && form.controls.expedido.value.id <= 0) || (form.controls.expedido.errors != null && form.controls.expedido.errors?.msg != null)">
+                        <option *ngFor="let exp of docExpediciones" [ngValue]="exp">{{exp.name}}</option>    
+                    </select> 
+                    <small *ngIf="form.controls.expedido.errors" class="invalid-feedback"> 
+                        {{form.controls.expedido.errors?.msg}}
+                    </small>  
+                </div>                                       
+            </div>
+
+            <div class="row">               
+                <div class="col-sm form-group">
+                    <label for="instrucción" class="col-form-label-sm">Grado de Instrucción: <strong class="text-danger">(*)</strong></label>
+                     <select required 
+                            formControlName="grado" 
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.grado.touched && form.controls.grado.value.id <= 0) || (form.controls.grado.errors != null && form.controls.grado.errors?.msg != null)">
+                        <option *ngFor="let intruction of levelInstruccions" [ngValue]="intruction">{{intruction.name}}</option>    
+                    </select>   
+                    <small *ngIf="form.controls.grado.errors" class="invalid-feedback"> 
+                        {{form.controls.grado.errors?.msg}}
+                    </small>                            
+                </div>
+
+                <div class="col-sm form-group" *ngIf="!activeFamilyForm">
+                    <label class="col-form-label-sm">Estado Civil</label>
+                    <select required 
+                            formControlName="estadoCivil" 
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.estadoCivil.touched && form.controls.estadoCivil.value.id <= 0) || (form.controls.estadoCivil.errors != null && form.controls.estadoCivil.errors?.msg != null)">
+                        <option *ngFor="let estado of estadoCiviles" [ngValue]="estado">{{estado.name}}</option>    
+                    </select> 
+                     <small *ngIf="form.controls.estadoCivil.errors" class="invalid-feedback"> 
+                        {{form.controls.estadoCivil.errors?.msg}}
+                    </small> 
+                </div> 
+                                                
+                <div class="col-sm" *ngIf="!activeFamilyForm">                   
+                    <label class="col-form-label-sm">El responsable de Proveer económicamente a la Familia es:<strong class="text-danger">(*)</strong></label>            
+                    <select  required
+                             formControlName="respFam"
+                             class="form-control form-control-sm select"
+                             [class.is-invalid]="(form.controls.respFam.touched && form.controls.respFam.value.id <= 0) || (form.controls.respFam.errors != null && form.controls.respFam.errors?.msg != null)">            
+                        <option *ngFor="let typeP of respFamilias" [ngValue]="typeP">{{typeP.name}}</option>
+                    </select>
+                     <small *ngIf="form.controls.respFam.errors" class="invalid-feedback"> 
+                        {{form.controls.respFam.errors?.msg}}
+                    </small> 
+                </div>  
+
+                <div class="col-sm form-group" *ngIf="!activeFamilyForm">
+                    <label class="form-control-sm">Tipología Familia:</label>
+                    <select required 
+                            formControlName="tipoFamilia" 
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.tipoFamilia.touched && form.controls.tipoFamilia.value.id <= 0) || (form.controls.tipoFamilia.errors != null && form.controls.tipoFamilia.errors?.msg != null)">
+                        <option *ngFor="let tipoF of tipoFamilias" [ngValue]="tipoF">{{tipoF.name}}</option>    
+                    </select> 
+                     <small *ngIf="form.controls.tipoFamilia.errors" class="invalid-feedback"> 
+                        {{form.controls.tipoFamilia.errors?.msg}}
+                    </small> 
+                </div> 
+
+                <div class="col-sm" *ngIf="!activeFamilyForm">
+                    <label class="col-form-label-sm"> Telf:</label>
+                    <input  formControlName="phone"  
+                            type="text" 
+                            class="form-control form-control-sm input"> 
+                </div>              
+                
+                <div class="col-sm" *ngIf="activeFamilyForm">                   
+                    <label class="col-form-label-sm">Parentesco:</label>            
+                    <select  required                             
+                             formControlName="parentesco"
+                             class="form-control form-control-sm select"
+                             (ngModelChange)="changePerentesco($event)"
+                             [class.is-invalid]="(form.controls.parentesco.touched && form.controls.parentesco.value.id <= 0) || (form.controls.parentesco.errors != null && form.controls.parentesco.errors?.msg != null)">            
+                        <option *ngFor="let typeP of parentescos" [ngValue]="typeP">{{typeP.name}}</option>
+                    </select>
+                     <small *ngIf="form.controls.parentesco.errors" class="invalid-feedback"> 
+                        {{form.controls.parentesco.errors?.msg}}
+                    </small> 
+                </div>                
+            </div>  
+            <hr *ngIf="!activeFamilyForm">
+            <div class="row" *ngIf="!activeFamilyForm">
+                <div class="col-sm">
+                    <label class="col-form-label-sm">Indique si PERTENECE a alguna nación o pueblo indigena originario campesino:</label> 
+                    <div class="row">                                                
+                        <div class="col-sm-2">
+                            <label class="custom-control custom-radio">
+                                <input  [value]="true"  
+                                            required  
+                                            formControlName="indigenaOriginario" 
+                                            type="radio" class="custom-control-input"
+                                            class="custom-control-input form-control-sm"> 
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Si</span>
+                            </label>             
+                        </div>                        
+                        <div class="col-sm-2">                                 
+                                <label class="custom-control custom-radio">
+                                    <input  [value]="false"  
+                                                required  
+                                                formControlName="indigenaOriginario" 
+                                                type="radio" class="custom-control-input"
+                                                class="custom-control-input form-control-sm"> 
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">No</span>
+                                </label>                                                             
+                        </div>                              
+                    </div>  
+                    <div class="row" *ngIf="form.controls.indigenaOriginario.value">
+                        <div class="col-sm">     
+                            <div class="form-group row">                       
+                                <label class="col-sm-2 col-form-label col-form-label-sm" >¿A cuál?</label>                                                        
+                                <div class="col-sm-10">
+                                    <input formControlName="indigenaNombre" 
+                                        required                                         
+                                        type="text"                           
+                                        class="form-control form-control-sm input"
+                                        [class.is-invalid]="(form.controls.indigenaNombre.touched && form.controls.indigenaNombre.value <= 0) || (form.controls.indigenaNombre.errors != null && form.controls.indigenaNombre.errors?.msg != null)">
+                                        <small *ngIf="form.controls.indigenaNombre.errors" class="invalid-feedback"> 
+                                            {{form.controls.indigenaNombre.errors?.msg}}
+                                        </small>   
+                                </div> 
+                            </div>                                         
+                        </div>
+                    </div>                                                                                                                                    
+                </div>
+         
+                <div class="col-sm" *ngIf="metrica == 1">
+                    <label class="col-form-label-sm"><strong>DEMUESTRA RESIDENCIA PERMANENTE EN EL LUGAR DONDE SOLICITA EL BENEFICIO</strong></label> 
+                    <div>                        
+                        <label class="custom-control custom-radio">
+                            <input  [value]="true"  
+                                        required  
+                                        formControlName="residenciaPermanente" 
+                                        type="radio" class="custom-control-input"
+                                        class="custom-control-input form-control-sm"> 
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Si</span>
+                        </label>                         
+                        <label class="custom-control custom-radio">
+                            <input  [value]="false"  
+                                        required  
+                                        formControlName="residenciaPermanente" 
+                                        type="radio" class="custom-control-input"
+                                        class="custom-control-input form-control-sm"> 
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">No</span>
+                        </label>
+                    </div>  
+                </div>
+
+                <div class="col-sm" *ngIf="metrica == 2">
+                    <label class="col-form-label-sm"><strong>¿La vivienda que ocupa actualmente, es propia?</strong></label> 
+                    <div class="row">                                                
+                        <div class="col-sm-2">
+                            <label class="custom-control custom-radio">
+                                <input  [value]="true"  
+                                            required  
+                                            formControlName="viviendaPropia" 
+                                            type="radio" class="custom-control-input"
+                                            class="custom-control-input form-control-sm"> 
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Si</span>
+                            </label>             
+                        </div>                            
+                        <div class="col-sm-2">                                 
+                                <label class="custom-control custom-radio">
+                                    <input  [value]="false"  
+                                                required  
+                                                formControlName="viviendaPropia" 
+                                                type="radio" class="custom-control-input"
+                                                class="custom-control-input form-control-sm"> 
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">No</span>
+                                </label>                                                             
+                        </div>                              
+                    </div>  
+                    <div class="row"  *ngIf="form.controls.viviendaPropia.value" class="animate-zoom">
+                        <div class="col-sm">     
+                                <div class="form-group row">                       
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" >Especifique como lo adquirió:</label>                                                        
+                                    <div class="col-sm-9">
+                                        <input formControlName="viviendaAdquirio"
+                                            required                                                 
+                                            type="text"                           
+                                            class="form-control form-control-sm input"                                                
+                                            [class.is-invalid]="(form.controls.viviendaAdquirio.touched && form.controls.viviendaAdquirio.value <= 0) || (form.controls.viviendaAdquirio.errors != null && form.controls.viviendaAdquirio.errors?.msg != null)">
+                                            <small *ngIf="form.controls.viviendaAdquirio.errors" class="invalid-feedback"> 
+                                                {{form.controls.viviendaAdquirio.errors?.msg}}
+                                            </small>   
+                                    </div> 
+                                </div>                                         
+                        </div>
+                    </div>                                                                                                                                    
+                </div>
+            </div>         
+
+            <hr>         
+        <div *ngIf="(metrica == 1 && form.controls.residenciaPermanente.value || activeFamilyForm) || (metrica == 2 && form.controls.viviendaPropia.value || activeFamilyForm)">   
+            <div class="row" >
+                    <div class="col-sm">
+                    <label class="col-form-label-sm">Es Asalariado:</label>                               
+                    <div>                        
+                        <label class="custom-control custom-radio">
+                            <input  [value]="true"  
+                                        required  
+                                        formControlName="asalariado" 
+                                        type="radio" class="custom-control-input"
+                                        class="custom-control-input form-control-sm"> 
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Si</span>
+                        </label> 
+                        
+                            <label class="custom-control custom-radio">
+                            <input  [value]="false"  
+                                        required  
+                                        formControlName="asalariado" 
+                                        type="radio" class="custom-control-input"
+                                        class="custom-control-input form-control-sm"> 
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">No</span>
+                        </label>
+                    </div>  
+                    <small *ngIf="form.controls.asalariado.errors" class="text-danger">
+                            {{form.controls.asalariado.errors?.msg}}                      
+                    </small>                     
+                </div> 
+                <div class="col-sm">                   
+                    <label class="col-form-label-sm">Actividad Económica/Ocupación:</label>
+                    <select  required
+                                formControlName="actEconomica"
+                                class="form-control form-control-sm select"
+                                [class.is-invalid]="(form.controls.actEconomica.touched && form.controls.actEconomica.value.id <= 0) || (form.controls.actEconomica.errors != null && form.controls.actEconomica.errors?.msg != null)">            
+                        <option *ngFor="let typeP of actividadEconomicas" [ngValue]="typeP">{{typeP.name}}</option>
+                    </select>
+                        <small *ngIf="form.controls.actEconomica.errors" class="invalid-feedback"> 
+                        {{form.controls.actEconomica.errors?.msg}}
+                    </small> 
+                </div>
+
+                <div class="col-sm">
+                    <label class="col-form-label-sm">Ingreso Mes, Para actividades económicas no formales, ingreso promedio en Bs. <strong class="text-danger">(*)</strong></label>
+                    <input  required 
+                            formControlName="ingreso"  
+                            type="number" 
+                            class="form-control form-control-sm input"
+                            [class.is-invalid]="(!form.controls.ingreso.valid && form.controls.ingreso.touched) || (form.controls.ingreso.errors != null && form.controls.ingreso.errors?.msg != null)"> 
+                    <small *ngIf="form.controls.ingreso.errors" class="invalid-feedback">
+                            {{form.controls.ingreso.errors?.msg}}                        
+                    </small>                    
+                </div>
+
+            </div>            
+            <hr>                        
+            <div class="row">                
+                <div class="col-sm" >                   
+                    <label class="col-form-label-sm">Tipo Discapacidad:</label>                                           
+                    <select  required                                
+                            formControlName="tipoDiscapacidad"
+                            class="form-control form-control-sm select"
+                            [class.is-invalid]="(form.controls.tipoDiscapacidad.touched && form.controls.tipoDiscapacidad.value.id <= 0) || (form.controls.tipoDiscapacidad.errors != null && form.controls.tipoDiscapacidad.errors?.msg != null)">                                        
+                        <option *ngFor="let typeD of tipoDiscapacidades" [ngValue]="typeD">{{typeD.name}}</option>
+                    </select>                                            
+                        <small *ngIf="form.controls.tipoDiscapacidad.errors" class="invalid-feedback"> 
+                        {{form.controls.tipoDiscapacidad.errors?.msg}}
+                    </small> 
+                </div>
+
+                <div class="col-sm" >                   
+                    <label class="col-form-label-sm">Grado Discapacidad: <strong class="text-danger">(*)</strong></label>            
+                    <select  required
+                                formControlName="gradoDiscapacidad"
+                                class="form-control form-control-sm select"
+                                [class.is-invalid]="(form.controls.gradoDiscapacidad.touched && form.controls.gradoDiscapacidad.value.id <= 0) || (form.controls.gradoDiscapacidad.errors != null && form.controls.gradoDiscapacidad.errors?.msg != null)">            
+                        <option *ngFor="let typeP of gradoDiscapacidades" [ngValue]="typeP">{{typeP.name}}</option>
+                    </select>
+                        <small *ngIf="form.controls.gradoDiscapacidad.errors" class="invalid-feedback"> 
+                        {{form.controls.gradoDiscapacidad.errors?.msg}}
+                    </small> 
+                </div>
+            </div>
+            <div class="row" > 
+                <div class="col-sm" >
+                        <label class="col-form-label-sm">Documento que presento el/la solicitante para respaldar la discapacidad declarada:</label><br>
+                        <label class="custom-control custom-checkbox col-form-label-sm">
+                        <input type="checkbox" class="custom-control-input" formControlName="ciDiscapacidad">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description" 
+                            [class.text-danger]="form.controls.ciDiscapacidad.errors != null && form.controls.ciDiscapacidad.errors?.msg != null">
+                            Carnet de discapacidad
+                        </span>
+                    </label>
+                        <label class="custom-control custom-checkbox col-form-label-sm">
+                        <input type="checkbox" class="custom-control-input" formControlName="certMedDiscapacidad">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"
+                            [class.text-danger]="form.controls.certMedDiscapacidad.errors != null && form.controls.certMedDiscapacidad.errors?.msg != null">
+                            Certificado médico
+                        </span>
+                    </label>
+                        <label class="custom-control custom-checkbox col-form-label-sm">
+                        <input type="checkbox" 
+                                class="custom-control-input" 
+                                formControlName="certOrgDiscapacidad">
+                        <span class="custom-control-indicator"></span>                        
+                        <span class="custom-control-description"
+                            [class.text-danger]="form.controls.certOrgDiscapacidad.errors != null && form.controls.certOrgDiscapacidad.errors?.msg != null">
+                            Certificación de la organizacion social, comunidad, ayllu, colonia, capitanía, distrito o junta vecinal
+                        </span>
+                    </label><br>
+                    <small *ngIf="form.controls.ciDiscapacidad.errors || form.controls.certMedDiscapacidad.errors || form.controls.certOrgDiscapacidad.errors" class="text-danger">
+                        Seleccione una de estas tres (3) opciones es obligatorio.                       
+                        </small>  
+                </div>                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <button *ngIf="isAcceses(3)" [disabled]="disabled" type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-danger" (click)="_cancelPerson()">Cancelar</button>    
+            </div>
+        </div>
+    </div>        
+    </div>
+</fieldset>
+
+     <!--div class="card" *ngIf="!activeAgregateForm">
+        <div class="card-header">
+        <h6 class="title">1.2 Residencia</h6>
+        </div>
+        <div class="card-block">      
+            <div class="row">
+                <div class="col-sm form-group">
+                    <label for="first_name">Dept/Prov/Mun. de Residencia</label>
+                    <input id="first_name" type="text" class="form-control">                                
+                </div>
+                <div class="col-sm form-group">
+                    <label for="first_name">Nombre del Lugar de Residencia</label>
+                    <input id="first_name" type="text" class="form-control">                                
+                </div>
+                <div class="col-sm form-group">
+                    <i class="material-icons prefix">phone</i>
+                    <label for="first_name">Teléfono</label>
+                    <input id="first_name" type="text" class="form-control">                                
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6 l4">
+                    <label for="first_name">Número de días al año dedicado al establecimiento</label>
+                <input id="first_name" type="text" class="form-control">                                
+                </div>
+                <div class="col-sm form-group">
+                    <label for="first_name">Dirección:</label>
+                <input id="first_name" type="text" class="form-control">                                
+                </div>
+            </div>                                                                    
+        </div>          
+    </div-->        
+
+    <!--button *ngIf="register.id == 0" type="button" class="btn btn-primary" (click)="saveRegister()" >Guardar</button>   
+    <button *ngIf="register.id != 0" type="button" class="btn btn-primary" (click)="editRegister()" >Guardar Cambios</button--> 
+
+
+    <!--pre>
+        {{f.valid}}
+    </pre>
+    <pre>
+        {{f.submit}}
+    </pre>
+    <pre>
+        {{f.value | json}}
+    </pre-->
+
+</form>

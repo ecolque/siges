@@ -1,0 +1,13 @@
+/*tbody{
+    overflow-y: scroll;
+    height: 700px;
+    width: 100%;
+    position: absolute;
+  }*/
+
+/*.table-responsive {
+    max-height:700px !important;    
+}*/
+
+
+.w3-select{ border:none;border-bottom:1px solid #ccc; font-size: 12px }
