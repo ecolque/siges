@@ -71,8 +71,8 @@ export class UtilsService implements OnInit {
   private static SERVER_2 = 'http://10.10.0.102:8080/rub/rub/main';
   //private static SERVER = "http://192.168.10.58:8080/";
   //private static SERVER = "http://10.10.0.159:80/";
-  //private static SERVER = 'http://siges.aevivienda.gob.bo/';
-  //private static SERVER_2 = 'http://siges.aevivienda.gob.bo/rub/rub/main';
+  // private static SERVER = 'http://siges.aevivienda.gob.bo/';
+  // private static SERVER_2 = 'http://siges.aevivienda.gob.bo/rub/rub/main';
 
   private static baseUrl: string = UtilsService.SERVER + 'siges/';
   public static baseUrl_2: string = UtilsService.SERVER_2;
@@ -91,6 +91,7 @@ export class UtilsService implements OnInit {
   public static geoBaseUrl: string = UtilsService.baseUrl + 'sspService/';
   public static mapBaseUrl: string = UtilsService.baseUrl + 'mapService/';
   private dataRequiredRegisterBaseUrl: string = UtilsService.baseUrl + 'dataRequiredService/register/';
+  public static documentoBaseUrl: string = UtilsService.baseUrl + 'documentoService/';
 
   public static localityBaseUrl: string = UtilsService.baseUrl + 'localityService/';
   public static dataRequiredAgricolaBaseUrl: string = UtilsService.baseUrl + 'dataRequiredService/agricola/';
