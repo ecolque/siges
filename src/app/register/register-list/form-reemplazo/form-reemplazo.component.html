@@ -17,6 +17,10 @@
     </div>
 
     <div class="row">
+        <div class="col-12" *ngIf="!cancelReemplazo">
+            <label><input type="radio" value="sustitucion" name="form" [(ngModel)]="option"> Sustitucion</label>
+            <label *ngIf="tipoProyId == 101"><input type="radio" value="reasignado" name="form" [(ngModel)]="option"> Reasignado</label>
+        </div>
         <div class="col-sm">
             <div class="card">               
                 <h6 class="card-header" *ngIf="!cancelReemplazo">LISTA DE SOLICITANTES A SER REEMPLAZADOS</h6>      

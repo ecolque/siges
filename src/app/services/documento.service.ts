@@ -58,7 +58,7 @@ export class DocumentoService {
       //this.file = res.data;            
       console.log("archivo subido");
     }, (err: any) => {
-      console.log("error al subir el archivo");
+      console.log("error al subir el archivo", err);
       // Show error message or make something.
     });    
   }

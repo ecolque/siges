@@ -18,6 +18,7 @@ export class RegisterService {
 
   static selectedProject: any;
   static personIdSelected: number;
+  static selectedStateId: number;
   // static selectedRegister:any;
   static isSelectedProject: boolean = false;
 
@@ -316,12 +317,18 @@ uploadImg(file, id) {
                 .catch(UtilsService.handleError);
 }
 
-  deleteRegister(id: number, idx: number): Observable<any[]> {
-    return this.http.delete(UtilsService.registerBaseUrl + id)
+deleteRegister(id: number, idx: number): Observable<any[]> {
+  return this.http.delete(UtilsService.registerBaseUrl + id)
+        .map(UtilsService.extractData)
+        .do(data => { RegisterService.registers.splice(idx, 1); this.registerSelectedEmitter.emit(null); })
+        .catch(UtilsService.handleError);
+}
+recorteRegister(id: number): Observable<any[]> {
+    return this.http.get(UtilsService.registerBaseUrl + 'recorte/' + id)
           .map(UtilsService.extractData)
-          .do(data => { RegisterService.registers.splice(idx, 1); this.registerSelectedEmitter.emit(null); })
+          .do(data => { })
           .catch(UtilsService.handleError);
-  }
+}
 
   /**cretidos */
   getCreditoEstados(projectId:number, registerId: number) {

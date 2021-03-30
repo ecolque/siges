@@ -17,6 +17,8 @@ export class FormReemplazoComponent implements OnInit {
     busy: Subscription;
     error: string;
 
+    tipoProyId: number;
+    option: string = 'sustitucion';
     constructor(
         public activeModal: NgbActiveModal,
         private registerService: RegisterService
@@ -25,9 +27,13 @@ export class FormReemplazoComponent implements OnInit {
     ngOnInit() { }
 
     guardarReemplazo(obj: any) {
-        console.log(obj);
+        let estadoId = 2;
+        if(this.option == 'reasignado'){
+            estadoId = 10;
+        }
         obj.registerId = this.register.id;
-        this.busy = this.registerService.guardarReemplazo(this.register.id, obj.id, obj.estado.id)
+        console.log(obj, this.tipoProyId);
+        this.busy = this.registerService.guardarReemplazo(this.register.id, obj.id, estadoId)
                 .subscribe(
                     data => {
                         this.register.reemplazante = {id: obj.id, nombres: (obj.person.paterno + ' ' + obj.person.materno + ' ' + obj.person.nombres)};

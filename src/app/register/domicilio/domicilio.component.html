@@ -27,7 +27,7 @@
                             <small *ngIf="form.controls.residencia.errors" style="color:red"> 
                                 {{form.controls.residencia.errors?.msg}}
                             </small> 
-                        </div>               
+                        </div>            
                     </div>
                     <div class="row"> 
                         <div class="col-sm form-group" *ngIf="urbano || mixto">
@@ -42,7 +42,7 @@
                                 {{form.controls.zona.errors?.msg}}
                             </small>                      
                         </div>   
-                        <div class="col-sm-5 form-group">                        
+                        <div class="col-sm form-group">                        
                             <label *ngIf="urbano || mixto" for="comunidadZona" class="col-form-label-sm">Nombre (Zona/Disctrito):</label>
                             <label *ngIf="rural || mixto" for="comunidadZona" class="col-form-label-sm">Comunidad/Colonia/Capitanía/Ayllu/Otro:</label>
                             <input formControlName="comunidadZona" 
@@ -52,7 +52,18 @@
                             <small *ngIf="form.controls.comunidadZona.errors" class="invalid-feedback">
                                     {{form.controls.comunidadZona.errors?.msg}}                        
                             </small>                                 
-                        </div>             
+                        </div>  
+                        
+                        <div class="col-sm form-group" *ngIf="tipoProyId == 101">
+                            <label for="lote" class="col-form-label-sm">Lote:</label>
+                            <input formControlName="lote" 
+                                    type="text" 
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="(!form.controls.lote.valid && form.controls.lote.touched) || (form.controls.lote.errors != null && form.controls.lote.errors?.msg != null)"> 
+                            <small *ngIf="form.controls.lote.errors" class="invalid-feedback">
+                                    {{form.controls.lote.errors?.msg}}                        
+                            </small>                                
+                        </div> 
 
                         <!--div class="col-sm form-group" *ngIf="urbano">
                             <label for="calle" class="col-form-label-sm">Nombre (Zona/Disctrito):</label>                    
@@ -139,6 +150,23 @@
                             </small>                                
                         </div>                                     
                     </div> 
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <table class="table-bordered">
+                                <thead>
+                                    <tr><th>Documentos:</th><th>Tiene</th></tr>
+                                </thead>
+                                <tbody>
+                                   <tr>
+                                       <td>Folio real de la vivienda,</td><td>
+                                        <input type="file" (change)="uploadFile($event, 1)" >
+                                       </td>
+                                   </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div>
                     <button [disabled]="busy != null ? !busy.closed : false" type="submit" class="btn btn-primary">Guardar</button>
                 </div>                                                                                                
             </div>    

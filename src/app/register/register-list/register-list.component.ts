@@ -52,6 +52,8 @@ export class RegisterListComponent implements OnInit {
   sumEspera: number;
   sumRechazados: number;
   sumRenuncias: number;
+  sumReasignados: number;
+  sumResContractual: number;
 
   sumConfirmados: number;
   sumInicialConfirmados: number;
@@ -125,6 +127,26 @@ export class RegisterListComponent implements OnInit {
          }
     });
  }
+ recorte(reg: any) {
+  this.error = '';
+  const modalRef = this.modalService.open(MsgModalComponent, {size: 'sm'});
+  modalRef.componentInstance.typeMsg = 'MENSAJE!';
+  modalRef.componentInstance.classHeader = 'bg-warning';
+  modalRef.componentInstance.msg = 'Esta operacion es irreversible, entra en recorte para que postule en otros proyectos?';
+  modalRef.componentInstance.okBtn = true;
+  modalRef.result.then((result) => {
+       if (result == 'ok') {
+        this.registerService.recorteRegister(reg.id).subscribe(data => {
+          reg.estado = data;
+        },
+          err => {
+            console.log(err);
+            this.error = err;
+          }
+        );
+       }
+  });
+}
 
   pageChange(page) {
     RegisterService.pageIndex = page;
@@ -225,8 +247,6 @@ export class RegisterListComponent implements OnInit {
     this.openFormDocumento(register);
   }
 
-
-
   cancelReemplazante(register: any) {
     this.openFormCancelReemplazo(register);
   }
@@ -278,9 +298,11 @@ export class RegisterListComponent implements OnInit {
   showConfirms(){
     this.registers = RegisterService.registers.filter(x => x.inicialValid);
   }
-
   showAceptados() {
     this.registers = RegisterService.registers.filter(x => x.estado.id === 1 || x.estado.id === 2);
+  }
+  showReasignados() {
+    this.registers = RegisterService.registers.filter(x => x.estado.id === 10);
   }
   showEnEspera() {
     this.registers = RegisterService.registers.filter(x => x.estado.id === 3);
@@ -288,9 +310,11 @@ export class RegisterListComponent implements OnInit {
   showRechazados() {
     this.registers = RegisterService.registers.filter(x => x.estado.id === 5 || x.estado.id === 6);
   }
-
   showRenuncias() {
     this.registers = RegisterService.registers.filter(x => x.estado.id === 4);
+  }
+  showResolucion() {
+    this.registers = RegisterService.registers.filter(x => x.estado.id === 9);
   }
 
   showFormEstadoCredito (registerId: number, nombres:string, paterno: string, materno: string, credito: any) {
@@ -420,6 +444,7 @@ export class RegisterListComponent implements OnInit {
     const modalRef = this.modalService.open(FormReemplazoComponent, {size: 'lg', backdrop: 'static', keyboard: false});
     modalRef.componentInstance.register = register;
     modalRef.componentInstance.registers = RegisterService.registers.filter(_ => _.estado.id == 3);
+    modalRef.componentInstance.tipoProyId = this.project.tipoProyId;
     modalRef.result.then((result) => {
       this.sumEstados();
     });
@@ -439,6 +464,7 @@ export class RegisterListComponent implements OnInit {
     modalRef.componentInstance.register = register;
     modalRef.componentInstance.registers = RegisterService.registers.filter(_ => _.id == register.reemplazante.id);
     modalRef.componentInstance.cancelReemplazo = true;
+    modalRef.componentInstance.tipoProyId = this.project.tipoProyId;
     modalRef.result.then((result) => {
       this.sumEstados();
     });
@@ -447,6 +473,7 @@ export class RegisterListComponent implements OnInit {
   private openFormRenuncia(register: any) {
     const modalRef = this.modalService.open(FormRenunciaComponent, {size: 'sm', backdrop: 'static', keyboard: false});
     modalRef.componentInstance.register = register;
+    modalRef.componentInstance.tipoProyId = this.project.tipoProyId;
     modalRef.result.then((result) => {
       this.sumEstados();
     });
@@ -505,11 +532,15 @@ export class RegisterListComponent implements OnInit {
     this.sumRechazados = 0;
     this.sumRenuncias = 0;
     this.sumConfirmados = 0;
+    this.sumReasignados = 0;
+    this.sumResContractual = 0;
     RegisterService.registers.forEach(x => {
         if (x.estado.id == 1 || x.estado.id == 2) { this.sumAceptados += 1; }
         if (x.estado.id == 3) { this.sumEspera += 1; }
         if (x.estado.id == 5 || x.estado.id == 6) { this.sumRechazados += 1; }
         if (x.estado.id == 4) { this.sumRenuncias += 1; }
+        if (x.estado.id == 10) { this.sumReasignados += 1; }
+        if (x.estado.id == 9) { this.sumResContractual += 1; }
         if (x.valid) { this.sumConfirmados += 1; }
     });
   }
@@ -524,6 +555,7 @@ export class RegisterListComponent implements OnInit {
   setRegisterSelected(register: any) {
     this.register = register;
     this.registerService.registerSelectedEmitter.emit(register);
+    RegisterService.selectedStateId = this.register.estado.id;
   }
 
   goNext() {

@@ -36,6 +36,10 @@ export class DomicilioComponent implements OnInit {
   bgClass: string;
   errors: any= [];
 
+  tipoProyId: number;
+
+  selectedFile: File = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -61,6 +65,7 @@ export class DomicilioComponent implements OnInit {
          this.urbano = RegisterService.selectedProject.urbano;
          this.rural = RegisterService.selectedProject.rural;
          this.mixto = RegisterService.selectedProject.mixto;
+         this.tipoProyId = RegisterService.selectedProject.tipoProyId;
 
          console.log(RegisterService.selectedProject);
 
@@ -179,6 +184,26 @@ export class DomicilioComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['project', this.registerId, 'family']);
+  }
+
+  uploadFile($event, documentId: number){
+    this.selectedFile = <File>$event.target.files[0];
+    console.log(this.selectedFile);
+
+    const fd = new FormData();
+    fd.append('file', this.selectedFile);
+    fd.append('registroId', this.registerId.toString());
+    // fd.append('tipoRespaldoId', documentId.toString());
+    fd.append('tipoRespaldoId', '1');
+    // fd.append('user_id', this.userId.toString());
+    this.domicilioService.uploadFile(fd).subscribe( res => {
+
+    }, e => {
+      alert(e);
+      console.log(e);
+    });
+    // this.onListarDocumentos();        
+    // this.archivoElegido;
   }
 
   private required(domicilio: any) {

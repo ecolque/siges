@@ -14,10 +14,12 @@ export class FormRenunciaComponent implements OnInit {
 
     register: any;
     renuncia: any;
+    tipoProyId: number;
     busy: Subscription;
     error: any;
 
     copyObs: string;
+    option: string = 'renuncia';
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -36,7 +38,7 @@ export class FormRenunciaComponent implements OnInit {
                                     this.renuncia = data;
                                     this.copyObs = this.renuncia.obs;
                                     this.renuncia.obs = null;
-                                    console.log(data);
+                                    console.log("+++", data);
                                 }, errors => {
                                    this.error = errors;
                                    this.registerService.openFormLogin(this.error);
@@ -47,6 +49,7 @@ export class FormRenunciaComponent implements OnInit {
 
     cancelRenuncia() {
         this.renuncia.estadoId = this.register.estado.id;
+        console.log(this.renuncia,this.register.estado.id)
         this.busy = this.registerService.cancelRenuncia(this.renuncia)
               .subscribe(
                 data => {
@@ -60,16 +63,19 @@ export class FormRenunciaComponent implements OnInit {
       }
 
     okRenuncia() {
-        this.renuncia.estadoId = this.register.estado.id;
-        this.busy = this.registerService.renunciar(this.renuncia)
-        .subscribe(
-          data => {
-            this.register.estado = data;
-            this.activeModal.close();
-          },
-          errors => {
-            this.error = errors;
-            }
-        );
+      let estadoId = 4;
+      if(this.option == 'resolucion'){
+        estadoId = 9;
       }
+      this.renuncia.estadoId = estadoId;
+      this.busy = this.registerService.renunciar(this.renuncia)
+      .subscribe(
+        data => {
+          this.register.estado = data;
+          this.activeModal.close();
+        },
+        errors => {
+          this.error = errors;
+      });
+    }
 }

@@ -82,6 +82,17 @@ export class DomicilioService {
       .catch(UtilsService.handleError);
     }
 
+    uploadFile(data: FormData) {    
+      //console.log(data);        
+      let uploadURL = UtilsService.domicilioBaseUrl + 'uploadDocument';        
+      return this.http.post(uploadURL, data)
+      .map(UtilsService.extractData)
+      .do(data => {
+          RegisterService.setPuntajeToRegisters(data.registerId, data.puntaje, data.estado);
+        })
+      .catch(UtilsService.handleError);   
+    }
+
     /*deleteFamily(id:number, idx:number): Observable<any[]>{
     return this.http.delete(UtilsService.familyBaseUrl+id)
           .map(UtilsService.extractData)

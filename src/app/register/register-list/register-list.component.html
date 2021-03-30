@@ -9,6 +9,9 @@
                     <li class="nav-item">
                         <button class="btn btn-sm btn-success" (click)="showAceptados()"><small>Aceptados</small> <span class="badge badge-light">{{sumAceptados}}</span></button>
                     </li>
+                    <li class="nav-item" *ngIf="project?.tipoProyId == 101">
+                        <button class="btn btn-sm btn-success" (click)="showReasignados()" style="color: black;"><small>Reasignados</small> <span class="badge badge-light">{{sumReasignados}}</span></button>
+                    </li>
                     <li class="nav-item">
                         <button class="btn btn-sm btn-warning" (click)="showEnEspera()"><small>En Espera</small> <span class="badge badge-light">{{sumEspera}}</span></button>
                     </li>
@@ -17,6 +20,9 @@
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-sm btn-primary" (click)="showRenuncias()"><small>Renuncias</small> <span class="badge badge-light">{{sumRenuncias}}</span></button>      
+                    </li>
+                    <li class="nav-item" *ngIf="project?.tipoProyId == 101">
+                        <button class="btn btn-sm btn-info" (click)="showResolucion()"><small>Res. Contrac.</small> <span class="badge badge-light">{{sumResContractual}}</span></button>      
                     </li>
                     <li class="nav-item" *ngIf="isAcceses(1)">
                         <div ngbDropdown class="btn-group">
@@ -158,13 +164,17 @@
                                     <span class="custom-control-description">{{countRegisters}}</span><small>F</small>
                                 </label>                                
                             </th-->
-                            <th class="bg-danger"><small>Renuncia</small></th>
+                            <th class="bg-danger">
+                                <small *ngIf="project?.tipoProyId == 101">Cambiar</small>
+                                <small *ngIf="project?.tipoProyId != 101">Renuncia</small>
+                            </th>
                             <th class="bg-danger"><small>C/Est.</small></th>
                             <th class="bg-danger"><small>Edit</small></th>
                             <!--th class="bg-danger"><small class="txt13">Form</small></th-->
                             <th class="bg-danger"><small class="txt13">V.Dom</small></th>                            
-                        <th class="bg-danger"><small class="txt13">Documento</small></th>
-                            <th class="bg-danger"><small>Excluir</small></th>
+                            <th class="bg-danger" *ngIf="project?.tipoProyId == 12"><small class="txt13">Documento</small></th>
+                            <th class="bg-danger" *ngIf="project?.tipoProyId != 101"><small>Excluir</small></th>
+                            <th class="bg-danger" *ngIf="project?.tipoProyId == 101"><small>Recorte</small></th>
                         </tr>
                     </thead>
                     <tbody class="{{project?.cerrado ? 'text-white' : ''}}"> <!-- (dblclick)="edit(reg.id)" (click)="setRegisterSelected(reg)""-->  <!--[class.table-danger]="reg.puntaje < 51" [class.table-success]="reg.puntaje >= 51"-->
@@ -203,7 +213,7 @@
                                     <small class="{{reg.estado.color}}" (click)="showBeneficio(reg)" style="padding:0 5px; cursor: pointer;"><strong>{{reg.estado.name}}</strong></small>
                                     <!--reemplazo-->
                                     <button *ngIf="reg.estado.btn && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-pill badge-light" (click)="showFormReemplazo(reg)">{{reg.estado.btnTxt}}</button> 
-                                    <button *ngIf="reg.estado.cancelRenuncia && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-light" (click)="cancelRenuncia(reg)">Deshacer Renuncia?</button>
+                                    <button *ngIf="reg.estado.cancelRenuncia && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-light" (click)="cancelRenuncia(reg)">Deshacer?</button>
                                     <button *ngIf="reg.reemplazante.id != 0 && isAcceses(3) && project?.tipoProyId != 12" (click)="cancelReemplazante(reg)" type="button" class="btn btn-sm btn-light" ngbPopover="{{reg.reemplazante.nombres}}" triggers="mouseenter:mouseleave" popoverTitle="REEMPLAZADO POR:">
                                         &#9755;                                
                                     </button>
@@ -255,12 +265,25 @@
                             <td (click)="setRegisterSelected(reg)"><button [disabled]="busyChageState != null ? !busyChageState.closed : false" *ngIf="reg.estado.cambioEstado && !reg.valid && isAcceses(3) && project?.tipoProyId != 12" (click)="cambioEstado(reg)" type="button" class="btn btn-sm btn-light" ngbTooltip="Cambia el estado de la Persona.">&#8633;</button></td>
                             <td (click)="setRegisterSelected(reg)"><button *ngIf="!reg.valid" (click)="edit(reg)" type="button" class="btn btn-sm btn-light">&#9998;</button></td>
                             <!--td (click)="setRegisterSelected(reg)"><a href="{{URL_PRINT}}getBoleta?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>F</small></a></td-->
-                            <td (click)="setRegisterSelected(reg)"><a *ngIf="project?.tipoProyId != 12 || (reg.inicialValid && project?.tipoProyId == 12)" href="{{URL_PRINT}}fichaPersonal?id={{projectId}}&id1={{reg.id}}" class="btn btn-sm btn-secondary" target="_blank"><small>VD</small></a></td>
-                            <td (click)="setRegisterSelected(reg)"><button *ngIf="reg.estado.btnExcluir && !reg.valid && reg.reemplazante.id == 0 && isAcceses(3)" (click)="delete(reg.id, i)" type="button" class="btn btn-sm btn-light" ngbTooltip="El solicitante deja de estar en esta lista">&#10006;</button></td>
-                        <td><button *ngIf="project?.tipoProyId == 12" (click)="showFormDocumento(reg)" type="button" class="btn btn-sm btn-primary">
-                                   Documento
-                            </button>
-                        </tr>    
+                            <td (click)="setRegisterSelected(reg)">
+                                <a *ngIf="project?.tipoProyId != 12 || (reg.inicialValid && project?.tipoProyId == 12)" 
+                                    href="{{URL_PRINT}}fichaPersonal?id={{projectId}}&id1={{reg.id}}" 
+                                    class="btn btn-sm btn-secondary" target="_blank"><small>VD</small></a>
+                            </td>
+                            <td *ngIf="project?.tipoProyId != 101" (click)="setRegisterSelected(reg)">
+                                <button *ngIf="reg.estado.btnExcluir && !reg.valid && reg.reemplazante.id == 0 && isAcceses(3)" 
+                                        (click)="delete(reg.id, i)" type="button" class="btn btn-sm btn-light" 
+                                        ngbTooltip="El solicitante deja de estar en esta lista">&#10006;</button>
+                            </td>
+                            <td *ngIf="project?.tipoProyId == 101" (click)="setRegisterSelected(reg)">
+                                <button *ngIf="reg.estado.btnExcluir && !reg.valid && reg.reemplazante.id == 0 && isAcceses(3)" 
+                                        (click)="recorte(reg)" type="button" class="btn btn-sm btn-light" 
+                                        ngbTooltip="Recorte">&#10006;</button>
+                            </td>
+                            <td *ngIf="project?.tipoProyId == 12"><button (click)="showFormDocumento(reg)" type="button" class="btn btn-sm btn-primary">
+                                    Documento
+                                </button>
+                            </tr>    
                     </tbody>
                 </table>  
                 

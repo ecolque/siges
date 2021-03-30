@@ -8,11 +8,20 @@
     <div class="modal-body">  
         <div class="row">
             <div class="col-sm">
-                <p class="font-weight-bold">{{register?.person.nombres}} {{register?.person.paterno}} {{register?.person.materno}}  {{register?.person.document}}</p>                
+                <p class="font-weight-bold">
+                    {{register?.person.nombres}} 
+                    {{register?.person.paterno}} 
+                    {{register?.person.materno}}  
+                    (CI: {{register?.person.document}})</p>
             </div>
         </div>
     
         <div class="row">
+            <div class="col-12" *ngIf="!renuncia?.renuncia">
+                <!-- tipoProyId -->
+                <label><input type="radio" value="renuncia" name="form" [(ngModel)]="option"> Renuncia</label>
+                <label *ngIf="tipoProyId == 101"><input type="radio" value="resolucion" name="form" [(ngModel)]="option"> Resolucion contractual</label>
+            </div>
             <div class="col-sm" *ngIf="renuncia">
                     <div class="alert alert-danger col-sm" role="alert" *ngIf="error">{{error}}</div>
                     <span class="badge badge-pill badge-primary">{{copyObs}}</span><br>
