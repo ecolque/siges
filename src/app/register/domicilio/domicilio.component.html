@@ -149,28 +149,42 @@
                                     {{form.controls.propietarioTelefono.errors?.msg}}                        
                             </small>                                
                         </div>                                     
-                    </div> 
-
-                    <div class="row">
-                        <div class="col-sm">
-                            <table class="table-bordered">
-                                <thead>
-                                    <tr><th>Documentos:</th><th>Tiene</th></tr>
-                                </thead>
-                                <tbody>
-                                   <tr>
-                                       <td>Folio real de la vivienda,</td><td>
-                                        <input type="file" (change)="uploadFile($event, 1)" >
-                                       </td>
-                                   </tr>
-                                </tbody>
-                            </table>
-                        </div>   
                     </div>
                     <button [disabled]="busy != null ? !busy.closed : false" type="submit" class="btn btn-primary">Guardar</button>
                 </div>                                                                                                
             </div>    
         </form>
+
+        <div class="card-body border border-primary">
+            <div class="row">
+                <div class="col-sm">
+                    <table class="table-bordered">
+                        <thead>
+                            <tr><th>Documentos</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let r of respaldos, let i = index">
+                            <td> 
+                                <div *ngIf="!r.respName" class="txt10"> {{i + 1}}. {{r.tipoRespName}}</div>
+                                <a *ngIf="r.respName" class="btn btn-sm btn-primary txt12" 
+                                        href="http://siges.aevivienda.gob.bo/siges/documents/{{r.respName}}" 
+                                        target="_blank" >{{i + 1}}. {{r.tipoRespName}}</a>
+                            </td>
+                            <td *ngIf="!r.respName">
+                                <input type="file" class="txt10" (change)="uploadFile($event, r)" >
+                            </td>
+                            <td *ngIf="r.respName">
+                                <button [disabled]="busy != null ? !busy.closed : false" 
+                                        type="button"
+                                        class="btn btn-sm btn-danger txt10"
+                                        (click)="deleteRespaldo(r.respId, r.respName)">Eliminar</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>   
+            </div>
+        </div>
 
         <div *ngIf="showCaracteristica" class="card">        
             <h6 class="card-header bg-primary text-white">CARACTERISTICAS DE LA VIVIENDA QUE OCUPA ACTUALMENTE</h6>        

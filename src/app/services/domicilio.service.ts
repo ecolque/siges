@@ -7,16 +7,19 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import { RegisterService } from './register.service';
+import { HttpRequest, HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class DomicilioService {
   public static domicilio: any;
   public static zonas: any= [];
   static caracteristica: any;
+  public static respaldos: any = [];
   registerId: number;
 
   constructor(
-    private http: Http
+    private http: Http,
+    private https: HttpClient
   ) {}
 
   public static getCaracteristicas(categorias: any) {
@@ -46,6 +49,7 @@ export class DomicilioService {
                     DomicilioService.domicilio = data.domicilio;
                     DomicilioService.zonas = data.zonas;
                     DomicilioService.caracteristica = data.caracteristica;
+                    DomicilioService.respaldos =  data.tipoRespaldos;
                   })
                 .catch(UtilsService.handleError);
       }else {
@@ -82,15 +86,25 @@ export class DomicilioService {
       .catch(UtilsService.handleError);
     }
 
-    uploadFile(data: FormData) {    
-      //console.log(data);        
-      let uploadURL = UtilsService.domicilioBaseUrl + 'uploadDocument';        
-      return this.http.post(uploadURL, data)
+    uploadFile(file: FormData) {
+      let newRequest = new HttpRequest('POST',
+        UtilsService.domicilioBaseUrl + 'uploadDocument', 
+        file, 
+        {reportProgress: true, responseType: 'text'}
+      );
+      return this.https.request(newRequest);
+      //console.log(data);     
+      // let headers = new Headers();
+      // headers.append('Content-Type','multipart/form-data');
+      // headers.append('Accept','application/json');
+      // let options = new RequestOptions({ headers: headers});   
+      // return this.http.post(UtilsService.domicilioBaseUrl + 'uploadDocument', file); 
+    }
+    deleteFileRespaldo(registerId: number, respaldoId: number, nameFile: string){
+      return this.http.get(UtilsService.domicilioBaseUrl + 'deleteFileRespaldo/' + registerId + '/' + respaldoId + '/' + nameFile)
       .map(UtilsService.extractData)
-      .do(data => {
-          RegisterService.setPuntajeToRegisters(data.registerId, data.puntaje, data.estado);
-        })
-      .catch(UtilsService.handleError);   
+      .do(data => {})
+      .catch(UtilsService.handleError);
     }
 
     /*deleteFamily(id:number, idx:number): Observable<any[]>{

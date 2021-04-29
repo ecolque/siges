@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal';
 
 import { Observable } from 'rxjs/Observable';
 import { MsgModalComponent } from '../../shared/utils/msg-modal/msg-modal.component';
+import { HttpRequest } from '@angular/common/http';
 
 @Component({
   selector: 'app-domicilio',
@@ -30,6 +31,8 @@ export class DomicilioComponent implements OnInit {
   caracteristica: any;
   categorias: any[]= [];
   datos: any[]= [];
+
+  respaldos: any[]= [];
 
   form: FormGroup;
 
@@ -56,8 +59,9 @@ export class DomicilioComponent implements OnInit {
        this.busy = this.domicilioService.getDomicilioByRegisterId(this.registerId).subscribe(
          data => {
            this.domicilio = DomicilioService.domicilio;
+           this.respaldos = DomicilioService.respaldos;
             this.setParameters();
-            console.log(this.domicilio);
+            console.log(this.respaldos);
         }, error => {
           this.router.navigate(['login']);
         });
@@ -186,24 +190,54 @@ export class DomicilioComponent implements OnInit {
     this.router.navigate(['project', this.registerId, 'family']);
   }
 
-  uploadFile($event, documentId: number){
-    this.selectedFile = <File>$event.target.files[0];
-    console.log(this.selectedFile);
-
-    const fd = new FormData();
-    fd.append('file', this.selectedFile);
-    fd.append('registroId', this.registerId.toString());
-    // fd.append('tipoRespaldoId', documentId.toString());
-    fd.append('tipoRespaldoId', '1');
-    // fd.append('user_id', this.userId.toString());
-    this.domicilioService.uploadFile(fd).subscribe( res => {
-
-    }, e => {
-      alert(e);
-      console.log(e);
-    });
+  uploadFile(event, respaldo: any){
+    console.log(event, respaldo);
+    if(event.target.files && event.target.files[0]){
+      const file: File = <File>event.target.files[0];
+      console.log(file);
+  
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('registroId', this.registerId.toString());
+      fd.append('tipoRespaldoId', respaldo.tipoRespId);
+      // fd.append('tipoRespaldoId', '1');
+      // fd.append('user_id', this.userId.toString());
+      this.busy = this.domicilioService.uploadFile(fd).subscribe( (res: any) => {
+        if(res.body){
+          try {
+            let obj = JSON.parse(res.body);
+            respaldo.respName = obj.respName;
+            respaldo.respId = obj.respId;
+            this.openMsgForm('El archivo se guardo', 'MENSAJE!!', 'bg-success');
+          } catch (e) {}
+        }
+       
+      }, e => {
+        if(e.statusText){
+          console.log(e.statusText)
+          this.openMsgForm(e.statusText, 'ERROR!', 'bg-danger');
+        }else{
+          this.openMsgForm('Error', 'ERROR!', 'bg-danger');
+        }
+        // alert(e);
+        console.log(e);
+      });
+    }
     // this.onListarDocumentos();        
     // this.archivoElegido;
+    
+  }
+
+  deleteRespaldo(respaldoId: number, nameFile: string){
+    if(confirm("Si eliminas quedara registrado esta accion, borrar?")){
+      this.busy = this.domicilioService.deleteFileRespaldo(this.registerId, respaldoId, nameFile).subscribe(res => {
+        DomicilioService.respaldos = res;
+        this.respaldos = res;
+      }, e => {
+        this.openMsgForm(e, 'ERROR!', 'bg-danger');
+      });
+    }
+    
   }
 
   private required(domicilio: any) {

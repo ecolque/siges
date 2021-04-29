@@ -23,6 +23,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginPopupComponent } from './login/login.popup.component';
 // import { GeoComponent } from './geo/geo.component';
 // import { SearchComponent } from './search/search.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { LoginPopupComponent } from './login/login.popup.component';
     FormsModule,
     ProjectModule,
     HttpModule,
+    HttpClientModule,
     NgbModule.forRoot(),
     ReactiveFormsModule,
     AppRoutingModule
