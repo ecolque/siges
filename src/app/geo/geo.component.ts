@@ -9,6 +9,17 @@ import { AuthService } from '../services/auth.service';
 import { GeoReportComponent } from './geo-report/geo-report.component';
 import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.component';
 
+import Map from 'ol/Map.js';
+import {fromLonLat} from 'ol/proj.js';
+import View from 'ol/View.js';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
+import Feature from 'ol/Feature.js';
+import {Style, Icon} from 'ol/style.js';
+import Point from 'ol/geom/Point.js';
+import VectorSource from 'ol/source/Vector.js';
+import {BingMaps, Cluster} from 'ol/source.js';
+import { timer } from 'rxjs/observable/timer';
+
 @Component({
   selector: 'app-geo',
   templateUrl: './geo.component.html',
@@ -53,7 +64,12 @@ export class GeoComponent implements OnInit {
   isSpp: boolean = false;
   err: string;  
 
-  constructor( private geoService: GeoService, private modalService: NgbModal) {
+  map;
+  icon: string;
+  iconFooter: string;
+
+  constructor( private geoService: GeoService, 
+      private modalService: NgbModal) {
     this.setClickedRowProject = function(index) {
       this.selectedRowProject = index;
       this.projectId = index;
@@ -69,6 +85,8 @@ export class GeoComponent implements OnInit {
     
     this.department = 0;
     this.year = 0;
+    this.icon = 'app/assets/css/images/marker-icon.png';
+    this.iconFooter = 'app/assets/images/foot.png';  
   }
 
   ngOnInit() {
@@ -86,7 +104,50 @@ export class GeoComponent implements OnInit {
       );
     }
     this.URL_PRINT = UtilsService.PATH_PRINT;
+    this.drawMap();
   }
+  view;
+  drawMap(){
+      this.view = new View({
+          center: fromLonLat([-65.640756, -16.613781]),
+          zoom: 5,
+          minZoom: 4,
+          maxZoom: 19
+      });
+      this.map = new Map({
+          layers: [ new TileLayer({source: new BingMaps({imagerySet: 'Aerial',key: 'ArxDLV-ANzpdA9DkVHwHYjnSUJFVDkvvCKVab3vxun8aNQuHmu_BZQTBY79JdS_T'})}) ],  
+          target: 'map',
+          view: this.view
+      });
+  }
+  private _setMarkerToMap(obj: any, icon = this.icon) {
+        if(this.map == null) return;
+        var iconFeature = new Feature(new Point(fromLonLat([obj.lng, obj.lat])));
+        iconFeature.set('style', new Style({
+          image: new Icon({
+            anchor: [0.5, 0.96],
+            crossOrigin: 'anonymous',
+            src: icon,
+          })
+        }));   
+
+        this.map.addLayer(new VectorLayer({
+          style: function(feature){ return feature.get('style') },
+          source: new VectorSource({features: [iconFeature]}), 
+          registerId: obj.registerId
+        }));
+    }
+    private _resetMarkers() {
+        if(this.map) {
+          const tmpLayers = [...this.map.getLayers().getArray()]                    
+          for( let i = 1; i < tmpLayers.length; i++ ) {
+              let lay = tmpLayers[i];
+              if(lay.type == 'VECTOR') {
+                this.map.removeLayer(tmpLayers[i]);
+              }                                          
+          }                  
+        }
+    }
 
   search() {
     this.projects = null;
@@ -149,6 +210,7 @@ export class GeoComponent implements OnInit {
   }
 
   getPhotos(inspectionId: number) {
+
     this.photos = null;
     this.mapPhotos = null;
     this.times = null;
@@ -158,25 +220,38 @@ export class GeoComponent implements OnInit {
       if (this.photos) {
         let tmp = this.photos[0];
         if (tmp && tmp.lat != 0 && tmp.lng != 0) {
-          this.lat = tmp.lat;
-          this.lng = tmp.lng;
+          this.view.setZoom(15);
+          this.view.setCenter(fromLonLat([tmp.lng, tmp.lat])); 
+          // this.lat = tmp.lat;
+          // this.lng = tmp.lng;
+          // this._setMarkerToMap({lat: tmp.lat, lng: tmp.lng});
         }
+        this._resetMarkers();
+        this.photos.forEach(loc => {
+          if (loc && loc.lat != 0 && loc.lng != 0) {
+            this._setMarkerToMap({lat: loc.lat, lng: loc.lng});
+          }
+        });
       }
     });
   }
 
   getTraking(inspectionId: number) {
     this.busy = this.geoService.getTraking(inspectionId).subscribe(data => {
-      console.log(data);
       this.times = data;
-      this.zoom = 14;
+      // this.zoom = 14;
       this.mapPhotos = null;
       if (this.times) {
-        for (let i = 0; i < this.times.length; i++) {
-          this.lat = this.times[i].locations[0].lat;
-          this.lng = this.times[i].locations[0].lng;
-          if (this.mapPhotos === null) { this.mapPhotos = []; }
 
+        this.view.setZoom(15);
+        this.view.setCenter(fromLonLat([this.times[0].locations[0].lng, this.times[0].locations[0].lat])); 
+        this._resetMarkers();
+
+        for (let i = 0; i < this.times.length; i++) {
+          // this.lat = this.times[i].locations[0].lat;
+          // this.lng = this.times[i].locations[0].lng;
+          if (this.mapPhotos === null) { this.mapPhotos = []; }
+          
           for (let j = 0; j < this.times[i].locations.length; j++) {
               let locFirst = this.times[i].locations[j];
               /*if(j === 0){
@@ -186,9 +261,15 @@ export class GeoComponent implements OnInit {
               }else{
                 locFirst.icon = "assets/images/foot.png"
               }*/
-              locFirst.icon = 'app/assets/images/foot.png';              
-              this.mapPhotos.push(locFirst);
+              // locFirst.icon = this.iconFooter;              
+              // this.mapPhotos.push(locFirst);
+              // this.photos.forEach(loc => {
+                if (locFirst && locFirst.lat != 0 && locFirst.lng != 0) {
+                  this._setMarkerToMap({lat: locFirst.lat, lng: locFirst.lng}, this.iconFooter);
+                }
+              // });
           }
+          
           /*let locFirst = this.times[i].locations[0];
           locFirst.icon = "assets/images/start.png"
           this.mapPhotos.push(locFirst);
@@ -222,8 +303,12 @@ export class GeoComponent implements OnInit {
     this.times = null;
     this.mapPhotos = this.photos.filter(_ => _.id === photoId);
     if (this.mapPhotos) {
-      this.lat = this.mapPhotos[0].lat;
-      this.lng = this.mapPhotos[0].lng;
+      // this.lat = this.mapPhotos[0].lat;
+      // this.lng = this.mapPhotos[0].lng;
+        this._resetMarkers();
+        this.view.setZoom(14);
+        this.view.setCenter(fromLonLat([this.mapPhotos[0].lng, this.mapPhotos[0].lat])); 
+        this._setMarkerToMap({lat: this.mapPhotos[0].lat, lng: this.mapPhotos[0].lng})
     }
   }
 
