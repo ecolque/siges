@@ -283,6 +283,14 @@ cambioEstado(registerId: number) {
           .catch(UtilsService.handleError);
 }
 
+changeToReasignado(registerId: number) {
+  let params = 'changeToReasignado/' + registerId;
+  return this.http.get(UtilsService.registerBaseUrl + params)
+          .map(UtilsService.extractData)
+          .do(data => { })
+          .catch(UtilsService.handleError);
+}
+
 guardarReemplazo(registerId: number, reemplazoId: number, estadoId: number) {
   let params = 'guardarReemplazo/' + registerId + '/' + reemplazoId + '/' + estadoId;
   return this.http.get(UtilsService.registerBaseUrl + params)

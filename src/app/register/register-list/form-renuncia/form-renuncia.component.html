@@ -19,8 +19,8 @@
         <div class="row">
             <div class="col-12" *ngIf="!renuncia?.renuncia">
                 <!-- tipoProyId -->
-                <label><input type="radio" value="renuncia" name="form" [(ngModel)]="option"> Renuncia</label>
-                <label *ngIf="tipoProyId == 101"><input type="radio" value="resolucion" name="form" [(ngModel)]="option"> Resolucion contractual</label>
+                <label class="font-weight-bold text-primary"><input type="radio" value="renuncia" name="form" [(ngModel)]="option"> Renuncia</label>
+                <label class="font-weight-bold text-primary" *ngIf="tipoProyId == 101"><input type="radio" value="resolucion" name="form" [(ngModel)]="option"> Resolucion contractual</label>
             </div>
             <div class="col-sm" *ngIf="renuncia">
                     <div class="alert alert-danger col-sm" role="alert" *ngIf="error">{{error}}</div>

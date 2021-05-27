@@ -17,9 +17,9 @@
     </div>
 
     <div class="row">
-        <div class="col-12" *ngIf="!cancelReemplazo">
-            <label><input type="radio" value="sustitucion" name="form" [(ngModel)]="option"> Sustitucion</label>
-            <label *ngIf="tipoProyId == 101"><input type="radio" value="reasignado" name="form" [(ngModel)]="option"> Reasignado</label>
+        <div class="col-12 border border-primary" *ngIf="!cancelReemplazo">
+            <label class="text-primary" style="font-size: 20px;"><input type="radio" value="sustitucion" name="form" [(ngModel)]="option"> Sustitucion</label>
+            <label class="text-primary" style="font-size: 20px;" *ngIf="tipoProyId == 101"><input type="radio" value="reasignado" name="form" [(ngModel)]="option"> Reasignado</label>
         </div>
         <div class="col-sm">
             <div class="card">               

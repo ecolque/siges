@@ -670,4 +670,27 @@ export class RegisterListComponent implements OnInit {
       const modalRef = this.modalService.open(FormObsCloseProject, {size: 'lg'});
       modalRef.componentInstance.registers = JSON.parse(JSON.stringify(list));
     }
+
+    changeToReasignado(reg: any){
+      const modalRef = this.modalService.open(MsgModalComponent, {size: 'sm'});
+      modalRef.componentInstance.typeMsg = 'MENSAJE!';
+      modalRef.componentInstance.classHeader = 'bg-warning';
+      modalRef.componentInstance.msg = 'Esta operacion es irreversible, esta seguro en pasar a REASIGNADO?';
+      modalRef.componentInstance.okBtn = true;
+      modalRef.result.then((result) => {
+        if (result == 'ok') {
+          this.error = null;
+          this.busyChageState = this.registerService.changeToReasignado(reg.id)
+          .subscribe(
+            data => {
+              reg.estado = data;
+            },
+            errors => {
+               this.error = errors;
+               this.registerService.openFormLogin(this.error);
+              }
+          );
+        }
+      });
+    }
 }

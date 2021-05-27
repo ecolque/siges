@@ -210,14 +210,32 @@
                             </td>
                             <td (click)="setRegisterSelected(reg)"> <!--Estado-->
                                 <div>
-                                    <small class="{{reg.estado.color}}" (click)="showBeneficio(reg)" style="padding:0 5px; cursor: pointer;"><strong>{{reg.estado.name}}</strong></small>
+                                    <small class="{{reg.estado.color}}" (click)="showBeneficio(reg)" 
+                                            style="padding:0 5px; cursor: pointer;">
+                                            <strong>{{reg.estado.name}}</strong>
+                                    </small>
+                                    <small *ngIf="reg.estado.id == 2 && project?.tipoProyId == 101" 
+                                            style="cursor: pointer;font-size: 10px;" (click)="changeToReasignado(reg)">&#9755;Rasig.</small>
                                     <!--reemplazo-->
-                                    <button *ngIf="reg.estado.btn && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-pill badge-light" (click)="showFormReemplazo(reg)">{{reg.estado.btnTxt}}</button> 
-                                    <button *ngIf="reg.estado.cancelRenuncia && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" class="badge badge-light" (click)="cancelRenuncia(reg)">Deshacer?</button>
-                                    <button *ngIf="reg.reemplazante.id != 0 && isAcceses(3) && project?.tipoProyId != 12" (click)="cancelReemplazante(reg)" type="button" class="btn btn-sm btn-light" ngbPopover="{{reg.reemplazante.nombres}}" triggers="mouseenter:mouseleave" popoverTitle="REEMPLAZADO POR:">
+                                    <button *ngIf="reg.estado.btn && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" 
+                                            class="badge badge-pill badge-light" 
+                                            (click)="showFormReemplazo(reg)">{{reg.estado.btnTxt}}
+                                    </button> 
+                                    <button *ngIf="reg.estado.cancelRenuncia && reg.reemplazante.id == 0 && isAcceses(3) && project?.tipoProyId != 12" type="button" 
+                                            class="badge badge-light" (click)="cancelRenuncia(reg)">Deshacer?
+                                    </button>
+                                    <button *ngIf="reg.reemplazante.id != 0 && isAcceses(3) && project?.tipoProyId != 12" 
+                                            (click)="cancelReemplazante(reg)" type="button" 
+                                            class="btn btn-sm btn-light" 
+                                            ngbPopover="{{reg.reemplazante.nombres}}" 
+                                            triggers="mouseenter:mouseleave" popoverTitle="REEMPLAZADO POR:">
                                         &#9755;                                
                                     </button>
-                                    <button *ngIf="reg.estado.slctVentas && project?.tipoProyId == 12" (click)="showFormEstadoCredito(reg.id, reg.person.nombres, reg.person.paterno, reg.person.materno, reg.credito)" class="badge badge-pill txt11 {{reg.credito.id == 0 ? 'badge-light' : (reg.credito.input ? 'btn-warning' : 'btn-primary')}}">{{reg.credito.id == 0 ? 'Sin Estado' : reg.credito.name}}</button>
+                                    <button *ngIf="reg.estado.slctVentas && project?.tipoProyId == 12" 
+                                            (click)="showFormEstadoCredito(reg.id, reg.person.nombres, reg.person.paterno, reg.person.materno, reg.credito)" 
+                                            class="badge badge-pill txt11 {{reg.credito.id == 0 ? 'badge-light' : (reg.credito.input ? 'btn-warning' : 'btn-primary')}}">
+                                                {{reg.credito.id == 0 ? 'Sin Estado' : reg.credito.name}}
+                                    </button>
                                 </div>
                             </td>
                             <td (click)="setRegisterSelected(reg)"> <!--Entidad-->                            

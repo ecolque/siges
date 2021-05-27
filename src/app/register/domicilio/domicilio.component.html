@@ -63,6 +63,16 @@
                             <small *ngIf="form.controls.lote.errors" class="invalid-feedback">
                                     {{form.controls.lote.errors?.msg}}                        
                             </small>                                
+                        </div>
+                        <div class="col-sm form-group" *ngIf="tipoProyId == 101">
+                            <label for="matricula" class="col-form-label-sm">Matricula:</label>
+                            <input formControlName="matricula" 
+                                    type="text" 
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="(!form.controls.matricula.valid && form.controls.matricula.touched) || (form.controls.matricula.errors != null && form.controls.matricula.errors?.msg != null)"> 
+                            <small *ngIf="form.controls.matricula.errors" class="invalid-feedback">
+                                    {{form.controls.matricula.errors?.msg}}                        
+                            </small>                                
                         </div> 
 
                         <!--div class="col-sm form-group" *ngIf="urbano">
@@ -155,7 +165,7 @@
             </div>    
         </form>
 
-        <div class="card-body border border-primary">
+        <div class="card-body border border-primary" *ngIf="tipoProyId == 101">
             <div class="row">
                 <div class="col-sm">
                     <table class="table-bordered">
