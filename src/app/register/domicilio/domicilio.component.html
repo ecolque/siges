@@ -170,25 +170,30 @@
                 <div class="col-sm">
                     <table class="table-bordered">
                         <thead>
-                            <tr><th>Documentos</th><th></th></tr>
+                            <tr><th>Documentos</th></tr>
                         </thead>
                         <tbody>
                         <tr *ngFor="let r of respaldos, let i = index">
                             <td> 
-                                <div *ngIf="!r.respName" class="txt10"> {{i + 1}}. {{r.tipoRespName}}</div>
+                                <div *ngIf="!r.respName" class="txt11"> {{i + 1}}. {{r.tipoRespName}}</div>
+
+                                <button *ngIf="r.respName" [disabled]="busy != null ? !busy.closed : false" 
+                                        type="button"
+                                        class="btn btn-sm btn-danger txt10"
+                                        (click)="deleteRespaldo(r.respId, r.respName)">X</button>
                                 <a *ngIf="r.respName" class="btn btn-sm btn-primary txt12" 
                                         href="http://siges.aevivienda.gob.bo/siges/documents/{{r.respName}}" 
-                                        target="_blank" >{{i + 1}}. {{r.tipoRespName}}</a>
+                                        target="_blank" >{{i + 1}}. {{r.tipoRespName}} (pdf)</a>
                             </td>
                             <td *ngIf="!r.respName">
                                 <input type="file" class="txt10" (change)="uploadFile($event, r)" >
                             </td>
-                            <td *ngIf="r.respName">
+                            <!-- <td *ngIf="r.respName">
                                 <button [disabled]="busy != null ? !busy.closed : false" 
                                         type="button"
                                         class="btn btn-sm btn-danger txt10"
-                                        (click)="deleteRespaldo(r.respId, r.respName)">Eliminar</button>
-                            </td>
+                                        (click)="deleteRespaldo(r.respId, r.respName)">X</button>
+                            </td> -->
                         </tr>
                         </tbody>
                     </table>
