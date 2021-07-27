@@ -190,18 +190,13 @@ export class DomicilioComponent implements OnInit {
     this.router.navigate(['project', this.registerId, 'family']);
   }
 
-  uploadFile(event, respaldo: any){
-    console.log(event, respaldo);
-    if(event.target.files && event.target.files[0]){
-      const file: File = <File>event.target.files[0];
-      console.log(file);
-  
+  saveRespaldo(respaldo: any){
+      if(!this.file){ alert("Seleccione un archivo"); return; }
       const fd = new FormData();
-      fd.append('file', file);
+      fd.append('file', this.file);
       fd.append('registroId', this.registerId.toString());
       fd.append('tipoRespaldoId', respaldo.tipoRespId);
-      // fd.append('tipoRespaldoId', '1');
-      // fd.append('user_id', this.userId.toString());
+      fd.append('numero', respaldo.numero);
       this.busy = this.domicilioService.uploadFile(fd).subscribe( (res: any) => {
         if(res.body){
           try {
@@ -209,9 +204,9 @@ export class DomicilioComponent implements OnInit {
             respaldo.respName = obj.respName;
             respaldo.respId = obj.respId;
             this.openMsgForm('El archivo se guardo', 'MENSAJE!!', 'bg-success');
+            this.file = null;
           } catch (e) {}
         }
-       
       }, e => {
         if(e.statusText){
           console.log(e.statusText)
@@ -222,6 +217,13 @@ export class DomicilioComponent implements OnInit {
         // alert(e);
         console.log(e);
       });
+    }
+  file: File;
+  uploadFile(event){
+    if(event.target.files && event.target.files[0]){
+      this.file = <File>event.target.files[0];
+      // fd.append('tipoRespaldoId', '1');
+      // fd.append('user_id', this.userId.toString());
     }
     // this.onListarDocumentos();        
     // this.archivoElegido;

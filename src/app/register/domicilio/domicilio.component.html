@@ -142,7 +142,7 @@
                                 formControlName="propietario"
                                 class="form-control form-control-sm"
                                 type="text"
-                                [class.is-invalid]="(!form.controls.propietario.valid && form.controls.propietario.touched) || (form.controls.propietario.errors != null && form.controls.propietario.errors?.msg != null)">                                
+                                [class.is-invalid]="(!form.controls.propietario.valid && form.controls.propietario.touched) || (form.controls.propietario.errors != null && form.controls.propietario.errors?.msg != null)">
                             <small *ngIf="form.controls.propietario.errors" class="invalid-feedback">
                                     {{form.controls.propietario.errors?.msg}}                        
                             </small>                                
@@ -170,23 +170,37 @@
                 <div class="col-sm">
                     <table class="table-bordered">
                         <thead>
-                            <tr><th>Documentos</th></tr>
+                            <tr><th>Documentos</th><th>Num#</th><th></th></tr>
                         </thead>
                         <tbody>
                         <tr *ngFor="let r of respaldos, let i = index">
                             <td> 
                                 <div *ngIf="!r.respName" class="txt11"> {{i + 1}}. {{r.tipoRespName}}</div>
 
+                                
+                                <a *ngIf="r.respName" class="txt12" 
+                                        href="http://siges.aevivienda.gob.bo/siges/documents/{{r.respName}}" 
+                                        target="_blank" >{{i + 1}}. {{r.tipoRespName}} (pdf)</a>
+
+                                <input *ngIf="!r.respName" type="file" class="txt10" (change)="uploadFile($event)" >
+                            </td>
+                            <!-- <td *ngIf="!r.respName">
+                                <input type="file" class="txt10" (change)="uploadFile($event)" >
+                            </td> -->
+                            <td>
+                                <input
+                                    [(ngModel)]="r.numero"
+                                    class="form-control form-control-sm"
+                                    type="text">
+                            </td>
+                            <td>
+                                <button *ngIf="r.respId == 0" [disabled]="busy != null ? !busy.closed : false" 
+                                        class="btn btn-sm btn-primary txt10"
+                                        (click)="saveRespaldo(r)">Guardar</button>
                                 <button *ngIf="r.respName" [disabled]="busy != null ? !busy.closed : false" 
                                         type="button"
                                         class="btn btn-sm btn-danger txt10"
                                         (click)="deleteRespaldo(r.respId, r.respName)">X</button>
-                                <a *ngIf="r.respName" class="btn btn-sm btn-primary txt12" 
-                                        href="http://siges.aevivienda.gob.bo/siges/documents/{{r.respName}}" 
-                                        target="_blank" >{{i + 1}}. {{r.tipoRespName}} (pdf)</a>
-                            </td>
-                            <td *ngIf="!r.respName">
-                                <input type="file" class="txt10" (change)="uploadFile($event, r)" >
                             </td>
                             <!-- <td *ngIf="r.respName">
                                 <button [disabled]="busy != null ? !busy.closed : false" 
