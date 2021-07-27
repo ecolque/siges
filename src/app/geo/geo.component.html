@@ -251,20 +251,24 @@
             </div>              
         </div>            
     </div> 
+    <div class="col-sm-6 animate-left" *ngIf="!photos">
+        <div class="border border-primary " style="height: 950px; overflow-y: scroll;"></div>
+    </div>
     <div class="col-sm-6">
-        <div class="card" *ngIf="mapPhotos">             
+        <div class="card">             
             <div class="card-body border border-primary padding">
-                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [mapTypeControl]='true' [fullscreenControl]="true">
-                    <agm-marker *ngFor="let m of mapPhotos; let i = index;" [latitude]="m.lat" [longitude]="m.lng" [iconUrl]="m.icon">
+                <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [mapTypeControl]='true' [fullscreenControl]="true">
+                    <agm-marker *ngFor="let m of mapPhotos; let i = index;" [latitude]="m.lat" [longitude]="m.lng" [iconUrl]="m.icon"> -->
                         <!-- agm-info-window>
                             <strong *ngIf="{{p.windows = true}}">{{p.date}}</strong>
                         </agm-info-window -->
-                    </agm-marker>                                                   
+                    <!-- </agm-marker>                                                    -->
                     <!--agm-polyline *ngFor="let time of times;" [strokeColor]="time.color" strokeWeight="0.2">
                             <agm-polyline-point  *ngFor="let l of time.locations;" [latitude]="l.lat" [longitude]="l.lng">
                             </agm-polyline-point>                               
                     </agm-polyline-->
-                </agm-map>
+                <!-- </agm-map> -->
+                <div id="map"></div>
             </div>
         </div>        
     </div>          
