@@ -12,6 +12,8 @@ import { Safehtml } from './safehtml.pipe';
 import { GeoZoomComponent } from './geo-zoom/geo-zoom.componente';
 import { GeoReportComponent } from './geo-report/geo-report.component';
 import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.component';
+import { GeoObsInsComponent } from './geo-obs-ins/geo-obs.ins.componente';
+import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.componente';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.componen
     Safehtml,
     GeoZoomComponent,
     GeoEvaluationComponent,
-    GeoReportComponent
+    GeoReportComponent,
+    GeoObsInsComponent,
+    GeoInsPendingComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +36,7 @@ import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.componen
     NgbModule.forRoot(),
     GeoRoutingModule
   ],
-  entryComponents: [ GeoZoomComponent, GeoEvaluationComponent, GeoReportComponent ],
+  entryComponents: [ GeoZoomComponent, GeoEvaluationComponent, GeoReportComponent, GeoObsInsComponent, GeoInsPendingComponent ],
   providers: [GeoService],
   bootstrap: []
 })

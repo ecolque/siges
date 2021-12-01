@@ -19,6 +19,8 @@ import Point from 'ol/geom/Point.js';
 import VectorSource from 'ol/source/Vector.js';
 import {BingMaps, Cluster} from 'ol/source.js';
 import { timer } from 'rxjs/observable/timer';
+import { GeoObsInsComponent } from './geo-obs-ins/geo-obs.ins.componente';
+import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.componente';
 
 @Component({
   selector: 'app-geo',
@@ -92,6 +94,8 @@ export class GeoComponent implements OnInit {
   ngOnInit() {
     this.err = null;
     this.isSpp = AuthService.userType === 1 ? true : false;
+    console.log( UtilsService.SSP );
+    console.log( UtilsService.USER );
     if (!this.isSpp) {
       this.departamentos = UtilsService.getDepartamentos();
       for (let i = this.currentTime.getFullYear()+1; i > 2010; i-- ) {
@@ -161,7 +165,10 @@ export class GeoComponent implements OnInit {
     this.selectedRowPerson = 0;
     this.registerId = 0;
     if(this.department != 0 && this.year != 0){
-      this.busy = this.geoService.getProjects(this.department, this.year).subscribe(data => {this.projects = data; console.log(data); });
+      this.busy = this.geoService.getProjects(this.department, this.year).subscribe(
+        data => {this.projects = data; console.log(data); },
+        error => alert(error)
+        );
     }else{alert("Seleccione departamento y Año");}
   }
 
@@ -361,5 +368,32 @@ export class GeoComponent implements OnInit {
     modalRef.componentInstance.projectCode = projectCode;
     /*modalRef.componentInstance.date = photo.date;
     modalRef.componentInstance.created = photo.created;  */
+  }
+
+  setObs(inspecion){
+    console.log(inspecion);
+    const modalRef = this.modalService.open(GeoObsInsComponent, {size: 'sm', backdrop: 'static', keyboard: false});    
+    modalRef.componentInstance.ins = JSON.parse(JSON.stringify(inspecion));
+    modalRef.result.then((res) => {
+      console.log(':::::: ',res);
+      if (res.ok == true) {
+        inspecion.obs = res.obs;
+      }
+    });
+    // modalRef.componentInstance.projectCode = projectCode;
+  }
+  openFormPending(){
+    const modalRef = this.modalService.open(GeoInsPendingComponent, {size: 'lg', backdrop: 'static', keyboard: false});    
+    modalRef.componentInstance.userId = UtilsService.USER.id;
+    modalRef.result.then((res) => {
+      console.log(':::::: ',res);
+      if (res.ok == true) {
+        // inspecion.obs = res.obs;
+      }
+    });
+  }
+
+  isAcceses(param: number) {    
+    return UtilsService.isAcceses(param);   
   }
 }

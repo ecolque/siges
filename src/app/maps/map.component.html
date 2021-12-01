@@ -2,8 +2,10 @@
     <div class="col-md-2 col-sm-4 border border-secondary">
             <label class="txt11">GESTION:</label>
             <select [(ngModel)]="year" (change)="changeYear()">
-                <option value="2018">2018</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
                 <option value="2019">2019</option>
+                <option value="2018">2018</option>
             </select>
             <div *ngIf="year != 0" class="animate-right">
                 <label class="txt11">DEPARTAMENTO:</label>
@@ -28,7 +30,7 @@
                     <div class="txt11 bg-primary text-white"><strong>PROYECTOS:</strong> <span *ngIf="projects">{{projects.length}}</span></div>
                     <div style="max-height: 400px; overflow: scroll;" class="no-padding border border-primary">
                             <div class="list-group">
-                                <div *ngFor="let p of projects; let i = index;" (click)="getPeople(p.id)" [class.active]="p.id == selectedRow" class="list-group-item list-group-item-action flex-column align-items-center">
+                                <div *ngFor="let p of projects; let i = index;" [class.active]="p.id == selectedRow" class="list-group-item list-group-item-action flex-column align-items-center">
                                     <div class="row no-padding d-flex w-100 justify-content-between">
                                         <div class="mb-1 txt11"><b>{{i+1}}. {{p.code}}</b></div>
                                         <span><b class="txt11">UH:</b> <span class="badge badge-primary">{{p.uh}}</span>  <b class="txt11">Benef.:</b> <span class="badge {{p.people == p.uh ? 'badge-primary' : 'badge-danger'}}">{{p.people}}</span></span>
@@ -38,7 +40,12 @@
                                             {{p.name}}
                                         </div>
                                         <div>
-                                            {{p.areaIntervencion}}; Estado: <b>{{p.desc}}</b>
+                                            {{p.areaIntervencion}} 
+                                            <br>
+                                            Estado: <b>{{p.desc}}</b>
+                                            <br>
+                                            <button (click)="getPeople(p.id, 0)">Gestion</button>
+                                            <button (click)="getPeople(p.id, 1)">Ejec.</button>
                                         </div>
                                     </div>
                                 </div>                                  

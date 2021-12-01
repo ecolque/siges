@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'search', loadChildren : 'app/search/search.module#SearchModule', canActivate : [AuthGuard] },
   { path: 'geo', loadChildren : 'app/geo/geo.module#GeoModule', canActivate : [AuthGuard] },
   { path: 'management', loadChildren : 'app/management/management.module#ManagementModule', canActivate : [AuthGuard] },
-  { path: 'maps', loadChildren : 'app/maps/map.module#MapModule', canActivate : [AuthGuard] },
+  { path: 'maps', loadChildren : 'app/maps/map.module#MapModule' },//, canActivate : [AuthGuard]
   { path: 'home', component : HomeComponent, canActivate : [AuthGuard] },
   // { path: '', component: ProjectComponent, pathMatch: 'full'},
   { path: '', component : HomeComponent, canActivate : [AuthGuard] },

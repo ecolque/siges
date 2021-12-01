@@ -1,0 +1,19 @@
+<div class="modal-header" style="height:30px">      
+    <div></div>  
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">        
+        <div class="row">
+            <div class="col-sm-12">
+                <textarea [(ngModel)]="ins.obs" class="form-control form-control-sm"></textarea>
+            </div>
+        </div>    
+</div>
+<div class="modal-footer">
+    <button [disabled]="busy != null ? !busy.closed : false" (click)="save()" type="button" class="btn btn-sm btn-primary">GUARDAR</button>
+    <button *ngIf="ins.obs" [disabled]="busy != null ? !busy.closed : false" (click)="delete()" type="button" class="btn btn-sm btn-danger">ELIMINAR</button>
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('')">CANCELAR</button> -->
+</div>
+      

@@ -35,8 +35,8 @@ export class MapService {
                 .catch(UtilsService.handleError);
     }
 
-    getPeopleByProjectId(projectId: number): Observable<any[]> {
-        let params = 'getPeopleByProjectId/' + projectId;
+    getPeopleByProjectId(projectId: number, type: number): Observable<any[]> {
+        let params = 'getPeopleByProjectId/' + projectId + '/' + type;
         return this.http.get(UtilsService.mapBaseUrl + params)
                 .map(UtilsService.extractData)
                 .do(data => { })

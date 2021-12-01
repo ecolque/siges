@@ -15,7 +15,7 @@ export class GeoService {
 // private utilsService: UtilsService
         ) { console.log('authenticate:' + UtilsService.authenticateBaseUrl); }
 
-        getProjects(departmentId: number, year: number): Observable<any[]> {
+    getProjects(departmentId: number, year: number): Observable<any[]> {
         let params = 'getProjects/' + departmentId + '/' + year;
         return this.http.get(UtilsService.geoBaseUrl + params)
                 .map(UtilsService.extractData)
@@ -101,6 +101,27 @@ export class GeoService {
                 .map(UtilsService.extractData)
                 .do(data => { })
                 .catch(UtilsService.handleError);
+    }
+
+    updateObs(inspection: any) {
+        return this.http.post(UtilsService.geoBaseUrl + 'updateObs', inspection)
+        .map(UtilsService.extractData)
+        .do(data => { })
+        .catch(UtilsService.handleError);
+    }
+
+    getNMProjectsPendigs(): Observable<any[]> {
+        let params = 'getNMPendingProjects';
+        return this.http.get(UtilsService.geoBaseUrl + params)
+                .map(UtilsService.extractData)
+                .do(data => { })
+                .catch(UtilsService.handleError);
+    }
+    autorizeNMPendingProkect(obj: any) {
+        return this.http.post(UtilsService.geoBaseUrl + 'autorizeNMPendingProject', obj)
+        .map(UtilsService.extractData)
+        .do(data => { })
+        .catch(UtilsService.handleError);
     }
 
 /*authWhenInvalidateSession(user:any): Observable<any[]>{

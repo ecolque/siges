@@ -108,7 +108,7 @@ import {toLonLat} from 'ol/proj.js';
 
     constructor(private mapService: MapService, private modalService: NgbModal, private router: Router) {            
       
-        this.getPeople = function(index) {              
+        this.getPeople = function(index, type) {              
 
             this.people = [];        
             this.activities = [];
@@ -117,7 +117,7 @@ import {toLonLat} from 'ol/proj.js';
             console.log(this.selectedRow);
             this.peopleTmp = [];
             this.msgList = 'Procesando datos...';
-            this.mapService.getPeopleByProjectId(index).subscribe (
+            this.mapService.getPeopleByProjectId(index, type).subscribe (
               data => {
                 
         
@@ -203,7 +203,7 @@ import {toLonLat} from 'ol/proj.js';
         };
 
         this.Url = 'app/assets/images/';
-        //this.Url = 'assets/images/';
+        // this.Url = 'assets/images/';
 
         this.iconMSola = this.Url + 'msola.png';
         this.iconPSolo = this.Url + 'psolo.png';
