@@ -67,17 +67,17 @@ export class UtilsService implements OnInit {
   private static URBANO_RURAL: string = 'URBANO/RURAL';
 
   
-  private static SERVER = 'http://10.10.0.102:8082/';
-  private static SERVER_2 = 'http://10.10.0.102:8082/rub/rub/main';
+  // private static SERVER = 'http://10.10.0.102:8082/';
+  // private static SERVER_2 = 'http://10.10.0.102:8082/rub/rub/main';
   //private static SERVER = "http://192.168.10.58:8080/";
   //private static SERVER = "http://10.10.0.159:80/";
-  // private static SERVER = 'http://siges.aevivienda.gob.bo/';
-  // private static SERVER_2 = 'http://siges.aevivienda.gob.bo/rub/rub/main';
+  private static SERVER = 'https://siges.aevivienda.gob.bo/';
+  private static SERVER_2 = 'https://siges.aevivienda.gob.bo/rub/rub/main';
 
   private static baseUrl: string = UtilsService.SERVER + 'siges/';
   public static baseUrl_2: string = UtilsService.SERVER_2;
   public static PATH_PRINT: string = UtilsService.SERVER;
-  public static PATH_PHOTOS: string = 'http://siges.aevivienda.gob.bo/sigesUpload/public/';
+  public static PATH_PHOTOS: string = 'https://siges.aevivienda.gob.bo/sigesUpload/public/';
 
   public static authenticateBaseUrl: string = UtilsService.baseUrl + 'authService/authenticate/';
   public static changepassBaseUrl: string = UtilsService.baseUrl + 'authService/';
