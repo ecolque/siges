@@ -110,15 +110,15 @@ export class GeoService {
         .catch(UtilsService.handleError);
     }
 
-    getNMProjectsPendigs(): Observable<any[]> {
-        let params = 'getNMPendingProjects';
+    getNMProjectsPendigs(projectName): Observable<any[]> {
+        let params = 'getNMPendingProjects/' + projectName;
         return this.http.get(UtilsService.geoBaseUrl + params)
                 .map(UtilsService.extractData)
                 .do(data => { })
                 .catch(UtilsService.handleError);
     }
-    autorizeNMPendingProkect(obj: any) {
-        return this.http.post(UtilsService.geoBaseUrl + 'autorizeNMPendingProject', obj)
+    autorizeNMPendingProkect(list: any) {
+        return this.http.post(UtilsService.geoBaseUrl + 'autorizeNMPendingProject', list)
         .map(UtilsService.extractData)
         .do(data => { })
         .catch(UtilsService.handleError);
