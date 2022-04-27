@@ -3,7 +3,7 @@
 </div>  
 <div class="modal-body nav-item form-group animate-zoom">      
   <ngb-alert type="danger" [dismissible]="false" [hidden]="!error">
-    <strong>Error: </strong> {{error | json}}
+    {{error | json}}
   </ngb-alert>                   
   <input [(ngModel)]="change.curr" type="password" placeholder="Contraseña Actual" class="form-control form-control-sm">
   <input [(ngModel)]="change.newpass" type="password" placeholder="Nueva Contraseña" class="form-control form-control-sm">
