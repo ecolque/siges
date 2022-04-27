@@ -38,6 +38,13 @@ export class GeoService {
                 .do(data => { })
                 .catch(UtilsService.handleError);
     }
+    getInspectionsTec(projectId: number): Observable<any[]> {
+        let params = 'getInspectionsTec/' + projectId;
+        return this.http.get(UtilsService.geoBaseUrl + params)
+                .map(UtilsService.extractData)
+                .do(data => { })
+                .catch(UtilsService.handleError);
+    }
 
     getInspectionsByRegisterId(registerId: number): Observable<any[]> {
         let params = 'getInspectionsByRegisterId/' + registerId;

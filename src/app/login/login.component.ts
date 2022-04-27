@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs/subscription';
 
 import { Router } from '@angular/router';
 import { User } from './user';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal';
+import { ResetPassComponent } from './reset-pass/reset-pass.component';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -48,18 +51,34 @@ export class LoginComponent implements OnInit {
     }else {
       this.busy = this.authService.authenticate(user).subscribe(
             data => {
-              this.loginPopupSuccess.emit(true);
-              
-              if(UtilsService.isAcceses(11)) {
-                this.router.navigate(['project']);
-              }else if(UtilsService.isAcceses(9)) {
-                this.router.navigate(['geo']);
-              }else if(UtilsService.isAcceses(7)){
-                        this.router.navigate(['search']);
-              }else if(UtilsService.isAcceses(8)){
-                this.router.navigate(['management']);
+              let u = data['user'];
+              if(u.passReset){
+                  this.openFormResetPassw(u);
+              }else{
+                this.loginPopupSuccess.emit(true);
+                if(UtilsService.isAcceses(11)) {
+                  this.router.navigate(['project']);
+                }else if(UtilsService.isAcceses(9)) {
+                  this.router.navigate(['geo']);
+                }else if(UtilsService.isAcceses(7)){
+                          this.router.navigate(['search']);
+                }else if(UtilsService.isAcceses(8)){
+                  this.router.navigate(['management']);
+                }
               }
             }, error => this.error = error);
         }
+  }
+
+  openFormResetPassw(u) {
+    const modalRef = this.modalService.open(ResetPassComponent, {size: 'sm', backdrop: 'static', keyboard: false});    
+    modalRef.componentInstance.username = u.username;
+    modalRef.result.then((result) => {
+      console.log('++++++++++++++++',result);
+      // if (result.ok === true) {
+        // this.form.get('password').setValue('');
+        // this.router.navigate(['project']);
+      // }
+    });
   }
 }

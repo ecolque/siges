@@ -24,12 +24,13 @@ import { LoginPopupComponent } from './login/login.popup.component';
 // import { GeoComponent } from './geo/geo.component';
 // import { SearchComponent } from './search/search.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ResetPassComponent } from './login/reset-pass/reset-pass.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent, HomeComponent, LoginPopupComponent// , GeoComponent //, SearchComponent // , VerBeneficioComponent,
+    LoginComponent, HomeComponent, LoginPopupComponent, ResetPassComponent// , GeoComponent //, SearchComponent // , VerBeneficioComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +42,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  entryComponents: [VerBeneficioComponent, LoginPopupComponent],
+  entryComponents: [VerBeneficioComponent, LoginPopupComponent, ResetPassComponent],
   providers: [UtilsService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })

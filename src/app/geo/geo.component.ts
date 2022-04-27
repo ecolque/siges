@@ -21,6 +21,7 @@ import {BingMaps, Cluster} from 'ol/source.js';
 import { timer } from 'rxjs/observable/timer';
 import { GeoObsInsComponent } from './geo-obs-ins/geo-obs.ins.componente';
 import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.componente';
+import { GeoInsAllPendingComponent } from './geo-ins-all-pending/geo-ins-all-pending.componente';
 
 @Component({
   selector: 'app-geo',
@@ -196,6 +197,19 @@ export class GeoComponent implements OnInit {
     this.registerId = 0;
     this.busy = this.geoService.getInspections(project.id).subscribe(data => { this.inspections = data; console.log(data); });
   }
+  searchInspectionTec(project: any){
+    this.people = null;
+    this.inspections = null;
+    this.insIds = [];
+    this.selectedRowInspection = 0;
+    this.selectedRowPerson = 0;
+    this.photos = null;
+    this.mapPhotos = null;
+    this.times = null;
+    this.projectId = project.id;
+    this.registerId = 0;
+    this.busy = this.geoService.getInspectionsTec(project.id).subscribe(data => { this.inspections = data; console.log(data); });
+  }
 
   getInspectionsByRegisterId(registerId: number, countInspections: number) {
     this.registerId = registerId;
@@ -274,6 +288,7 @@ export class GeoComponent implements OnInit {
                 if (locFirst && locFirst.lat != 0 && locFirst.lng != 0) {
                   this._setMarkerToMap({lat: locFirst.lat, lng: locFirst.lng}, this.iconFooter);
                 }
+                
               // });
           }
           
@@ -384,6 +399,16 @@ export class GeoComponent implements OnInit {
   }
   openFormPending(){
     const modalRef = this.modalService.open(GeoInsPendingComponent, {size: 'lg', backdrop: 'static', keyboard: false});    
+    modalRef.componentInstance.userId = UtilsService.USER.id;
+    modalRef.result.then((res) => {
+      console.log(':::::: ',res);
+      if (res.ok == true) {
+        // inspecion.obs = res.obs;
+      }
+    });
+  }
+  openFormAllPending(){
+    const modalRef = this.modalService.open(GeoInsAllPendingComponent, {size: 'lg', backdrop: 'static', keyboard: false});    
     modalRef.componentInstance.userId = UtilsService.USER.id;
     modalRef.result.then((res) => {
       console.log(':::::: ',res);

@@ -1,0 +1,25 @@
+<div class="modal-header bg-primary text-white" style="height:30px">
+  <h6>CAMBIAR CLAVE</h6> 
+</div>  
+<div class="modal-body nav-item form-group animate-zoom">      
+  <ngb-alert type="danger" [dismissible]="false" [hidden]="!error">
+    <strong>Error: </strong> {{error | json}}
+  </ngb-alert>                   
+  <input [(ngModel)]="change.curr" type="password" placeholder="Contraseña Actual" class="form-control form-control-sm">
+  <input [(ngModel)]="change.newpass" type="password" placeholder="Nueva Contraseña" class="form-control form-control-sm">
+  <input [(ngModel)]="change.repeatpass" type="password" placeholder="Repita Contraseña" class="form-control form-control-sm">                    
+
+  <label style="font-size: 12px;font-weight: bold;">POR SEGURIDAD DEBE CAMBIAR SU CLAVE</label>
+  <label style="font-size: 11px;">Su clave debe contener lo siguiente:</label>
+  <div style="font-size: 11px;">
+    <li>Letra minuscula</li>
+    <li>Letra MAYUSCULA</li>
+    <li>Un numero</li>
+    <li>Un caracter especial ($ @ #)</li>
+    <li>Debe ser mayor a 8 caracteres</li>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-lg btn-primary btn-block" (click)="changePass()"><small>Cambiar Clave</small></button>
+      <!-- <button class="nav-link btn btn-sm btn-danger text-white" (click)="showBtnPass = !showBtnPass"><small>Cancelar</small></button>                     -->
+</div>

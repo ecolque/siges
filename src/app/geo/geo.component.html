@@ -8,6 +8,7 @@
                         <div class="col-sm">
                             <div class="txt1"><b>PROYECTOS </b>
                                 <button class="btn btn-sm btn-success" *ngIf="isAcceses(17)" (click)="openFormPending()">INSPECCIONES FUERA DE FECHA</button>
+                                <button class="btn btn-sm btn-success" *ngIf="!isAcceses(17)" (click)="!openFormAllPending()">INSPECCIONES FUERA DE FECHA</button>
                                 <!--button *ngIf="department != 0 && year != 0" class="btn btn-sm btn-warning float-right txt11" (click)="report()">Reportes</button-->
                                 <a href="{{URL_PRINT}}getInformeProject?ids={{projIds}}&r=0&byp=1" *ngIf="projIds.length" class="btn btn-sm btn-danger animate-right" target="_blank"><small>↓ ({{projIds.length}}) Por Proyecto</small></a>
                                 <a href="{{URL_PRINT}}getInformeProject?ids={{projIds}}&byp=0" *ngIf="projIds.length" class="btn btn-sm btn-danger animate-right" target="_blank"><small>↓ ({{projIds.length}}) Por Proyecto y Beneficiarios</small></a>                                
@@ -61,7 +62,8 @@
                                             <th>#</th>                                            
                                             <th>Código</th>
                                             <th>Nombre</th>
-                                            <th>Evaluacion</th>
+                                            <th>E.Soc.</th>
+                                            <th>E.Tec.</th>
                                             <th>Inspección por Proyecto</th>
                                             <th>Inpección por Solicitantes</th>     
                                             <th></th>                                   
@@ -72,7 +74,8 @@
                                             <td>{{i+1}}</td>
                                             <td>{{proy.code}}</td>
                                             <td>{{proy.name}}</td>
-                                            <td><button class="btn btn-sm btn-info" (click)="openFormEvaluation(proy.id, proy.code)" *ngIf="proy.evaluations != 0">E. <span class="badge badge-light">{{proy.evaluations}}</span></button></td>
+                                            <td><button class="btn btn-sm btn-info" (click)="openFormEvaluation(proy.id, proy.code)" *ngIf="proy.evaluations != 0">S. <span class="badge badge-light">{{proy.evaluations}}</span></button></td>
+                                            <td><button class="btn btn-sm btn-info" (click)="searchInspectionTec(proy)" *ngIf="proy.inspectionsTec != 0">T. <span class="badge badge-light">{{proy.inspectionsTec}}</span></button></td>
                                             <td><button [disabled]="busy != null ? !busy.closed : false" *ngIf="proy.inspections != 0" class="btn btn-sm {{proy.color == null ? 'btn-danger' : proy.color}}" (click)="searchInspection(proy)">{{proy.inspections}} <small>Insp.</small> </button></td>
                                             <td><button [disabled]="busy != null ? !busy.closed : false" *ngIf="proy.people != 0" class="btn btn-sm btn-warning" (click)="searchPerson(proy)">{{proy.people}} <small>Per.</small> </button></td>                          
                                             <td>
@@ -178,7 +181,7 @@
                                         <td>{{ins.user}}<br><b>{{ins.cargo}}</b><br>
                                              <label *ngIf="ins.obs" class="btn-danger"><small>{{ins.obs}} </small> ({{ins.userObs}})</label>
                                              <button *ngIf="isAcceses(17)" (click)="setObs(ins)">Obs</button> </td>
-                                        <td><b>{{ins.description}}</b> <br><small>Fecha realizada: {{ins.date}};<br>Fecha cargada: {{ins.created}}</small></td>                                           
+                                        <td><b>{{ins.description}} <small style="color: blue;">{{ins.namePerson}}</small> </b> <br><small>Fecha realizada: {{ins.date}};<br>Fecha cargada: {{ins.created}}</small></td>                                           
                                         <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-success" (click)="getTime(ins)"> <label *ngIf="!ins.hr">&#9888;</label> {{ins.hr}}</button></td> 
                                         <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm btn-danger" (click)="getPhotos(ins.id)">{{ins.countPhoto}} <small>Fotos</small></button></td>                                        
                                         <td><button [disabled]="busy != null ? !busy.closed : false" class="btn btn-sm" (click)="getTraking(ins.id)"> <img src="app/assets/images/start.png"> VER</button></td>
@@ -236,8 +239,8 @@
         <div class="border border-primary " style="height: 950px; overflow-y: scroll;">                          
             <div class="row">
                     <div class="card col-sm-6"   *ngFor="let pto of photos; let i = index;">                                                         
-                        <img *ngIf="pto.id > 2429328" class="card-img-top"   [src]="'data:image/jpeg;base64,'+ pto.thumb | safeHtml" alt="First slide">
-                        <img *ngIf="pto.id <= 2429328" class="card-img-top"   [src]="'http://ssp.aevivienda.gob.bo/sspUp/' + pto.id + 's.jpg'" alt="First slide">
+                        <img *ngIf="pto.id > 3096470" class="card-img-top"   [src]="'data:image/jpeg;base64,'+ pto.thumb | safeHtml" alt="First slide">
+                        <img *ngIf="pto.id <= 3096470" class="card-img-top"   [src]="'http://ssp.aevivienda.gob.bo/sspUp/' + pto.id + '.jpg'" alt="First slide">
                         <div class="card-body">                            
                             <small>
                                 <b>Descripción: </b>{{pto.description}} <br> 

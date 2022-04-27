@@ -1,0 +1,68 @@
+<div class="modal-header" style="height:30px">      
+    <div></div>  
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close('')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">     
+    
+        <div class="row">
+            <div class="col-sm-10">
+                <input  type="text" [(ngModel)]="project" 
+                        class="form-control form-control-sm" 
+                        placeholder="Escriba codigo o nombre o inciales del codigo de proyecto"/>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-sm btn-warning" (click)="searchProject()" [disabled]="busy != null ? !busy.closed : false">Buscar</button>
+            </div>
+        </div>
+
+    
+        <div class="row">
+            <!-- <div class="col-sm-12">
+                <label>Filter</label>
+                <input type="text">
+            </div> -->
+            <div class="col-sm-12">
+                <!-- style="height: 250px; overflow-y: scroll;" -->
+                <div class="border"> 
+                           
+                        <table class="table table-sm table-bordered table-hover txt11">
+                            <thead class="bg-dark text-white">
+                                <tr>
+                                    <th>#</th>                                            
+                                    <th>Municipio</th>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Gestion</th>
+                                    <th>Dias atraso</th>
+                                    <!-- <th>Causal</th>
+                                    <th></th>
+                                    <th></th>                                    -->
+                                </tr>                                                                              
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let proy of projects; let i = index;"> 
+                                    <td>{{i+1}}</td>
+                                    <td>{{proy.mun}}</td>
+                                    <td>{{proy.codProject}}</td>
+                                    <td>{{proy.nameProject}}</td>
+                                    <td>{{proy.gestion}}</td>
+                                    <td>{{proy.lateDays}}</td>
+                                    <!-- <td><input type="number" [(ngModel)]="proy.lateDays" class="form-control form-control-sm" style="width: 100px;" ></td> -->
+                                    <!-- <td><input type="text" [(ngModel)]="proy.note" class="form-control form-control-sm"></td>
+                                    <td>
+                                        <button (click)="autorize(proy, i)" class="btn btn-sm btn-primary">Ampliar Plazo/Autorizar</button>
+                                    </td> -->
+                                </tr>                                        
+                            </tbody>                                
+                        </table>                                                                                    
+                </div>
+            </div>
+        </div>    
+</div>
+<div class="modal-footer">
+    <!-- <button [disabled]="busy != null ? !busy.closed : false" (click)="save()" type="button" class="btn btn-sm btn-primary">GUARDAR</button>
+    <button *ngIf="ins.obs" [disabled]="busy != null ? !busy.closed : false" (click)="delete()" type="button" class="btn btn-sm btn-danger">ELIMINAR</button> -->
+</div>
+      

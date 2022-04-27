@@ -18,12 +18,20 @@ export class AppComponent implements OnInit {
   isSpp: boolean;
   constructor(
     private authService: AuthService    
-    ) {}
+    ) {
+      console.log(window.location.protocol)
+      // if(window.location.protocol == 'http:'){
+      //   // window.location.protocol = 'https:';
+      //   // window.location.reload();
+      //   document.location.href = 'https://siges.aevivienda.gob.bo';
+      // }
+    }
 
   ngOnInit() {
     this.authService.userAuthEmitter.subscribe(
             user => { 
-              this.user = user; console.log(this.user); 
+              this.user = user;
+              console.log(this.user); 
               this.isSpp = this.user['type'] === 1 ? true : false;
               console.log("**************");
               console.log(this.isSpp);
@@ -43,7 +51,7 @@ export class AppComponent implements OnInit {
   changePass() {
     if(this.change.newpass === this.change.repeatpass) {
       this.change.ssp = this.isSpp;   
-      console.log(this.change);   
+      
       this.authService.changePassword(this.change).subscribe(
         data => {
           this.showBtnPass = false;

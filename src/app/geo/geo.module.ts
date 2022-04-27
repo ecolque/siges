@@ -14,6 +14,7 @@ import { GeoReportComponent } from './geo-report/geo-report.component';
 import { GeoEvaluationComponent } from './geo-evaluation/geo-evaluation.component';
 import { GeoObsInsComponent } from './geo-obs-ins/geo-obs.ins.componente';
 import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.componente';
+import { GeoInsAllPendingComponent } from './geo-ins-all-pending/geo-ins-all-pending.componente';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.compon
     GeoEvaluationComponent,
     GeoReportComponent,
     GeoObsInsComponent,
-    GeoInsPendingComponent
+    GeoInsPendingComponent,
+    GeoInsAllPendingComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +38,7 @@ import { GeoInsPendingComponent } from './geo-ins-pending/geo-ins-pending.compon
     NgbModule.forRoot(),
     GeoRoutingModule
   ],
-  entryComponents: [ GeoZoomComponent, GeoEvaluationComponent, GeoReportComponent, GeoObsInsComponent, GeoInsPendingComponent ],
+  entryComponents: [ GeoZoomComponent, GeoEvaluationComponent, GeoReportComponent, GeoObsInsComponent, GeoInsPendingComponent, GeoInsAllPendingComponent ],
   providers: [GeoService],
   bootstrap: []
 })
